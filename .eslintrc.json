@@ -82,7 +82,7 @@
                 "@typescript-eslint/class-name-casing": "off",
                 "@typescript-eslint/indent": [
                     "error",
-                    4
+                    {}
                 ],
                 "@typescript-eslint/member-delimiter-style": [
                     "off",
@@ -100,11 +100,7 @@
                 "@typescript-eslint/prefer-namespace-keyword": "warn",
                 "@typescript-eslint/quotes": [
                     "error",
-                    "single",
-                    {
-                        "avoidEscape": true,
-                        "allowTemplateLiterals": true
-                    }
+                    {}
                 ],
                 "@typescript-eslint/semi": [
                     "off",
@@ -113,16 +109,12 @@
                 "@typescript-eslint/type-annotation-spacing": "error",
                 "@typescript-eslint/brace-style": [
                     "error",
-                    "1tbs", { "allowSingleLine": true }
+                    {}
                 ],
                 "@typescript-eslint/comma-spacing": "error",
-                "@typescript-eslint/space-before-function-paren": ["error", {
-                    "anonymous": "always",
-                    "named": "never",
-                    "asyncArrow": "always"
-                }],
+                "@typescript-eslint/space-before-function-paren": ["error", {}],
                 "@typescript-eslint/func-call-spacing": ["error"],
-                "@typescript-eslint/keyword-spacing": ["error"]
+                "@typescript-eslint/keyword-spacing": ["error", { "before": true, "after": true }]
             }
         }
     ]
