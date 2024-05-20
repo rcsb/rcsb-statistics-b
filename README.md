@@ -27,7 +27,7 @@
 <!-- ABOUT RCSB PDB Statistics -->
 ## About RCSB PDB Statistics
 
-[![Product Name Screen Shot][rcsb-stats-screenshot]](https://example.com)
+[![Product Name Screen Shot][rcsb-stats-screenshot]](https://www.rcsb.org/stats/)
 Visual summaries of RCSB PDB data can be used to effectively communicate complex information to a wide range of use.
 
 What is RCSB PDB Statistics?:
@@ -125,7 +125,7 @@ See the [feature list](https://rcsbpdb.atlassian.net/browse/RO-3713) for a full 
 
 
 <!-- LINKS & IMAGES -->
-[rcsb-stats-screenshot]: assets/images/home_graphic_placeholder.png
+[rcsb-stats-screenshot]: src/assets/images/home_graphic_placeholder.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
