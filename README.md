@@ -65,8 +65,6 @@ See the [feature list](https://rcsbpdb.atlassian.net/browse/RO-3713) for a full 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
-
 ### Built With
 
 Here's a list of the major frameworks/libraries used for this project.
