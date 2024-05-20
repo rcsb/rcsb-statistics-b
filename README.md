@@ -5,11 +5,12 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About RCSB PDB Statistics</a>
+      <a href="#about-rcsb-pdb-statistics">About RCSB PDB Statistics</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -18,7 +19,6 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
   </ol>
 </details>
 
@@ -40,6 +40,29 @@ These statistics are generated using Web Services and represent the current hold
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- ROADMAP -->
+## Roadmap
+
+- [ ] RO-4100	Responsive statistics application layout
+- [ ] RO-4101	Expand charting area to full screen mode
+- [ ] RO-4102	Filter the chart based on displayed categories
+- [ ] RO-4104	Chart export functionality as image
+- [ ] RO-4105	Access to Search API query editor
+- [ ] RO-4106	Enable navigation to search results via chart elements
+- [ ] RO-4107	Color palette customization for accessible and publication-ready charts
+- [ ] RO-4108	Charting application landing page
+- [ ] RO-4109	Chart data download as CSV
+- [ ] RO-4110	Display of chart data as table
+- [ ] RO-4111	Chart description display
+- [ ] RO-4112	Reset all options to original state
+- [ ] RO-4113	Toggle between linear and logarithmic scale
+- [ ] RO-4114	Data growth charts exploration
+- [ ] RO-4134	Dynamic and interactive charting area
+- [ ] RO-4199	Navigation between application states
+
+See the [feature list](https://rcsbpdb.atlassian.net/browse/RO-3713) for a full list of features to be worked on.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Built With
@@ -99,29 +122,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] RO-4100	Responsive statistics application layout
-- [ ] RO-4101	Expand charting area to full screen mode
-- [ ] RO-4102	Filter the chart based on displayed categories
-- [ ] RO-4104	Chart export functionality as image
-- [ ] RO-4105	Access to Search API query editor
-- [ ] RO-4106	Enable navigation to search results via chart elements
-- [ ] RO-4107	Color palette customization for accessible and publication-ready charts
-- [ ] RO-4108	Charting application landing page
-- [ ] RO-4109	Chart data download as CSV
-- [ ] RO-4110	Display of chart data as table
-- [ ] RO-4111	Chart description display
-- [ ] RO-4112	Reset all options to original state
-- [ ] RO-4113	Toggle between linear and logarithmic scale
-- [ ] RO-4114	Data growth charts exploration
-- [ ] RO-4134	Dynamic and interactive charting area
-- [ ] RO-4199	Navigation between application states
-
-See the [feature list](https://rcsbpdb.atlassian.net/browse/RO-3713) for a full list of features to be worked on.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- LINKS & IMAGES -->
