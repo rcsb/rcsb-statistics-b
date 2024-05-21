@@ -43,22 +43,23 @@ These statistics are generated using Web Services and represent the current hold
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] RO-4100	Responsive statistics application layout
-- [ ] RO-4101	Expand charting area to full screen mode
-- [ ] RO-4102	Filter the chart based on displayed categories
-- [ ] RO-4104	Chart export functionality as image
-- [ ] RO-4105	Access to Search API query editor
-- [ ] RO-4106	Enable navigation to search results via chart elements
-- [ ] RO-4107	Color palette customization for accessible and publication-ready charts
-- [ ] RO-4108	Charting application landing page
-- [ ] RO-4109	Chart data download as CSV
-- [ ] RO-4110	Display of chart data as table
-- [ ] RO-4111	Chart description display
-- [ ] RO-4112	Reset all options to original state
-- [ ] RO-4113	Toggle between linear and logarithmic scale
-- [ ] RO-4114	Data growth charts exploration
-- [ ] RO-4134	Dynamic and interactive charting area
-- [ ] RO-4199	Navigation between application states
+- [ ] RO-4108 Charting application landing page
+- [ ] RO-4100 Responsive statistics application layout
+- [ ] RO-4101 Expand charting area to full screen mode
+- [ ] RO-4111 Chart description display
+- [ ] RO-4113 Toggle between linear and logarithmic scale
+- [ ] RO-4102 Filter the chart based on displayed categories
+- [ ] RO-4104 Chart export functionality as image
+- [ ] RO-4110 Display of chart data as table
+- [ ] RO-4112 Reset all options to original state
+- [ ] RO-4109 Chart data download as CSV
+- [ ] RO-4199 Navigation between application states
+- [ ] RO-4105 Access to Search API query editor
+- [ ] RO-4106 Enable navigation to search results via chart elements
+- [ ] RO-4114 Data growth charts exploration
+- [ ] RO-4134 Dynamic and interactive charting area
+- [ ] RO-4107 Color palette customization for accessible and publication-ready charts
+
 
 See the [feature list](https://rcsbpdb.atlassian.net/browse/RO-3713) for a full list of features to be worked on.
 
