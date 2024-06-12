@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
         <article className="col-12">
           <div className="card">
             <div className="card-body">
-              <h3>Statistics Home...</h3>
+              <h1>PDB Statistics 2024</h1>
               <ListGroup items={listItems} />
             </div>
           </div>

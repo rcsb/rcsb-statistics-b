@@ -8,7 +8,7 @@ const DistSourceOrgNat: React.FC = () => {
         <article className="col-12">
           <div className="card">
             <div className="card-body">
-              <h3>PDB Statistics: PDB Data Distribution by Natural Source Organism</h3>
+              <h2>PDB Statistics: PDB Data Distribution by Natural Source Organism</h2>
               <Link to="/">Return Home</Link>
             </div>
           </div>
