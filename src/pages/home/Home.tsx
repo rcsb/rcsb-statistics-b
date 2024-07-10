@@ -3,8 +3,8 @@ import ListGroup from '../../components/ListGroup';
 
 const HomePage: React.FC = () => {
   const listItems = [
+    { text: 'by Experimental Method and Molecular Type', link: '/summary' },
     { text: 'by Natural Source Organism', link: '/distribution-source-organism-natural' },
-    { text: 'by Experimental Method and Molecular Type', link: '/distribution-source-organism-natural' },
   ];
 
   return (
@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
         <article className="col-12">
           <div className="card">
             <div className="card-body">
-              <h1>PDB Statistics 2024</h1>
+              <h1>PDB Statistics 2024....</h1>
               <ListGroup items={listItems} />
             </div>
           </div>

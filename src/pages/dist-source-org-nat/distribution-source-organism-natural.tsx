@@ -35,28 +35,45 @@ const DistSourceOrgNat: React.FC = () => {
   useEffect(() => {
     console.log("mainAttribute=", state.mainAttribute);
   }, [state.mainAttribute]);
-
   
-    return (
-      <div>
-          <div style={{marginBottom:20}}>
-              <FacetSelector
-                  componentId={"main-attribute"}
-                  observer={selectorObserver}
-                  selectorRole={"main"}
-                  facets={FACET_STORE}
-              />
-              <FacetSelector
-                  componentId={"additional-attribute"}
-                  observer={selectorObserver}
-                  selectorRole={"additional"}
-                  facets={ADDITIONAL_FACET_STORE}
-              />
-          </div>
-          <div>firstDim={JSON.stringify(state.mainAttribute)}</div>
-      </div>
-    )
+  return state.mainAttribute.facet && state.mainAttribute.chartType ?
+  <main className="container mt-5">
+      <section className="row">
+        <article className="col-12">
+          <div className="card">
+            <div className="card-body">
+              <div style={{marginBottom:20}}>
+                  <FacetSelector
+                      componentId={"main-attribute"}
+                      observer={selectorObserver}
+                      selectorRole={"main"}
+                      facets={FACET_STORE}
+                  />
+                  <FacetSelector
+                      componentId={"additional-attribute"}
+                      observer={selectorObserver}
+                      selectorRole={"additional"}
+                      facets={ADDITIONAL_FACET_STORE}
+                  />
+              </div>
 
+              <div style={{marginLeft:-80}}>
+              <FacetPlot
+                  firstDim={state.mainAttribute.facet}
+                  secondDim={
+                      state.mainAttribute.facetId != state.additionalAttribute?.facetId ? state.additionalAttribute?.facet : undefined
+                  }
+                  chartType={state.mainAttribute.chartType}
+                  returnType={ReturnType.Entry}
+                  chartConfig={state.mainAttribute.chartConfig}
+              />
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      <Link to="/">All Statistics</Link>
+  </main> : null;
   
 };
 
