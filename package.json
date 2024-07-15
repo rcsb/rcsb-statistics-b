@@ -6,22 +6,31 @@
     "build"
   ],
   "dependencies": {
+    "@craco/craco": "^7.1.0",
+    "@rcsb/rcsb-api-tools": "^4.1.11",
+    "@rcsb/rcsb-charts": "^0.2.4",
+    "@rcsb/rcsb-search-tools": "^0.0.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "bootstrap": "^5.3.3",
+    "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.77.7",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "GENERATE_SOURCEMAP=false craco start",
+    "start:hosted": "cross-env REACT_APP_HOSTED=true GENERATE_SOURCEMAP=false craco start",
+    "build": "GENERATE_SOURCEMAP=false craco build",
+    "build:hosted": "cross-env REACT_APP_HOSTED=true GENERATE_SOURCEMAP=false craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -45,9 +54,15 @@
     "@babel/preset-typescript": "^7.24.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "@types/lodash": "^4.17.6",
+    "cross-env": "^7.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "react-scripts": "^5.0.1",
+    "rxjs": "^7.8.1",
+    "style-loader": "^4.0.0",
     "ts-jest": "^27.1.3"
   }
 }
+
+
