@@ -1,5 +1,7 @@
-import React, { lazy, Suspense} from 'react';
+import React, { lazy, Suspense, startTransition } from 'react';
 import { createMemoryRouter, Outlet, RouterProvider } from 'react-router-dom';
+import Navbar from './components/NavBar';  
+import ErrorBoundary from './components/ErrorBoundary';
 
 const HomePage = lazy(() => import('./pages/home'));
 const DistSourceOrgNat = lazy(() => import('./pages/dist-source-org-nat'));
@@ -11,7 +13,14 @@ const router = createMemoryRouter(
       path: '/',
       element: (
         <>
-          <Outlet />
+          <main className="container mt-5">
+            <section className="row">
+                <Navbar />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Outlet />
+                </Suspense>
+            </section>
+          </main>
         </>
       ),
       children: [
@@ -42,11 +51,15 @@ const router = createMemoryRouter(
       ]
     }
   ],
-  {initialEntries: [location.pathname.replace("/stats-b", "") || '/']}
+  { initialEntries: [location.pathname.replace("/stats-b", "") || '/'] }
 );
 
 const App: React.FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 };
 
 export default App;

@@ -8,18 +8,10 @@ const HomePage: React.FC = () => {
   ];
 
   return (
-    <main className="container mt-5">
-      <section className="row">
-        <article className="col-12">
-          <div className="card">
-            <div className="card-body">
-              <h1>PDB Statistics 2024 (craco)</h1>
-              <ListGroup items={listItems} />
-            </div>
-          </div>
-        </article>
-      </section>
-    </main>
+  <article className="col-12">
+    <h3>PDB Statistics 2024. </h3>
+    <ListGroup items={listItems} />
+  </article>
   );
 };
 

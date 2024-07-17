@@ -37,11 +37,7 @@ const DistSourceOrgNat: React.FC = () => {
   }, [state.mainAttribute]);
   
   return state.mainAttribute.facet && state.mainAttribute.chartType ?
-  <main className="container mt-5">
-      <section className="row">
         <article className="col-12">
-          <div className="card">
-            <div className="card-body">
               <div style={{marginBottom:20}}>
                   <FacetSelector
                       componentId={"main-attribute"}
@@ -65,12 +61,10 @@ const DistSourceOrgNat: React.FC = () => {
                   returnType={ReturnType.Entry}
                   chartConfig={state.mainAttribute.chartConfig}
               />
-            </div>
-          </div>
+          <Link to="/">All Statistics</Link>
         </article>
-      </section>
-      <Link to="/">All Statistics</Link>
-  </main> : null;
+    
+  : null;
 };
 
 export default DistSourceOrgNat;
