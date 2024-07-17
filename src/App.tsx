@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { createMemoryRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Navbar from './components/NavBar';  
 import ErrorBoundary from './components/ErrorBoundary';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = lazy(() => import('./pages/home'));
 const DistSourceOrgNat = lazy(() => import('./pages/dist-source-org-nat'));
