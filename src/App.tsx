@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, startTransition } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createMemoryRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Navbar from './components/NavBar';  
 import ErrorBoundary from './components/ErrorBoundary';
