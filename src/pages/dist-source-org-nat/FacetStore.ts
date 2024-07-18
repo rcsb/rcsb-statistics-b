@@ -5,8 +5,8 @@ import {StatsFacetInterface} from "../../interfaces/StatsFacetInterface";
 
 const globalChatConfig: ChartConfigInterface = {
     chartDisplayConfig: {
-        constWidth: 1200,
-        constHeight: 600
+        constWidth: 900,
+        constHeight: 500
     },
     tooltipText: (d)=>{
         return d.id?.join(" ");

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Navbar,
   NavbarBrand,
@@ -11,6 +11,8 @@ import {
 } from './NavBarStyles';
 
 const NavBar: React.FC = () => {
+  const location = useLocation();
+
   return (
     <Navbar className="navbar navbar-default">
       <div className="container-fluid">
@@ -34,21 +36,20 @@ const NavBar: React.FC = () => {
         </div>
         <NavbarCollapse className="collapse navbar-collapse" id="statsnavbarnav">
           <ul className="nav navbar-nav">
-            <NavItem className="nav-item active">
+            <NavItem className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <NavLink as={Link} to="/">About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
-            
-            <NavItem className="nav-item">
+            <NavItem className={`nav-item ${location.pathname === '/distribution-source-organism-natural' ? 'active' : ''}`}>
               <NavLink as={Link} to="/distribution-source-organism-natural">Data Growth</NavLink>
             </NavItem>
-            <NavItem className="nav-item">
+            <NavItem className={`nav-item ${location.pathname === '/summary' ? 'active' : ''}`}>
               <NavLink as={Link} to="/summary">Data Distribution</NavLink>
             </NavItem>
-            <NavItem className="nav-item">
-              <NavLink as={Link} to="/">Other Statistics</NavLink>
+            <NavItem className={`nav-item ${location.pathname === '/other-statistics' ? 'active' : ''}`}>
+              <NavLink as={Link} to="/other-statistics">Other Statistics</NavLink>
             </NavItem>
-            <NavItem className="nav-item">
-              <NavLink as={Link} to="/">PDB Data Snapshot</NavLink>
+            <NavItem className={`nav-item ${location.pathname === '/pdb-data-snapshot' ? 'active' : ''}`}>
+              <NavLink as={Link} to="/pdb-data-snapshot">PDB Data Snapshot</NavLink>
             </NavItem>
           </ul>
         </NavbarCollapse>
