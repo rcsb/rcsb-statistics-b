@@ -13,10 +13,13 @@ interface DistSourceOrgNatState {
   additionalAttribute?: StatsFacetInterface;
 }
 
-const Container = styled.div`
+const Article = styled.article`
   width: 100%;
-  padding: 0 15px;
   margin: 0 auto;
+
+  canvas {
+    margin-left: -100px;
+  }
 `;
 
 const Row = styled.div`
@@ -65,7 +68,7 @@ const DistSourceOrgNat: React.FC = () => {
   }, [state.mainAttribute]);
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
-    <Container>
+    <Article>
       <h3>PDB Data Growth By ...</h3>
       <Row>
         <Col size={10}>
@@ -103,7 +106,7 @@ const DistSourceOrgNat: React.FC = () => {
           <Link to="/">All Statistics</Link>
         </FullWidthCol>
       </Row>
-    </Container>
+    </Article>
   ) : null;
 };
 
