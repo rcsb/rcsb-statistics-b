@@ -19,7 +19,10 @@ const Article = styled.article`
 
   canvas {
     margin-left: -100px;
+    max-width: 90%;
+   // border: 1px solid #ccc;
   }
+  
 `;
 
 const Row = styled.div`
@@ -86,12 +89,12 @@ const DistSourceOrgNat: React.FC = () => {
         </Col>
         <Col size={2}>
           <MarginBottomDiv>
-            <FacetSelector
+            {/* <FacetSelector
               componentId="main-attribute"
               observer={selectorObserver}
               selectorRole="main"
               facets={FACET_STORE}
-            />
+            /> */}
             <FacetSelector
               componentId="additional-attribute"
               observer={selectorObserver}
