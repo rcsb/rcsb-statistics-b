@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const HomePage = lazy(() => import('./pages/home'));
 const DistSourceOrgNat = lazy(() => import('./pages/dist-source-org-nat'));
 const Summary = lazy(() => import('./pages/summary'));
+const OtherStatistics = lazy(() => import('./pages/other-stats'));
+const PdbDataSnapshot = lazy(() => import('./pages/pdb-data-snapshot'));
 
 const router = createMemoryRouter(
   [
@@ -46,6 +48,22 @@ const router = createMemoryRouter(
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Summary />
+            </Suspense>
+          )
+        },
+        {
+          path: '/other-statistics',
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <OtherStatistics />
+            </Suspense>
+          )
+        },
+        {
+          path: '/pdb-data-snapshot',
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <PdbDataSnapshot />
             </Suspense>
           )
         }

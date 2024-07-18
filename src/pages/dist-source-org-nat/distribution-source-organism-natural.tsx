@@ -43,11 +43,6 @@ const FullWidthCol = styled.div`
   padding: 0 15px;
 `;
 
-const StyledFacetPlot = styled(FacetPlot)`
-  background: lime; 
-  max-width: 900px;
-`;
-
 const DistSourceOrgNat: React.FC = () => {
   const [state, setState] = useState<DistSourceOrgNatState>({ mainAttribute: FACET_STORE[0] });
 
@@ -71,9 +66,10 @@ const DistSourceOrgNat: React.FC = () => {
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Container>
+      <h3>PDB Data Growth By ...</h3>
       <Row>
         <Col size={10}>
-          <StyledFacetPlot
+          <FacetPlot
             firstDim={state.mainAttribute.facet}
             secondDim={
               state.mainAttribute.facetId !== state.additionalAttribute?.facetId
