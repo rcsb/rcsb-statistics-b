@@ -95,6 +95,15 @@ const DistSourceOrgNat: React.FC = () => {
 
   const [selectedDataSet, setSelectedDataSet] = useState<string>('cumulative');
 
+  const [checkedMethods, setCheckedMethods] = useState({
+    xray: true,
+    electronMicroscopy: true,
+    nmr: true,
+    neutronDiffraction: true,
+    multiMethod: true,
+    other: true,
+  });
+
   const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
     next: (selector) => {
       setState((prevState) => {
@@ -117,6 +126,20 @@ const DistSourceOrgNat: React.FC = () => {
     setSelectedDataSet(event.target.value);
   };
 
+  // Handle checkbox changes
+  const handleCheckboxChange = (method: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckedMethods(prevState => ({
+      ...prevState,
+      [method]: event.target.checked,
+    }));
+  };
+
+  // Placeholder for filtering logic, assuming `originalData` is available
+  useEffect(() => {
+    // Filter data based on checked methods
+    // Update the data used in <FacetPlot> accordingly
+  }, [checkedMethods]);
+
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
       <h3>PDB Data Growth By ...</h3>
@@ -133,6 +156,7 @@ const DistSourceOrgNat: React.FC = () => {
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
+              // Pass filtered data here if needed
             />
           </Col>
           <Col md={2}>
@@ -143,31 +167,43 @@ const DistSourceOrgNat: React.FC = () => {
                 <Form.Check 
                   type="checkbox"
                   id="method1"
+                  checked={checkedMethods.xray}
+                  onChange={handleCheckboxChange('xray')}
                   label={<StyledFormCheckLabel>X-ray Diffraction</StyledFormCheckLabel>}
                 />
                 <Form.Check 
                   type="checkbox"
                   id="method2"
+                  checked={checkedMethods.electronMicroscopy}
+                  onChange={handleCheckboxChange('electronMicroscopy')}
                   label={<StyledFormCheckLabel>Electron Microscopy</StyledFormCheckLabel>}
                 />
                 <Form.Check 
                   type="checkbox"
                   id="method3"
+                  checked={checkedMethods.nmr}
+                  onChange={handleCheckboxChange('nmr')}
                   label={<StyledFormCheckLabel>NMR</StyledFormCheckLabel>}
                 />
                 <Form.Check 
                   type="checkbox"
                   id="method4"
+                  checked={checkedMethods.neutronDiffraction}
+                  onChange={handleCheckboxChange('neutronDiffraction')}
                   label={<StyledFormCheckLabel>Neutron Diffraction</StyledFormCheckLabel>}
                 />
                 <Form.Check 
                   type="checkbox"
                   id="method5"
+                  checked={checkedMethods.multiMethod}
+                  onChange={handleCheckboxChange('multiMethod')}
                   label={<StyledFormCheckLabel>Multi-method</StyledFormCheckLabel>}
                 />
                 <Form.Check 
                   type="checkbox"
                   id="method6"
+                  checked={checkedMethods.other}
+                  onChange={handleCheckboxChange('other')}
                   label={<StyledFormCheckLabel>Other</StyledFormCheckLabel>}
                 />
               </Form>
