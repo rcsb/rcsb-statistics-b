@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
 import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
@@ -12,11 +11,6 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 interface DistSourceOrgNatState {
   mainAttribute: StatsFacetInterface;
   additionalAttribute?: StatsFacetInterface;
-}
-
-interface ColorBox {
-  label: string;
-  color: string;
 }
 
 const Article = styled.article`
@@ -85,24 +79,16 @@ const BoxText = styled.div`
 const DistSourceOrgNat: React.FC = () => {
   const [state, setState] = useState<DistSourceOrgNatState>({ mainAttribute: FACET_STORE[0] });
 
-  const [colorBoxes, setColorBoxes] = useState<ColorBox[]>([
-    { label: 'X-ray Diffraction', color: 'blue' },
-    { label: 'Electron Microscopy', color: 'lime' },
-    { label: 'NMR', color: 'red' },
-    { label: 'Neutron Diffraction', color: 'brown' },
-    { label: 'Multi-method', color: 'purple' },
-  ]);
-
   const [selectedDataSet, setSelectedDataSet] = useState<string>('cumulative');
 
-  const [checkedMethods, setCheckedMethods] = useState({
-    xray: true,
-    electronMicroscopy: true,
-    nmr: true,
-    neutronDiffraction: true,
-    multiMethod: true,
-    other: true,
-  });
+  const [methods, setMethods] = useState([
+    { label: 'X-ray Diffraction', key: 'xray', checked: true, color: 'blue' },
+    { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: true, color: 'lime' },
+    { label: 'NMR', key: 'nmr', checked: true, color: 'red' },
+    { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: true, color: 'brown' },
+    { label: 'Multi-method', key: 'multiMethod', checked: true, color: 'purple' },
+    { label: 'Other', key: 'other', checked: true, color: 'gray' },
+  ]);
 
   const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
     next: (selector) => {
@@ -126,23 +112,19 @@ const DistSourceOrgNat: React.FC = () => {
     setSelectedDataSet(event.target.value);
   };
 
-  // Handle checkbox changes
-  const handleCheckboxChange = (method: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckedMethods(prevState => ({
-      ...prevState,
-      [method]: event.target.checked,
-    }));
+  const handleCheckboxChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMethods = [...methods];
+    newMethods[index].checked = event.target.checked;
+    setMethods(newMethods);
   };
 
-  // Placeholder for filtering logic, assuming `originalData` is available
   useEffect(() => {
-    // Filter data based on checked methods
-    // Update the data used in <FacetPlot> accordingly
-  }, [checkedMethods]);
+    // Placeholder for data filtering logic
+  }, [methods]);
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
-      <h3>PDB Data Growth By ...</h3>
+      <h3>PDB Data Growth By Experamental Method</h3>
       <Container>
         <Row>
           <Col md={10}>
@@ -161,57 +143,27 @@ const DistSourceOrgNat: React.FC = () => {
           </Col>
           <Col md={2}>
             <DataOptionsHeader>Data Options</DataOptionsHeader>
-            <MethodsShownWrapper>
-              <MethodsShownText>Methods Shown</MethodsShownText>
-              <Form>
-                <Form.Check 
-                  type="checkbox"
-                  id="method1"
-                  checked={checkedMethods.xray}
-                  onChange={handleCheckboxChange('xray')}
-                  label={<StyledFormCheckLabel>X-ray Diffraction</StyledFormCheckLabel>}
-                />
-                <Form.Check 
-                  type="checkbox"
-                  id="method2"
-                  checked={checkedMethods.electronMicroscopy}
-                  onChange={handleCheckboxChange('electronMicroscopy')}
-                  label={<StyledFormCheckLabel>Electron Microscopy</StyledFormCheckLabel>}
-                />
-                <Form.Check 
-                  type="checkbox"
-                  id="method3"
-                  checked={checkedMethods.nmr}
-                  onChange={handleCheckboxChange('nmr')}
-                  label={<StyledFormCheckLabel>NMR</StyledFormCheckLabel>}
-                />
-                <Form.Check 
-                  type="checkbox"
-                  id="method4"
-                  checked={checkedMethods.neutronDiffraction}
-                  onChange={handleCheckboxChange('neutronDiffraction')}
-                  label={<StyledFormCheckLabel>Neutron Diffraction</StyledFormCheckLabel>}
-                />
-                <Form.Check 
-                  type="checkbox"
-                  id="method5"
-                  checked={checkedMethods.multiMethod}
-                  onChange={handleCheckboxChange('multiMethod')}
-                  label={<StyledFormCheckLabel>Multi-method</StyledFormCheckLabel>}
-                />
-                <Form.Check 
-                  type="checkbox"
-                  id="method6"
-                  checked={checkedMethods.other}
-                  onChange={handleCheckboxChange('other')}
-                  label={<StyledFormCheckLabel>Other</StyledFormCheckLabel>}
-                />
-              </Form>
-            </MethodsShownWrapper>
+            {methods.length > 0 && (
+              <MethodsShownWrapper>
+                <MethodsShownText>Methods Shown</MethodsShownText>
+                <Form>
+                  {methods.map((method, index) => (
+                    <Form.Check
+                      key={method.key}
+                      type="checkbox"
+                      id={`method-${method.key}`}
+                      checked={method.checked}
+                      onChange={handleCheckboxChange(index)}
+                      label={<StyledFormCheckLabel>{method.label}</StyledFormCheckLabel>}
+                    />
+                  ))}
+                </Form>
+              </MethodsShownWrapper>
+            )}
             <MethodsShownWrapper>
               <MethodsShownText>Data Set</MethodsShownText>
               <Form>
-                <Form.Check 
+                <Form.Check
                   type="radio"
                   id="dataset1"
                   name="dataset"
@@ -220,7 +172,7 @@ const DistSourceOrgNat: React.FC = () => {
                   onChange={handleDataSetChange}
                   label={<StyledFormCheckLabel>Cumulative</StyledFormCheckLabel>}
                 />
-                <Form.Check 
+                <Form.Check
                   type="radio"
                   id="dataset2"
                   name="dataset"
@@ -245,10 +197,10 @@ const DistSourceOrgNat: React.FC = () => {
           <FullWidthCol>
             <div>Cumulative (available each year) number of PDB structures determined by</div>
             <ColorBoxesContainer>
-              {colorBoxes.map((box, index) => (
+              {methods.filter(method => method.checked).map((method, index) => (
                 <ColorBoxWrapper key={index}>
-                  <ColorBox bgColor={box.color} />
-                  <BoxText>{box.label}</BoxText>
+                  <ColorBox bgColor={method.color} />
+                  <BoxText>{method.label}</BoxText>
                 </ColorBoxWrapper>
               ))}
             </ColorBoxesContainer>
