@@ -8,9 +8,18 @@ import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 
+interface MethodState {
+  label: string;
+  key: string;
+  checked: boolean;
+  color: string;
+}
+
 interface DistSourceOrgNatState {
   mainAttribute: StatsFacetInterface;
   additionalAttribute?: StatsFacetInterface;
+  selectedDataSet: string;
+  methods: MethodState[];
 }
 
 const Article = styled.article`
@@ -77,28 +86,25 @@ const BoxText = styled.div`
 `;
 
 const DistSourceOrgNat: React.FC = () => {
-  const [state, setState] = useState<DistSourceOrgNatState>({ mainAttribute: FACET_STORE[0] });
-
-  const [selectedDataSet, setSelectedDataSet] = useState<string>('cumulative');
-
-  const [methods, setMethods] = useState([
-    { label: 'X-ray Diffraction', key: 'xray', checked: true, color: 'blue' },
-    { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: true, color: 'lime' },
-    { label: 'NMR', key: 'nmr', checked: true, color: 'red' },
-    { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: true, color: 'brown' },
-    { label: 'Multi-method', key: 'multiMethod', checked: true, color: 'purple' },
-    { label: 'Other', key: 'other', checked: true, color: 'gray' },
-  ]);
+  const [state, setState] = useState<DistSourceOrgNatState>({
+    mainAttribute: FACET_STORE[0],
+    selectedDataSet: 'cumulative',
+    methods: [
+      { label: 'X-ray Diffraction', key: 'xray', checked: true, color: 'blue' },
+      { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: true, color: 'lime' },
+      { label: 'NMR', key: 'nmr', checked: true, color: 'red' },
+      { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: true, color: 'brown' },
+      { label: 'Multi-method', key: 'multiMethod', checked: true, color: 'purple' },
+      { label: 'Other', key: 'other', checked: true, color: 'gray' },
+    ],
+  });
 
   const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
     next: (selector) => {
-      setState((prevState) => {
-        const newFacet = selector.facet;
-        return {
-          ...prevState,
-          [selector.role === 'main' ? 'mainAttribute' : 'additionalAttribute']: newFacet,
-        };
-      });
+      setState((prevState) => ({
+        ...prevState,
+        [selector.role === 'main' ? 'mainAttribute' : 'additionalAttribute']: selector.facet,
+      }));
     },
     error: () => {},
     complete: () => {},
@@ -106,25 +112,32 @@ const DistSourceOrgNat: React.FC = () => {
 
   useEffect(() => {
     console.log('mainAttribute=', state.mainAttribute);
-  }, [state.mainAttribute]);
+    console.log('methods=', state.methods);
+  }, [state.mainAttribute, state.methods]);
 
   const handleDataSetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDataSet(event.target.value);
+    setState((prevState) => ({
+      ...prevState,
+      selectedDataSet: event.target.value,
+    }));
   };
 
   const handleCheckboxChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMethods = [...methods];
+    const newMethods = [...state.methods];
     newMethods[index].checked = event.target.checked;
-    setMethods(newMethods);
+    setState((prevState) => ({
+      ...prevState,
+      methods: newMethods,
+    }));
   };
 
   useEffect(() => {
     // Placeholder for data filtering logic
-  }, [methods]);
+  }, [state.methods]);
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
-      <h3>PDB Data Growth By Experamental Method</h3>
+      <h3>PDB Data Growth By Experimental Method</h3>
       <Container>
         <Row>
           <Col md={10}>
@@ -143,11 +156,11 @@ const DistSourceOrgNat: React.FC = () => {
           </Col>
           <Col md={2}>
             <DataOptionsHeader>Data Options</DataOptionsHeader>
-            {methods.length > 0 && (
+            {state.methods.length > 0 && (
               <MethodsShownWrapper>
                 <MethodsShownText>Methods Shown</MethodsShownText>
                 <Form>
-                  {methods.map((method, index) => (
+                  {state.methods.map((method, index) => (
                     <Form.Check
                       key={method.key}
                       type="checkbox"
@@ -168,7 +181,7 @@ const DistSourceOrgNat: React.FC = () => {
                   id="dataset1"
                   name="dataset"
                   value="cumulative"
-                  checked={selectedDataSet === 'cumulative'}
+                  checked={state.selectedDataSet === 'cumulative'}
                   onChange={handleDataSetChange}
                   label={<StyledFormCheckLabel>Cumulative</StyledFormCheckLabel>}
                 />
@@ -177,7 +190,7 @@ const DistSourceOrgNat: React.FC = () => {
                   id="dataset2"
                   name="dataset"
                   value="releasedAnnually"
-                  checked={selectedDataSet === 'releasedAnnually'}
+                  checked={state.selectedDataSet === 'releasedAnnually'}
                   onChange={handleDataSetChange}
                   label={<StyledFormCheckLabel>Released Annually</StyledFormCheckLabel>}
                 />
@@ -197,7 +210,7 @@ const DistSourceOrgNat: React.FC = () => {
           <FullWidthCol>
             <div>Cumulative (available each year) number of PDB structures determined by</div>
             <ColorBoxesContainer>
-              {methods.filter(method => method.checked).map((method, index) => (
+              {state.methods.filter(method => method.checked).map((method, index) => (
                 <ColorBoxWrapper key={index}>
                   <ColorBox bgColor={method.color} />
                   <BoxText>{method.label}</BoxText>
