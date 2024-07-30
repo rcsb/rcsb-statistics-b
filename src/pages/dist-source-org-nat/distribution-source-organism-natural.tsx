@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
+import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
 import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
 import { FacetPlot } from '../../components/FacetPlot';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
@@ -47,7 +48,7 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 10px;
 `;
 
-const MethodsShownWrapper = styled.div`
+const FilterSectionWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
@@ -86,6 +87,7 @@ const BoxText = styled.div`
 `;
 
 const DistSourceOrgNat: React.FC = () => {
+  console.log("FACET_STORE",FACET_STORE)
   const [state, setState] = useState<DistSourceOrgNatState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative',
@@ -99,6 +101,7 @@ const DistSourceOrgNat: React.FC = () => {
     ],
   });
 
+  // Original observer for handling changes in main and additional attributes from FacetSelector
   const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
     next: (selector) => {
       setState((prevState) => ({
@@ -110,9 +113,24 @@ const DistSourceOrgNat: React.FC = () => {
     complete: () => {},
   };
 
+  // Observer for handling checkbox state changes from FacetCheckbox
+  const handleMethodsChange: Observer<{ facet: StatsFacetInterface; role: CheckboxRoleType }> = {
+    next: (selector) => {
+      setState((prevState) => ({
+        ...prevState,
+        methods: prevState.methods.map((method) =>
+          method.key === selector.facet.facetId
+            ? { ...method, checked: !method.checked }
+            : method
+        ),
+      }));
+    },
+    error: () => {},
+    complete: () => {},
+  };
+
   useEffect(() => {
-    console.log('mainAttribute=', state.mainAttribute);
-    console.log('methods=', state.methods);
+    // Placeholder for data processing or logging
   }, [state.mainAttribute, state.methods]);
 
   const handleDataSetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,19 +139,6 @@ const DistSourceOrgNat: React.FC = () => {
       selectedDataSet: event.target.value,
     }));
   };
-
-  const handleCheckboxChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMethods = [...state.methods];
-    newMethods[index].checked = event.target.checked;
-    setState((prevState) => ({
-      ...prevState,
-      methods: newMethods,
-    }));
-  };
-
-  useEffect(() => {
-    // Placeholder for data filtering logic
-  }, [state.methods]);
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
@@ -151,29 +156,24 @@ const DistSourceOrgNat: React.FC = () => {
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
-              // Pass filtered data here if needed
             />
           </Col>
           <Col md={2}>
             <DataOptionsHeader>Data Options</DataOptionsHeader>
-            {state.methods.length > 0 && (
-              <MethodsShownWrapper>
-                <MethodsShownText>Methods Shown</MethodsShownText>
-                <Form>
-                  {state.methods.map((method, index) => (
-                    <Form.Check
-                      key={method.key}
-                      type="checkbox"
-                      id={`method-${method.key}`}
-                      checked={method.checked}
-                      onChange={handleCheckboxChange(index)}
-                      label={<StyledFormCheckLabel>{method.label}</StyledFormCheckLabel>}
-                    />
-                  ))}
-                </Form>
-              </MethodsShownWrapper>
-            )}
-            <MethodsShownWrapper>
+            <FilterSectionWrapper>
+              <MethodsShownText>Methods Shown</MethodsShownText>
+              <FacetCheckbox
+                componentId="methods-checkbox"
+                observer={handleMethodsChange}
+                selectorRole="additional"
+                facets={state.methods.map((method) => ({
+                  facetId: method.key,
+                  facetName: method.label,
+                  checked: method.checked,
+                }))}
+              />
+            </FilterSectionWrapper>
+            <FilterSectionWrapper>
               <MethodsShownText>Data Set</MethodsShownText>
               <Form>
                 <Form.Check
@@ -195,7 +195,7 @@ const DistSourceOrgNat: React.FC = () => {
                   label={<StyledFormCheckLabel>Released Annually</StyledFormCheckLabel>}
                 />
               </Form>
-            </MethodsShownWrapper>
+            </FilterSectionWrapper>
             <ControlSection>
               <FacetSelector
                 componentId="additional-attribute"

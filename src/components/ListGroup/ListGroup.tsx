@@ -13,11 +13,11 @@ interface ListGroupProps {
 const ListGroup: React.FC<ListGroupProps> = ({ items }) => {
   return (
     <ul className="list-group">
-      {items.map((item, index) => (
+      {/* {items.map((item, index) => (
         <Link key={index} to={item.link} className="list-group-item">
           {item.text}
         </Link>
-      ))}
+      ))} */}
     </ul>
   );
 };

@@ -44,6 +44,96 @@ const EXPL_METHOD: StatsFacetInterface = {
     }
 };
 
+const EXPL_METHOD_XRAY: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
+const EXPL_METHOD_ELECTRON: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
+const EXPL_METHOD_NMR: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
+const EXPL_METHOD_NEUTRON: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
+const EXPL_METHOD_MULTI: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
+const EXPL_METHOD_OTHER: StatsFacetInterface = {
+    facetName: "Experimental Method",
+    facetId: "expl_method",
+    chartType: ChartType.barplot,
+    facet: {
+        name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+        aggregation_type: AggregationType.Terms,
+        attribute: RcsbSearchMetadata.Exptl.Method.path
+    },
+    chartConfig: {
+        ...globalChatConfig,
+        mostPopulatedGroups: 3
+    }
+};
+
 const ORGANISM: StatsFacetInterface = {
     facetName: "Organism",
     facetId: "organism",

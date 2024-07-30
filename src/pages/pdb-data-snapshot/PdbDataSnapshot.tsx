@@ -9,7 +9,7 @@ const PdbDataSnapshot: React.FC = () => {
 
         <div>(data table goes here)</div>
 
-        <Link to="/">All Statistics</Link>
+        {/* <Link to="/">All Statistics</Link> */}
       </article>
   );
 };

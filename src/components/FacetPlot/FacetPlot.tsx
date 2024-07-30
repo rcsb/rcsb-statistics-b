@@ -93,6 +93,7 @@ async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promis
         return [[]];
 
     const buckets = getFacetsFromSearch(queryResults);
+    console.log("queryResults", queryResults);
     const secondDim = props.secondDim;
     if(secondDim)
         return drillFacets(buckets.filter(f=>f.name == getFacetName(secondDim)));
