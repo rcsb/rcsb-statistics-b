@@ -87,21 +87,19 @@ const BoxText = styled.div`
 `;
 
 const DistSourceOrgNat: React.FC = () => {
-  console.log("FACET_STORE",FACET_STORE)
   const [state, setState] = useState<DistSourceOrgNatState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative',
     methods: [
-      { label: 'X-ray Diffraction', key: 'xray', checked: true, color: 'blue' },
-      { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: true, color: 'lime' },
-      { label: 'NMR', key: 'nmr', checked: true, color: 'red' },
-      { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: true, color: 'brown' },
-      { label: 'Multi-method', key: 'multiMethod', checked: true, color: 'purple' },
-      { label: 'Other', key: 'other', checked: true, color: 'gray' },
+      { label: 'X-ray Diffraction', key: 'xray', checked: false, color: 'blue' },
+      { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: false, color: 'lime' },
+      { label: 'NMR', key: 'nmr', checked: false, color: 'red' },
+      { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: false, color: 'brown' },
+      { label: 'Multi-method', key: 'multiMethod', checked: false, color: 'purple' },
+      { label: 'Other', key: 'other', checked: false, color: 'gray' },
     ],
   });
 
-  // Original observer for handling changes in main and additional attributes from FacetSelector
   const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
     next: (selector) => {
       setState((prevState) => ({
@@ -113,7 +111,6 @@ const DistSourceOrgNat: React.FC = () => {
     complete: () => {},
   };
 
-  // Observer for handling checkbox state changes from FacetCheckbox
   const handleMethodsChange: Observer<{ facet: StatsFacetInterface; role: CheckboxRoleType }> = {
     next: (selector) => {
       setState((prevState) => ({
