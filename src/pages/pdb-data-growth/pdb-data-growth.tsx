@@ -8,12 +8,6 @@ import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEn
 import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
 import { Container, Row, Col, Form } from 'react-bootstrap';
-import {RcsbSearchMetadata} from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
-import {
-    AggregationType,
-    Interval
-} from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
-import {ChartType} from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 
 interface MethodState {
   label: string;
@@ -22,7 +16,7 @@ interface MethodState {
   color: string;
 }
 
-interface DistSourceOrgNatState {
+interface pdbDataGrowthState {
   mainAttribute: StatsFacetInterface;
   additionalAttribute?: StatsFacetInterface;
   selectedDataSet: string;
@@ -92,17 +86,17 @@ const BoxText = styled.div`
   font-size: 1.2rem;
 `;
 
-const DistSourceOrgNat: React.FC = () => {
-  const [state, setState] = useState<DistSourceOrgNatState>({
+const PdbDataGrowth: React.FC = () => {
+  const [state, setState] = useState<pdbDataGrowthState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative',
     methods: [
-      { label: 'X-ray Diffraction', key: 'xray', checked: true, color: 'blue' },
-      { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: true, color: 'lime' },
-      { label: 'NMR', key: 'nmr', checked: true, color: 'red' },
-      { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: true, color: 'brown' },
-      { label: 'Multi-method', key: 'multiMethod', checked: true, color: 'purple' },
-      { label: 'Other', key: 'other', checked: true, color: 'gray' },
+      { label: 'X-ray Diffraction', key: 'xray', checked: false, color: 'blue' },
+      { label: 'Electron Microscopy', key: 'electronMicroscopy', checked: false, color: 'lime' },
+      { label: 'NMR', key: 'nmr', checked: false, color: 'red' },
+      { label: 'Neutron Diffraction', key: 'neutronDiffraction', checked: false, color: 'brown' },
+      { label: 'Multi-method', key: 'multiMethod', checked: false, color: 'purple' },
+      { label: 'Other', key: 'other', checked: false, color: 'gray' },
     ],
   });
 
@@ -133,6 +127,7 @@ const DistSourceOrgNat: React.FC = () => {
   };
 
   useEffect(() => {
+    // Placeholder for data processing or logging
   }, [state.mainAttribute, state.methods]);
 
   const handleDataSetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,24 +144,63 @@ const DistSourceOrgNat: React.FC = () => {
         <Row>
           <Col md={10}>
             <FacetPlot
-              firstDim={{
-                  name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-                  aggregation_type: AggregationType.DateHistogram,
-                  attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-                  interval: Interval.Year,
-                  min_interval_population: 0
-              }}
-              secondDim={{
-                  name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-                  aggregation_type: AggregationType.Terms,
-                  attribute: RcsbSearchMetadata.Exptl.Method.path
-              }}
+              firstDim={state.mainAttribute.facet}
+              secondDim={
+                state.mainAttribute.facetId !== state.additionalAttribute?.facetId
+                  ? state.additionalAttribute?.facet
+                  : undefined
+              }
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
             />
           </Col>
           <Col md={2}>
+            <DataOptionsHeader>Data Options</DataOptionsHeader>
+            <FilterSectionWrapper>
+              <MethodsShownText>Methods Shown</MethodsShownText>
+              <FacetCheckbox
+                componentId="methods-checkbox"
+                observer={handleMethodsChange}
+                selectorRole="additional"
+                facets={state.methods.map((method) => ({
+                  facetId: method.key,
+                  facetName: method.label,
+                  checked: method.checked,
+                }))}
+              />
+            </FilterSectionWrapper>
+            <FilterSectionWrapper>
+              <MethodsShownText>Data Set</MethodsShownText>
+              <Form>
+                <Form.Check
+                  type="radio"
+                  id="dataset1"
+                  name="dataset"
+                  value="cumulative"
+                  checked={state.selectedDataSet === 'cumulative'}
+                  onChange={handleDataSetChange}
+                  label={<StyledFormCheckLabel>Cumulative</StyledFormCheckLabel>}
+                />
+                <Form.Check
+                  type="radio"
+                  id="dataset2"
+                  name="dataset"
+                  value="releasedAnnually"
+                  checked={state.selectedDataSet === 'releasedAnnually'}
+                  onChange={handleDataSetChange}
+                  label={<StyledFormCheckLabel>Released Annually</StyledFormCheckLabel>}
+                />
+              </Form>
+            </FilterSectionWrapper>
+            <ControlSection>
+              <FacetSelector
+                componentId="additional-attribute"
+                observer={selectorObserver}
+                selectorRole="additional"
+                facets={ADDITIONAL_FACET_STORE}
+              />
+            </ControlSection>
           </Col>
         </Row>
         <Row>
@@ -187,4 +221,4 @@ const DistSourceOrgNat: React.FC = () => {
   ) : null;
 };
 
-export default DistSourceOrgNat;
+export default PdbDataGrowth;

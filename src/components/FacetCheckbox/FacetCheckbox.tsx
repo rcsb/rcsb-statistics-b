@@ -2,15 +2,15 @@ import * as React from "react";
 import { useEffect } from "react";
 import { fromEvent, map, Observer } from 'rxjs';
 import styled from 'styled-components';
-import { StatsFacetInterface } from "../../interfaces/StatsFacetInterface";
+import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
 
-export type CheckboxRoleType = "main" | "additional";
+export type CheckboxRoleType = 'main' | 'additional';
 
 export interface FacetCheckboxProps {
   componentId: string;
-  facets: StatsFacetInterface[];
+  facets: { facetId: string; facetName: string; checked: boolean }[];
   selectorRole: CheckboxRoleType;
-  observer: Observer<{ facet: StatsFacetInterface; role: CheckboxRoleType; }>;
+  observer: Observer<{ facet: StatsFacetInterface; role: CheckboxRoleType }>;
 }
 
 const CheckboxContainer = styled.div`
@@ -27,24 +27,23 @@ const CheckboxInput = styled.input`
 `;
 
 export function FacetCheckbox(props: FacetCheckboxProps) {
-
-  useEffect(() => {
-    const checkboxElements = document.querySelectorAll(`#facet-checkbox-${props.componentId} input[type=checkbox]`);
-    const subscription = fromEvent<React.ChangeEvent<HTMLInputElement>>(checkboxElements, "change").pipe(
-      map(event => ({
-        facet: props.facets[parseInt(event.target.value)],
-        role: props.selectorRole
-      }))
-    ).subscribe(props.observer);
-
-    return () => subscription.unsubscribe();
-  }, [props.facets, props.selectorRole, props.observer]);
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, facetIndex: number) => {
+    const updatedFacet = props.facets[facetIndex];
+    updatedFacet.checked = event.target.checked;
+    props.observer.next({ facet: updatedFacet, role: props.selectorRole });
+  };
 
   return (
     <CheckboxContainer id={`facet-checkbox-${props.componentId}`}>
       {props.facets.map((facet, n) => (
         <Label key={facet.facetId}>
-          <CheckboxInput type="checkbox" value={n.toString()} /> {facet.facetName}
+          <CheckboxInput
+            type="checkbox"
+            value={n.toString()}
+            checked={facet.checked}
+            onChange={(event) => handleCheckboxChange(event, n)}
+          />{' '}
+          {facet.facetName}
         </Label>
       ))}
     </CheckboxContainer>

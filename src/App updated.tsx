@@ -3,6 +3,7 @@ import { createMemoryRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Navbar from './components/NavBar';  
 import ErrorBoundary from './components/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import useSyncGlobalRouter from './hooks/useRouterSync';
 
 const HomePage = lazy(() => import('./pages/home'));
 const DistSourceOrgNat = lazy(() => import('./pages/dist-source-org-nat'));
@@ -10,17 +11,26 @@ const Summary = lazy(() => import('./pages/summary'));
 const OtherStatistics = lazy(() => import('./pages/other-stats'));
 const PdbDataSnapshot = lazy(() => import('./pages/pdb-data-snapshot'));
 
+const RouteHandler = () => {
+  // Synchronize router globally
+  useSyncGlobalRouter({ basename: '/stats-b' });
+
+  return (
+    <Outlet />
+  );
+}
+
 const router = createMemoryRouter(
   [
     {
       path: '/',
       element: (
         <>
+          <Navbar />
           <main className="container mt-5">
             <section className="row">
-                <Navbar />
                 <Suspense fallback={<div>Loading...</div>}>
-                  <Outlet />
+                  <RouteHandler />
                 </Suspense>
             </section>
           </main>
@@ -66,8 +76,7 @@ const router = createMemoryRouter(
               <PdbDataSnapshot />
             </Suspense>
           )
-        }
-        ,
+        },
         {
           path: '/pdb-data-growth',
           element: (
@@ -79,10 +88,10 @@ const router = createMemoryRouter(
       ]
     }
   ],
-  { initialEntries: [location.pathname.replace("/stats-b", "") || '/'] }
+  { initialEntries: [window.location.pathname.replace("/stats-b", "") || '/'] }
 );
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <ErrorBoundary>
       <RouterProvider router={router} />
