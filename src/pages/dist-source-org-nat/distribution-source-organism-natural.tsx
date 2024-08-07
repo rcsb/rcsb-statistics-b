@@ -39,35 +39,13 @@ const Article = styled.article`
   }
 `;
 
-const ControlSection = styled.div`
-  margin-bottom: 20px;
-`;
+
 
 const FullWidthCol = styled.div`
   width: 100%;
   padding: 0 15px;
 `;
 
-const DataOptionsHeader = styled.div`
-  font-weight: bold;
-  font-size: 1.2em;
-  margin-bottom: 10px;
-`;
-
-const FilterSectionWrapper = styled.div`
-  margin-bottom: 10px;
-`;
-
-const MethodsShownText = styled.div`
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
-
-const StyledFormCheckLabel = styled(Form.Check.Label)`
-  margin-left: 5px;
-  font-weight: normal;
-  margin-bottom: -7px;
-`;
 
 const ColorBoxesContainer = styled.div`
   display: flex;

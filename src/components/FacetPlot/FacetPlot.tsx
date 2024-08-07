@@ -19,6 +19,14 @@ import { BarChartDataProvider } from "@rcsb/rcsb-charts/lib/RcsbChartDataProvide
 import { ChartJsBarComponent } from "@rcsb/rcsb-charts/lib/RcsbChartImplementations/ChatJsImplementations/ChartJsBarComponent";
 import { ChartJsHistogramComponent } from "@rcsb/rcsb-charts/lib/RcsbChartImplementations/ChatJsImplementations/ChartJsHistogramComponent";
 
+
+const ControlSection = styled.div`
+  margin-left: -60px;
+  border-left: 1px solid #ccc;
+  padding-left: 20px;
+`; 
+
+
 const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
@@ -34,6 +42,17 @@ const StyledLabel = styled.label`
     margin-left: 5px;
     font-weight: normal;
     margin-bottom: -7px;
+`;
+
+const DataOptionsHeader = styled.div`
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+`;
+
+const MethodsShownText = styled.div`
+  font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 export function FacetPlot(props: FacetPlotInterface) {
@@ -93,25 +112,29 @@ export function FacetPlot(props: FacetPlotInterface) {
                     />
                 </Col>
                 <Col md={2}>
-                    <div>
-                    {methods.map(method => {
-                        const checkboxId = `checkbox-${method}`;
-                        return (
-                            <CheckboxContainer key={method}>
-                                <StyledCheckbox
-                                    type="checkbox"
-                                    id={checkboxId}
-                                    value={method}
-                                    checked={selectedMethods.has(method)}
-                                    onChange={() => handleCheckboxChange(method)}
-                                />
-                                <StyledLabel htmlFor={checkboxId}>
-                                    {method}
-                                </StyledLabel>
-                            </CheckboxContainer>
-                        );
-                    })}
-                    </div>
+                    <ControlSection>
+                        <DataOptionsHeader>Data Options</DataOptionsHeader>
+                        <div>
+                            <MethodsShownText>Methods Shown</MethodsShownText>
+                        {methods.map(method => {
+                            const checkboxId = `checkbox-${method}`;
+                            return (
+                                <CheckboxContainer key={method}>
+                                    <StyledCheckbox
+                                        type="checkbox"
+                                        id={checkboxId}
+                                        value={method}
+                                        checked={selectedMethods.has(method)}
+                                        onChange={() => handleCheckboxChange(method)}
+                                    />
+                                    <StyledLabel htmlFor={checkboxId}>
+                                        {method}
+                                    </StyledLabel>
+                                </CheckboxContainer>
+                            );
+                        })}
+                        </div>
+                    </ControlSection>
                 </Col>
             </Row>
         </Container>
