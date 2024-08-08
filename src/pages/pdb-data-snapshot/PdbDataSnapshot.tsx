@@ -5,7 +5,7 @@ const PdbDataSnapshot: React.FC = () => {
 
   return (
       <article className="col-12">
-        <h2>PDB Data Snapshot</h2>
+        <h4>PDB Data Snapshot</h4>
 
         <div>(data table goes here)</div>
 

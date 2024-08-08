@@ -5,7 +5,7 @@ const Summary: React.FC = () => {
 
   return (
       <article className="col-12">
-        <h2>PDB Data Distribution by Experimental Method and Molecular Type</h2>
+        <h4>PDB Data Distribution by Experimental Method and Molecular Type</h4>
 
         <div>(data table goes here)</div>
 

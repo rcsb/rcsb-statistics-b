@@ -12,7 +12,7 @@ const OtherStats: React.FC = () => {
 
   return (
       <article className="col-12">
-        <h2>Other Statistics</h2>
+        <h4>Other Statistics</h4>
 
         <div>
           <FacetPlot2
