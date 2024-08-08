@@ -122,7 +122,7 @@ const DistSourceOrgNat: React.FC = () => {
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
-      <h3>PDB Data Growth By Experimental Method</h3>
+      <h2>PDB Data Growth By Experimental Method</h2>
       <Container>
         <Row>
           <Col md={10}>

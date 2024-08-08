@@ -14,11 +14,11 @@ const routes = [
 
 const NotFound = () => (
   <div>
-    Oops, looks like this page mutated! 🧬 Try going back to the homepage or double-checking the URL.
+    Oops, looks like this page mutated! 🧬 Try going back to the Statistics homepage or double-checking the URL.
   </div>
 );
 
-const AppContent: React.FC = () => {
+const StatisticsAppContent: React.FC = () => {
   return (
     <main className="container mt-5">
       <section className="row">
@@ -44,7 +44,7 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <Router basename="/stats-b">
-        <AppContent />
+        <StatisticsAppContent />
       </Router>
     </ErrorBoundary>
   );
