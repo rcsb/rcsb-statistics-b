@@ -116,23 +116,23 @@ export function FacetPlot(props: FacetPlotInterface) {
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <div>
                             <MethodsShownText>Methods Shown</MethodsShownText>
-                        {methods.map(method => {
-                            const checkboxId = `checkbox-${method}`;
-                            return (
-                                <CheckboxContainer key={method}>
-                                    <StyledCheckbox
-                                        type="checkbox"
-                                        id={checkboxId}
-                                        value={method}
-                                        checked={selectedMethods.has(method)}
-                                        onChange={() => handleCheckboxChange(method)}
-                                    />
-                                    <StyledLabel htmlFor={checkboxId}>
-                                        {method}
-                                    </StyledLabel>
-                                </CheckboxContainer>
-                            );
-                        })}
+                            {methods.map(method => {
+                                const checkboxId = `checkbox-${method}`;
+                                return (
+                                    <CheckboxContainer key={method}>
+                                        <StyledCheckbox
+                                            type="checkbox"
+                                            id={checkboxId}
+                                            value={method}
+                                            checked={selectedMethods.has(method)}
+                                            onChange={() => handleCheckboxChange(method)}
+                                        />
+                                        <StyledLabel htmlFor={checkboxId}>
+                                            {method}
+                                        </StyledLabel>
+                                    </CheckboxContainer>
+                                );
+                            })}
                         </div>
                     </ControlSection>
                 </Col>

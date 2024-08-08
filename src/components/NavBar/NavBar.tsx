@@ -39,8 +39,8 @@ const NavBar: React.FC = () => {
             <NavItem className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <NavLink as={Link} to="/">About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/distribution-source-organism-natural' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/distribution-source-organism-natural">Data Growth</NavLink>
+            <NavItem className={`nav-item ${location.pathname === '/pdb-data-growth' ? 'active' : ''}`}>
+              <NavLink as={Link} to="/pdb-data-growth">Data Growth</NavLink>
             </NavItem>
             <NavItem className={`nav-item ${location.pathname === '/summary' ? 'active' : ''}`}>
               <NavLink as={Link} to="/summary">Data Distribution</NavLink>
@@ -48,7 +48,7 @@ const NavBar: React.FC = () => {
             <NavItem className={`nav-item ${location.pathname === '/other-statistics' ? 'active' : ''}`}>
               <NavLink as={Link} to="/other-statistics">Other Statistics</NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/pdb-data-growth' ? 'active' : ''}`}>
+            <NavItem className={`nav-item ${location.pathname === '/pdb-data-snapshot' ? 'active' : ''}`}>
               <NavLink as={Link} to="/pdb-data-snapshot">PDB Data Growth Test</NavLink>
             </NavItem>
           </ul>

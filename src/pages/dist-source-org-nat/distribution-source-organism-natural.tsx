@@ -150,14 +150,14 @@ const DistSourceOrgNat: React.FC = () => {
         <Row>
           <FullWidthCol>
             <div>Cumulative (available each year) number of PDB structures determined by</div>
-            <ColorBoxesContainer>
+            {/* <ColorBoxesContainer>
               {state.methods.filter(method => method.checked).map((method, index) => (
                 <ColorBoxWrapper key={index}>
                   <ColorBox bgColor={method.color} />
                   <BoxText>{method.label}</BoxText>
                 </ColorBoxWrapper>
               ))}
-            </ColorBoxesContainer>
+            </ColorBoxesContainer> */}
           </FullWidthCol>
         </Row>
       </Container>
