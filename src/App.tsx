@@ -3,14 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/NavBar';  
 import ErrorBoundary from './components/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const routes = [
-  { path: '/', element: lazy(() => import('./pages/home')), exact: true },
-  { path: '/pdb-data-growth', element: lazy(() => import('./pages/pdb-data-growth')) },
-  { path: '/summary', element: lazy(() => import('./pages/summary')) },
-  { path: '/other-statistics', element: lazy(() => import('./pages/other-stats')) },
-  { path: '/pdb-data-snapshot', element: lazy(() => import('./pages/pdb-data-snapshot')) }
-];
+import routes from './routes';
 
 const NotFound = () => (
   <div>

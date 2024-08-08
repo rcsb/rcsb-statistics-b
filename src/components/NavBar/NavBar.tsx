@@ -9,6 +9,7 @@ import {
   NavItem,
   NavbarCollapse
 } from './NavBarStyles';
+import paths from '../../routes/paths';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
@@ -36,20 +37,20 @@ const NavBar: React.FC = () => {
         </div>
         <NavbarCollapse className="collapse navbar-collapse" id="statsnavbarnav">
           <ul className="nav navbar-nav">
-            <NavItem className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/">About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
+            <NavItem className={`nav-item ${location.pathname === paths.HOME ? 'active' : ''}`}>
+              <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/pdb-data-growth' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/pdb-data-growth">Data Growth</NavLink>
+            <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`}>
+              <NavLink as={Link} to={paths.PDB_DATA_GROWTH}>Data Growth</NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/summary' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/summary">Data Distribution</NavLink>
+            <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_DISTRIBUTION ? 'active' : ''}`}>
+              <NavLink as={Link} to={paths.PDB_DATA_DISTRIBUTION}>Data Distribution</NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/other-statistics' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/other-statistics">Other Statistics</NavLink>
+            <NavItem className={`nav-item ${location.pathname === paths.OTHER_STATISTICS ? 'active' : ''}`}>
+              <NavLink as={Link} to={paths.OTHER_STATISTICS}>Other Statistics</NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === '/pdb-data-snapshot' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/pdb-data-snapshot">PDB Data Snapshot</NavLink>
+            <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_SNAPSHOT ? 'active' : ''}`}>
+              <NavLink as={Link} to={paths.PDB_DATA_SNAPSHOT}>PDB Data Snapshot</NavLink>
             </NavItem>
           </ul>
         </NavbarCollapse>

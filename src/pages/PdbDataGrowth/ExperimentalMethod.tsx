@@ -39,8 +39,6 @@ const Article = styled.article`
   }
 `;
 
-
-
 const FullWidthCol = styled.div`
   width: 100%;
   padding: 0 15px;
@@ -70,7 +68,7 @@ const BoxText = styled.div`
   font-size: 1.2rem;
 `;
 
-const PdbDataGrowth: React.FC = () => {
+const ExperimentalMethod: React.FC = () => {
   const [state, setState] = useState<DataGrowthExpState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative',
@@ -165,4 +163,4 @@ const PdbDataGrowth: React.FC = () => {
   ) : null;
 };
 
-export default PdbDataGrowth;
+export default ExperimentalMethod;

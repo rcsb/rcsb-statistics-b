@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Summary: React.FC = () => {
+const DataDistribution: React.FC = () => {
 
   return (
       <article className="col-12">
@@ -14,4 +14,4 @@ const Summary: React.FC = () => {
   );
 };
 
-export default Summary;
+export default DataDistribution;
