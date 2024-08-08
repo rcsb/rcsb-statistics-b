@@ -4,21 +4,19 @@ import Navbar from './components/NavBar';
 import ErrorBoundary from './components/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const HomePage = lazy(() => import('./pages/home'));
-const DistSourceOrgNat = lazy(() => import('./pages/dist-source-org-nat'));
-const Summary = lazy(() => import('./pages/summary'));
-const OtherStatistics = lazy(() => import('./pages/other-stats'));
-const PdbDataSnapshot = lazy(() => import('./pages/pdb-data-snapshot'));
-
-const NotFound = () => <div className="alert alert-danger" role="alert">Oops, looks like this page mutated! 🧬 Try going back to the homepage or double-checking the URL.</div>;
-
 const routes = [
-  { path: '/', element: <HomePage />, exact: true },
-  { path: '/pdb-data-growth', element: <DistSourceOrgNat /> },
-  { path: '/summary', element: <Summary /> },
-  { path: '/other-statistics', element: <OtherStatistics /> },
-  { path: '/pdb-data-snapshot', element: <PdbDataSnapshot /> }
+  { path: '/', element: lazy(() => import('./pages/home')), exact: true },
+  { path: '/pdb-data-growth', element: lazy(() => import('./pages/pdb-data-growth')) },
+  { path: '/summary', element: lazy(() => import('./pages/summary')) },
+  { path: '/other-statistics', element: lazy(() => import('./pages/other-stats')) },
+  { path: '/pdb-data-snapshot', element: lazy(() => import('./pages/pdb-data-snapshot')) }
 ];
+
+const NotFound = () => (
+  <div>
+    Oops, looks like this page mutated! 🧬 Try going back to the homepage or double-checking the URL.
+  </div>
+);
 
 const AppContent: React.FC = () => {
   return (
@@ -31,7 +29,7 @@ const AppContent: React.FC = () => {
               <Route 
                 key={index} 
                 path={route.path} 
-                element={route.element} 
+                element={<route.element />} 
               />
             ))}
             <Route path="*" element={<NotFound />} />

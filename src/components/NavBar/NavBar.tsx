@@ -49,7 +49,7 @@ const NavBar: React.FC = () => {
               <NavLink as={Link} to="/other-statistics">Other Statistics</NavLink>
             </NavItem>
             <NavItem className={`nav-item ${location.pathname === '/pdb-data-snapshot' ? 'active' : ''}`}>
-              <NavLink as={Link} to="/pdb-data-snapshot">PDB Data Growth Test</NavLink>
+              <NavLink as={Link} to="/pdb-data-snapshot">PDB Data Snapshot</NavLink>
             </NavItem>
           </ul>
         </NavbarCollapse>
