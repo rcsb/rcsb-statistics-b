@@ -15,11 +15,16 @@ import {
 } from './NavBarStyles';
 import paths from '../../routes/paths';
 
+// Utility function to check if the current path matches a given base path
+const isActivePath = (locationPathname: string, basePath: string): boolean => {
+  return locationPathname.startsWith(basePath);
+};
+
 const NavBar: React.FC = () => {
   const location = useLocation();
 
-  // Check if the current path matches any of the "Data Growth" paths
-  const isDataGrowthActive = location.pathname.startsWith(paths.PDB_DATA_GROWTH);
+  const isDataGrowthActive = isActivePath(location.pathname, paths.PDB_DATA_GROWTH);
+  const isDataDistributionActive = isActivePath(location.pathname, paths.PDB_DATA_DISTRIBUTION);
 
   return (
     <Navbar className="navbar navbar-default">
@@ -48,22 +53,48 @@ const NavBar: React.FC = () => {
               <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
             <NavDropdown className={`nav-item dropdown ${isDataGrowthActive ? 'active' : ''}`}>
-              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`} as="a" href="#">
+              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`} as="a">
                 Data Growth
                  <span className="triangle" />
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu">
                 <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH}>
-                  Data Growth Overview
+                  By Experimental Method
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH}>
-                  Dummy Option
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                  By Molecular Composition
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                  By Assembly Symmetry
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                  By Number of Domains
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                  By Unique Protein Sequences
                 </DropdownItem>
               </DropdownMenu>
             </NavDropdown>
-            <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_DISTRIBUTION ? 'active' : ''}`}>
-              <NavLink as={Link} to={paths.PDB_DATA_DISTRIBUTION}>Data Distribution</NavLink>
-            </NavItem>
+            <NavDropdown className={`nav-item dropdown ${isDataDistributionActive ? 'active' : ''}`}>
+              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_DISTRIBUTION ? 'active' : ''}`} as="a">
+                Data Distribution
+                 <span className="triangle" />
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu">
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
+                  By Method and Molecular Type
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
+                  By Source Organism
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
+                  By Expression System
+                </DropdownItem>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
+                  By Residue Count
+                </DropdownItem>
+              </DropdownMenu>
+            </NavDropdown>
             <NavItem className={`nav-item ${location.pathname === paths.OTHER_STATISTICS ? 'active' : ''}`}>
               <NavLink as={Link} to={paths.OTHER_STATISTICS}>Other Statistics</NavLink>
             </NavItem>

@@ -23,15 +23,13 @@ export const NavbarBrand = styled.a`
 `;
 
 export const NavLink = styled(RouterLink)`
+
   color: #333;
 
   &:hover {
     color: #555;
   }
 
-  &.disabled {
-    color: #ccc;
-  }
 
   &.active {
     font-weight: bold !important;
