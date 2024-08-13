@@ -7,12 +7,19 @@ import {
   NavbarToggler,
   NavbarTogglerIcon,
   NavItem,
-  NavbarCollapse
+  NavbarCollapse,
+  NavDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from './NavBarStyles';
 import paths from '../../routes/paths';
 
 const NavBar: React.FC = () => {
   const location = useLocation();
+
+  // Check if the current path matches any of the "Data Growth" paths
+  const isDataGrowthActive = location.pathname.startsWith(paths.PDB_DATA_GROWTH);
 
   return (
     <Navbar className="navbar navbar-default">
@@ -40,9 +47,20 @@ const NavBar: React.FC = () => {
             <NavItem className={`nav-item ${location.pathname === paths.HOME ? 'active' : ''}`}>
               <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
-            <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`}>
-              <NavLink as={Link} to={paths.PDB_DATA_GROWTH}>Data Growth</NavLink>
-            </NavItem>
+            <NavDropdown className={`nav-item dropdown ${isDataGrowthActive ? 'active' : ''}`}>
+              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`} as="a" href="#">
+                Data Growth
+                 <span className="triangle" />
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu">
+                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH}>
+                  Data Growth Overview
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH}>
+                  Dummy Option
+                </DropdownItem>
+              </DropdownMenu>
+            </NavDropdown>
             <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_DISTRIBUTION ? 'active' : ''}`}>
               <NavLink as={Link} to={paths.PDB_DATA_DISTRIBUTION}>Data Distribution</NavLink>
             </NavItem>
