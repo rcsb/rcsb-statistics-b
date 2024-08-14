@@ -26,7 +26,6 @@ const ControlSection = styled.div`
   padding-left: 20px;
 `; 
 
-
 const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;

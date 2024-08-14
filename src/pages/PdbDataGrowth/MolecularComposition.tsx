@@ -15,54 +15,23 @@ import {
 import {ChartType} from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 import {
   Article,
-  FullWidthCol,
-  ColorBoxesContainer,
-  ColorBoxWrapper,
-  ColorBox,
-  BoxText
-} from './GrowthStyles';
+} from './GrowthStyles'; 
 
-interface MethodState {
-  label: string;
-  key: string;
-  checked: boolean;
-  color: string;
-}
-
-interface DataGrowthExpState {
+interface DataGrowthMolecularCompState {
   mainAttribute: StatsFacetInterface;
   additionalAttribute?: StatsFacetInterface;
   selectedDataSet: string;
 }
 
-const ExperimentalMethod: React.FC = () => {
-  const [state, setState] = useState<DataGrowthExpState>({
+const MolecularComposition: React.FC = () => {
+  const [state, setState] = useState<DataGrowthMolecularCompState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative'
   });
 
-  const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
-    next: (selector) => {
-      setState((prevState) => ({
-        ...prevState,
-        [selector.role === 'main' ? 'mainAttribute' : 'additionalAttribute']: selector.facet,
-      }));
-    },
-    error: () => {},
-    complete: () => {},
-  };
-
-
-  const handleDataSetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedDataSet: event.target.value,
-    }));
-  };
-
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
-      <h4>PDB Data Growth By Experimental Method</h4>
+      <h4>PDB Data Growth By Molecular Composition</h4>
       <Container>
         <Row>
           <Col md={10}>
@@ -74,11 +43,11 @@ const ExperimentalMethod: React.FC = () => {
                   interval: Interval.Year,
                   min_interval_population: 0
               }}
-              secondDim={{
-                  name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-                  aggregation_type: AggregationType.Terms,
-                  attribute: RcsbSearchMetadata.Exptl.Method.path
-              }}
+              // secondDim={{
+              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+              //     aggregation_type: AggregationType.Terms,
+              //     attribute: RcsbSearchMetadata.Exptl.Method.path
+              // }}
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
@@ -87,22 +56,9 @@ const ExperimentalMethod: React.FC = () => {
           <Col md={2}>
           </Col>
         </Row>
-        <Row>
-          <FullWidthCol>
-            <div>Cumulative (available each year) number of PDB structures determined by</div>
-            {/* <ColorBoxesContainer>
-              {state.methods.filter(method => method.checked).map((method, index) => (
-                <ColorBoxWrapper key={index}>
-                  <ColorBox bgColor={method.color} />
-                  <BoxText>{method.label}</BoxText>
-                </ColorBoxWrapper>
-              ))}
-            </ColorBoxesContainer> */}
-          </FullWidthCol>
-        </Row>
       </Container>
     </Article>
   ) : null;
 };
 
-export default ExperimentalMethod;
+export default MolecularComposition;
