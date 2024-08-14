@@ -15,19 +15,7 @@ import {
 import {ChartType} from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 import {
   Article,
-  FullWidthCol,
-  ColorBoxesContainer,
-  ColorBoxWrapper,
-  ColorBox,
-  BoxText
 } from './GrowthStyles';
-
-interface MethodState {
-  label: string;
-  key: string;
-  checked: boolean;
-  color: string;
-}
 
 interface DataGrowthExpState {
   mainAttribute: StatsFacetInterface;
@@ -67,38 +55,36 @@ const ExperimentalMethod: React.FC = () => {
         <Row>
           <Col md={10}>
             <FacetPlot
+              // firstDim={{
+              //     name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+              //     aggregation_type: AggregationType.DateHistogram,
+              //     attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+              //     interval: Interval.Year,
+              //     min_interval_population: 0
+              // }}
+              // secondDim={{
+              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+              //     aggregation_type: AggregationType.Terms,
+              //     attribute: RcsbSearchMetadata.Exptl.Method.path
+              // }}
               firstDim={{
-                  name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-                  aggregation_type: AggregationType.DateHistogram,
-                  attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-                  interval: Interval.Year,
-                  min_interval_population: 0
-              }}
-              secondDim={{
-                  name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-                  aggregation_type: AggregationType.Terms,
-                  attribute: RcsbSearchMetadata.Exptl.Method.path
-              }}
+                name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+                aggregation_type: AggregationType.DateHistogram,
+                attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+                interval: Interval.Year,
+                min_interval_population: 1
+            }}
+            secondDim={{
+              "name": "Experimental Method",
+              "aggregation_type": "terms",
+              "attribute": "rcsb_entry_info.experimental_method",
+              "min_interval_population": 1
+            }}
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
             />
           </Col>
-          <Col md={2}>
-          </Col>
-        </Row>
-        <Row>
-          <FullWidthCol>
-            <div>Cumulative (available each year) number of PDB structures determined by</div>
-            {/* <ColorBoxesContainer>
-              {state.methods.filter(method => method.checked).map((method, index) => (
-                <ColorBoxWrapper key={index}>
-                  <ColorBox bgColor={method.color} />
-                  <BoxText>{method.label}</BoxText>
-                </ColorBoxWrapper>
-              ))}
-            </ColorBoxesContainer> */}
-          </FullWidthCol>
         </Row>
       </Container>
     </Article>

@@ -54,6 +54,35 @@ const MethodsShownText = styled.div`
   margin-bottom: 8px;
 `;
 
+ const FullWidthCol = styled.div`
+  width: 100%;
+  padding: 0 15px;
+`;
+
+ const ColorBoxesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+const ColorBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ColorBox = styled.div<{ bgColor: string }>`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.bgColor};
+  margin-right: 10px;
+`;
+
+const BoxText = styled.div`
+  font-size: 1.2rem;
+`;
+
+
 export function FacetPlot(props: FacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
     const [methods, setMethods] = useState<string[]>([]);
@@ -69,7 +98,6 @@ export function FacetPlot(props: FacetPlotInterface) {
         });
         console.log("FacetPlot props", props);
     }, [props]);
-
 
     const extractMethods = (data: ChartObjectInterface[][]): Set<string> => {
         const methodsSet = new Set<string>();
@@ -98,6 +126,11 @@ export function FacetPlot(props: FacetPlotInterface) {
             selectedMethods.has(subItem.objectConfig ? subItem.objectConfig.objectId[1] : "Unknown")
         )
     );
+
+    const getMethodColor = (method: string) => {
+        const methodIndex = methods.indexOf(method);
+        return COLORS[methodIndex % COLORS.length];
+    };
 
     return (
         <Container>
@@ -135,6 +168,19 @@ export function FacetPlot(props: FacetPlotInterface) {
                         </div>
                     </ControlSection>
                 </Col>
+            </Row>
+            <Row>
+                <FullWidthCol>
+                    <div>Cumulative (available each year) number of PDB structures determined by:</div>
+                    <ColorBoxesContainer>
+                        {Array.from(selectedMethods).map((method, index) => (
+                            <ColorBoxWrapper key={index}>
+                                <ColorBox bgColor={getMethodColor(method)} />
+                                <BoxText>{method}</BoxText>
+                            </ColorBoxWrapper>
+                        ))}
+                    </ColorBoxesContainer>
+                </FullWidthCol>
             </Row>
         </Container>
     );

@@ -21,12 +21,13 @@ const OtherStats: React.FC = () => {
                 aggregation_type: AggregationType.DateHistogram,
                 attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
                 interval: Interval.Year,
-                min_interval_population: 0
+                min_interval_population: 1
             }}
             secondDim={{
-                name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-                aggregation_type: AggregationType.Terms,
-                attribute: RcsbSearchMetadata.Exptl.Method.path
+              "name": "Experimental Method",
+              "aggregation_type": "terms",
+              "attribute": "rcsb_entry_info.experimental_method",
+              "min_interval_population": 1
             }}
             chartType={ChartType.histogram}
             returnType={ReturnType.Entry}
