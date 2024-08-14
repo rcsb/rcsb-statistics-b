@@ -30,7 +30,6 @@ export const NavLink = styled(RouterLink)`
     color: #555;
   }
 
-
   &.active {
     font-weight: bold !important;
   }

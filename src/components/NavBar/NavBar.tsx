@@ -15,7 +15,6 @@ import {
 } from './NavBarStyles';
 import paths from '../../routes/paths';
 
-// Utility function to check if the current path matches a given base path
 const isActivePath = (locationPathname: string, basePath: string): boolean => {
   return locationPathname.startsWith(basePath);
 };
@@ -23,7 +22,7 @@ const isActivePath = (locationPathname: string, basePath: string): boolean => {
 const NavBar: React.FC = () => {
   const location = useLocation();
 
-  const isDataGrowthActive = isActivePath(location.pathname, paths.PDB_DATA_GROWTH);
+  const isDataGrowthActive = isActivePath(location.pathname, paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL);
   const isDataDistributionActive = isActivePath(location.pathname, paths.PDB_DATA_DISTRIBUTION);
 
   return (
@@ -53,24 +52,24 @@ const NavBar: React.FC = () => {
               <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
             </NavItem>
             <NavDropdown className={`nav-item dropdown ${isDataGrowthActive ? 'active' : ''}`}>
-              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_GROWTH ? 'active' : ''}`} as="a">
+              <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL ? 'active' : ''}`} as="a">
                 Data Growth
                  <span className="triangle" />
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu">
-                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Experimental Method
                 </DropdownItem>
-                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Molecular Composition
                 </DropdownItem>
-                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Assembly Symmetry
                 </DropdownItem>
-                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Number of Domains
                 </DropdownItem>
-                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH}>
+                <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Unique Protein Sequences
                 </DropdownItem>
               </DropdownMenu>
