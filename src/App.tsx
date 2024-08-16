@@ -33,10 +33,14 @@ const StatisticsAppContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+interface AppProps {
+  basename: string;
+}
+
+const App: React.FC<AppProps> = ({ basename }) => {
   return (
     <ErrorBoundary>
-      <Router basename="/stats-b">
+      <Router basename={basename}>
         <StatisticsAppContent />
       </Router>
     </ErrorBoundary>

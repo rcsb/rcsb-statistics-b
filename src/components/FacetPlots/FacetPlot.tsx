@@ -49,7 +49,7 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 10px;
 `;
 
-const MethodsShownText = styled.div`
+const FiltersShownText = styled.div`
   font-weight: bold;
   margin-bottom: 8px;
 `;
@@ -82,11 +82,30 @@ const BoxText = styled.div`
   font-size: 1.2rem;
 `;
 
+const RadioBoxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  cursor: pointer;
+`;
+
+const StyledRadio = styled.input`
+  margin-right: 10px;
+`;
+
+const StyledRadioLabel = styled.label`
+  font-size: 10px;
+  margin-left: 5px;
+  font-weight: normal;
+  margin-bottom: -7px;
+`;
+
 
 export function FacetPlot(props: FacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
     const [methods, setMethods] = useState<string[]>([]);
     const [selectedMethods, setSelectedMethods] = useState<Set<string>>(new Set());
+    const [selectedRadio, setSelectedRadio] = useState<string>('cumulative');
 
     useEffect(() => {
         setData([]);
@@ -96,7 +115,7 @@ export function FacetPlot(props: FacetPlotInterface) {
             setMethods(Array.from(methodsSet));
             setSelectedMethods(methodsSet)
         });
-        console.log("FacetPlot props", props);
+        console.log("props", props);
     }, [props]);
 
     const extractMethods = (data: ChartObjectInterface[][]): Set<string> => {
@@ -121,6 +140,10 @@ export function FacetPlot(props: FacetPlotInterface) {
         setSelectedMethods(updatedMethods);
     };
 
+    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedRadio(event.target.value);
+    };
+
     const filteredData = data.map(item => 
         item.filter(subItem => 
             selectedMethods.has(subItem.objectConfig ? subItem.objectConfig.objectId[1] : "Unknown")
@@ -140,14 +163,23 @@ export function FacetPlot(props: FacetPlotInterface) {
                         data={filteredData}
                         chartComponentImplementation={props.chartType === ChartType.histogram ? ChartJsHistogramComponent : ChartJsBarComponent}
                         dataProvider={props.chartType === ChartType.histogram ? new HistogramChartDataProvider() : new BarChartDataProvider()}
-                        chartConfig={props.chartConfig}
+                        chartConfig={{
+                            "chartDisplayConfig": {
+                                "constWidth": 900,
+                                "constHeight": 500,
+                                "paddingLeft": 120,
+                                "paddingTopLarge": 20,
+                                "xDomainPadding": 100,
+                                "minBarLength": 10,
+                            }
+                        }}
                     />
                 </Col>
                 <Col md={2}>
                     <ControlSection>
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <div>
-                            <MethodsShownText>Methods Shown</MethodsShownText>
+                            <FiltersShownText>Methods Shown</FiltersShownText>
                             {methods.map(method => {
                                 const checkboxId = `checkbox-${method}`;
                                 return (
@@ -166,12 +198,39 @@ export function FacetPlot(props: FacetPlotInterface) {
                                 );
                             })}
                         </div>
+                        <div>
+                            <FiltersShownText>Data Set</FiltersShownText>
+                                <RadioBoxContainer>
+                                    <StyledRadio
+                                        type="radio"
+                                        id="cumulative"
+                                        value="cumulative"
+                                        checked={selectedRadio === 'cumulative'}
+                                        onChange={handleRadioChange}
+                                    />
+                                    <StyledRadioLabel htmlFor="cumulative">
+                                        Cumulative
+                                    </StyledRadioLabel>
+                                </RadioBoxContainer>
+                                <RadioBoxContainer>
+                                    <StyledRadio
+                                        type="radio"
+                                        id="released-annually"
+                                        value="released-annually"
+                                        checked={selectedRadio === 'released-annually'}
+                                        onChange={handleRadioChange}
+                                    />
+                                    <StyledRadioLabel htmlFor="released-annually">
+                                        Released Annually
+                                    </StyledRadioLabel>
+                                </RadioBoxContainer>
+                        </div>
                     </ControlSection>
                 </Col>
             </Row>
             <Row>
                 <FullWidthCol>
-                    <div>Cumulative (available each year) number of PDB structures determined by:</div>
+                    <div>Cumulative (available each year) number of PDB structures determined by</div>
                     <ColorBoxesContainer>
                         {Array.from(selectedMethods).map((method, index) => (
                             <ColorBoxWrapper key={index}>
@@ -226,7 +285,7 @@ async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promis
         return [[]];
 
     const buckets = getFacetsFromSearch(queryResults);
-    console.log("queryResults", queryResults);
+   // console.log("queryResults", queryResults);
     const secondDim = props.secondDim;
     if (secondDim)
         return drillFacets(buckets.filter(f => f.name === getFacetName(secondDim)));
