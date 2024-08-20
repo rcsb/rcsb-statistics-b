@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
 import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
 import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
-import { FacetPlot } from '../../components/FacetPlots';
+import { FacetPlot } from '../../components/FacetPlots/Growth/GrowthPlot';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
 import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
@@ -23,7 +23,7 @@ interface DataGrowthExpState {
   selectedDataSet: string;
 }
 
-const ExperimentalMethod: React.FC = () => {
+const OverallStructures: React.FC = () => {
   const [state, setState] = useState<DataGrowthExpState>({
     mainAttribute: FACET_STORE[0],
     selectedDataSet: 'cumulative'
@@ -50,23 +50,11 @@ const ExperimentalMethod: React.FC = () => {
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>
-      <h4>PDB Data Growth By Experimental Method</h4>
+      <h4>PDB Data Overall Growth of Released Entries</h4>
       <Container>
         <Row>
           <Col md={10}>
             <FacetPlot
-              // firstDim={{
-              //     name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-              //     aggregation_type: AggregationType.DateHistogram,
-              //     attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-              //     interval: Interval.Year,
-              //     min_interval_population: 0
-              // }}
-              // secondDim={{
-              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-              //     aggregation_type: AggregationType.Terms,
-              //     attribute: RcsbSearchMetadata.Exptl.Method.path
-              // }}
               firstDim={{
                 name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
                 aggregation_type: AggregationType.DateHistogram,
@@ -74,13 +62,7 @@ const ExperimentalMethod: React.FC = () => {
                 interval: Interval.Year,
                 min_interval_population: 1
               }}
-              secondDim={{
-                "name": "Experimental Method",
-                "aggregation_type": "terms",
-                "attribute": "rcsb_entry_info.experimental_method",
-                "min_interval_population": 1
-              }}
-                chartType={state.mainAttribute.chartType}
+              chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
             />
@@ -91,4 +73,4 @@ const ExperimentalMethod: React.FC = () => {
   ) : null;
 };
 
-export default ExperimentalMethod;
+export default OverallStructures;

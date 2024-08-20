@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ChartFacetPlotInterface, FacetPlotInterface } from "../../../interfaces/FacetPlotInterface";
+import { FacetPlotInterface } from "../../../interfaces/FacetPlotInterface";
 import { SearchQueryType, SearchRequestType } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryInterfaces";
 import { buildAttributeQuery, buildMultiFacet, buildRequestFromSearchQuery } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryTools";
 import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
@@ -19,12 +19,11 @@ import { BarChartDataProvider } from "@rcsb/rcsb-charts/lib/RcsbChartDataProvide
 import { ChartJsBarComponent } from "@rcsb/rcsb-charts/lib/RcsbChartImplementations/ChatJsImplementations/ChartJsBarComponent";
 import { ChartJsHistogramComponent } from "@rcsb/rcsb-charts/lib/RcsbChartImplementations/ChatJsImplementations/ChartJsHistogramComponent";
 
-
 const ControlSection = styled.div`
   margin-left: -60px;
   border-left: 1px solid #ccc;
   padding-left: 20px;
-`; 
+`;
 
 const CheckboxContainer = styled.div`
   display: flex;
@@ -37,10 +36,9 @@ const StyledCheckbox = styled.input`
 `;
 
 const StyledLabel = styled.label`
-    font-size: 10px;
-    margin-left: 5px;
-    font-weight: normal;
-    margin-bottom: -7px;
+  margin-left: 5px;
+  font-weight: normal;
+  margin-bottom: -7px;
 `;
 
 const DataOptionsHeader = styled.div`
@@ -49,55 +47,132 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 10px;
 `;
 
-const MethodsShownText = styled.div`
+const FiltersShownText = styled.div`
   font-weight: bold;
   margin-bottom: 8px;
 `;
 
+const FullWidthCol = styled.div`
+  width: 100%;
+  padding: 0 15px;
+`;
+
+const ColorBoxesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+const ColorBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ColorBox = styled.div<{ bgColor: string }>`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.bgColor};
+  margin-right: 10px;
+`;
+
+const BoxText = styled.div`
+  font-size: 1.2rem;
+`;
+
 export function FacetPlot(props: FacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
-    const [methods, setMethods] = useState<string[]>([]);
-    const [selectedMethods, setSelectedMethods] = useState<Set<string>>(new Set());
+    const [dataSets, setDataSets] = useState<string[]>([]);
+    const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         setData([]);
         chartFacets(props).then(data => {
-            setData(data);
-            const methodsSet = extractMethods(data);
-            setMethods(Array.from(methodsSet));
-            setSelectedMethods(methodsSet)
+            const cumulativeData = data.length > 0 ? (() => {
+                const cumulativeDataArray: { label: string | number; population: number; objectConfig: { objectId: (string | number)[]; color: string }; }[] = [];
+                let cumulativeSum = 0;
+
+                const originalColor = getDataSetColor("Annual");
+                const cumulativeColor = getDataSetColor("Cumulative");
+
+                // Iterate through the original data and create the Cumulative data with a different color
+                data[0].forEach(item => {
+                    cumulativeSum += item.population;
+                    cumulativeDataArray.push({
+                        label: item.label,
+                        population: cumulativeSum,
+                        objectConfig: {
+                            objectId: [item.label, cumulativeSum],
+                            color: cumulativeColor // Set the color for the Cumulative data
+                        }
+                    });
+                });
+
+                // Create a copy of the original data with the original color
+                const originalDataWithColor = data[0].map(item => ({
+                    ...item,
+                    objectConfig: {
+                        ...item.objectConfig,
+                        color: originalColor // Set the color for the original data
+                    }
+                }));
+
+                return [originalDataWithColor, cumulativeDataArray];
+            })() : [];
+            setData(cumulativeData);
+            const dataSetsShown = extractDataSets(cumulativeData);
+            setDataSets(Array.from(dataSetsShown));
+            // Automatically select all datasets if there's more than one
+            setSelectedDataSets(new Set(dataSetsShown));
         });
-        console.log("FacetPlot props", props);
     }, [props]);
 
+    const extractDataSets = (data: ChartObjectInterface[][]): Set<string> => {
+        const dataSetsShown = new Set<string>();
 
-    const extractMethods = (data: ChartObjectInterface[][]): Set<string> => {
-        const methodsSet = new Set<string>();
-        data.forEach(item => {
-            item.forEach(subItem => {
-                if (subItem.objectConfig) {
-                    methodsSet.add(subItem.objectConfig.objectId[1]);
-                }
-            });
+        // Assign objectId and color based on the index of the dataset
+        const datasetIds = ["Annual", "Cumulative"];
+
+        data.forEach((dataset, index) => {
+            if (dataset.length > 0) { // Only process non-empty arrays
+                const datasetId = datasetIds[index] || `Dataset-${index + 1}`; // Assign "Annual" or "Cumulative" or a unique identifier
+                dataSetsShown.add(datasetId); // Add the identifier to the Set
+
+                const color = getDataSetColor(datasetId);
+
+                // Assign the objectId and color to each item in the dataset
+                dataset.forEach(item => {
+                    if (item.objectConfig) {
+                        item.objectConfig.objectId.unshift(datasetId); // Add the dataset ID to the start of objectId array
+                        item.objectConfig.color = color; // Assign the appropriate color
+                    } else {
+                        item.objectConfig = {
+                            objectId: [datasetId],
+                            color: color
+                        };
+                    }
+                });
+            }
         });
-        return methodsSet;
+
+        return dataSetsShown;
     };
 
-    const handleCheckboxChange = (method: string) => {
-        const updatedMethods = new Set(selectedMethods);
-        if (updatedMethods.has(method)) {
-            updatedMethods.delete(method);
+    const handleCheckboxChange = (dataSet: string) => {
+        const updatedDataSets = new Set(selectedDataSets);
+        if (updatedDataSets.has(dataSet)) {
+            updatedDataSets.delete(dataSet);
         } else {
-            updatedMethods.add(method);
+            updatedDataSets.add(dataSet);
         }
-        setSelectedMethods(updatedMethods);
+        setSelectedDataSets(updatedDataSets);
     };
 
-    const filteredData = data.map(item => 
-        item.filter(subItem => 
-            selectedMethods.has(subItem.objectConfig ? subItem.objectConfig.objectId[1] : "Unknown")
+    const filteredData = data.length > 0 ? data.map(item =>
+        item.filter(subItem =>
+            selectedDataSets.has(subItem.objectConfig ? subItem.objectConfig.objectId[0] : "Unknown")
         )
-    );
+    ) : [];
 
     return (
         <Container>
@@ -107,52 +182,72 @@ export function FacetPlot(props: FacetPlotInterface) {
                         data={filteredData}
                         chartComponentImplementation={props.chartType === ChartType.histogram ? ChartJsHistogramComponent : ChartJsBarComponent}
                         dataProvider={props.chartType === ChartType.histogram ? new HistogramChartDataProvider() : new BarChartDataProvider()}
-                        chartConfig={props.chartConfig}
+                        chartConfig={{
+                            "chartDisplayConfig": {
+                                "constWidth": 900,
+                                "constHeight": 500,
+                                "paddingLeft": 120,
+                                "paddingTopLarge": 20,
+                                "xDomainPadding": 100,
+                                "minBarLength": 10,
+                            }
+                        }}
                     />
                 </Col>
                 <Col md={2}>
                     <ControlSection>
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <div>
-                            <MethodsShownText>Methods Shown</MethodsShownText>
-                            {methods.map(method => {
-                                const checkboxId = `checkbox-${method}`;
-                                return (
-                                    <CheckboxContainer key={method}>
-                                        <StyledCheckbox
-                                            type="checkbox"
-                                            id={checkboxId}
-                                            value={method}
-                                            checked={selectedMethods.has(method)}
-                                            onChange={() => handleCheckboxChange(method)}
-                                        />
-                                        <StyledLabel htmlFor={checkboxId}>
-                                            {method}
-                                        </StyledLabel>
-                                    </CheckboxContainer>
-                                );
-                            })}
+                            <FiltersShownText>Methods Shown</FiltersShownText>
+                            {dataSets.length > 1 ? (
+                                dataSets.map(dataSet => {
+                                    const checkboxId = `checkbox-${dataSet}`;
+                                    return (
+                                        <CheckboxContainer key={dataSet}>
+                                            <StyledCheckbox
+                                                type="checkbox"
+                                                id={checkboxId}
+                                                value={dataSet}
+                                                checked={selectedDataSets.has(dataSet)}
+                                                onChange={() => handleCheckboxChange(dataSet)}
+                                            />
+                                            <StyledLabel htmlFor={checkboxId}>
+                                                {dataSet}
+                                            </StyledLabel>
+                                        </CheckboxContainer>
+                                    );
+                                })
+                            ) : (
+                                <CheckboxContainer>
+                                    <StyledCheckbox
+                                        type="checkbox"
+                                        checked={true}
+                                        disabled={true} // Disable the checkbox if there's only one dataset
+                                    />
+                                    <StyledLabel>
+                                        {dataSets[0] || 'Single Dataset'}
+                                    </StyledLabel>
+                                </CheckboxContainer>
+                            )}
                         </div>
                     </ControlSection>
                 </Col>
             </Row>
+            <Row>
+                <FullWidthCol>
+                    <div>Cumulative (available each year) and annual number of released entries</div>
+                    <ColorBoxesContainer>
+                        {Array.from(selectedDataSets).map((dataSet, index) => (
+                            <ColorBoxWrapper key={index}>
+                                <ColorBox bgColor={getDataSetColor(dataSet)} />
+                                <BoxText>{dataSet}</BoxText>
+                            </ColorBoxWrapper>
+                        ))}
+                    </ColorBoxesContainer>
+                </FullWidthCol>
+            </Row>
         </Container>
     );
-}
-
-export function ChartFacetPlot(props: ChartFacetPlotInterface) {
-    const [data, setData] = useState<ChartObjectInterface[][]>([]);
-
-    useEffect(() => {
-        chartFacets(props).then(data => setData(data));
-    }, [props]);
-
-    return (<ChartComponent
-        data={data}
-        chartComponentImplementation={props.chartComponent}
-        dataProvider={props.dataProvider}
-        chartConfig={props.chartConfig}
-    />);
 }
 
 async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promise<ChartObjectInterface[][]> {
@@ -180,7 +275,6 @@ async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promis
         return [[]];
 
     const buckets = getFacetsFromSearch(queryResults);
-    console.log("queryResults", queryResults);
     const secondDim = props.secondDim;
     if (secondDim)
         return drillFacets(buckets.filter(f => f.name === getFacetName(secondDim)));
@@ -237,8 +331,8 @@ function getFacetName(facet: AttributeFacetType | FilterFacetType): string {
 }
 
 const COLORS: string[] = [
-    "#718de8",
-    "#2fad30",
+    "#2c5889",
+    "#86b5e6",
     "#e71f8a",
     "#f60505",
     "#a27206",
@@ -246,3 +340,8 @@ const COLORS: string[] = [
     "#85ff34",
     "#ea6c05"
 ];
+
+function getDataSetColor(dataSet: string) {
+    const index = ["Annual", "Cumulative"].indexOf(dataSet);
+    return COLORS[index % COLORS.length];
+}

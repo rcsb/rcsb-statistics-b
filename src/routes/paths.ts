@@ -1,5 +1,7 @@
 const paths = {
   HOME: '/',
+  PDB_DATA_GROWTH_OVERALL_STRUCTURES: '/growth/overall-structures',
+  PDB_DATA_GROWTH_OVERALL_SMALL_MOLECULES: '/growth/overall-small-molecules',
   PDB_DATA_GROWTH_BY_EXPERIMENTAL: '/growth/experimental-method',
   PDB_DATA_GROWTH_BY_MOLECULAR: '/growth/molecular-composition',
   PDB_DATA_GROWTH_BY_ASSEMBLY: '/growth/assembly-symmetry',

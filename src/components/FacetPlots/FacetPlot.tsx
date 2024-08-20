@@ -342,7 +342,7 @@ function getFacetName(facet: AttributeFacetType | FilterFacetType): string {
 }
 
 const COLORS: string[] = [
-    "#718de8",
+    "#86b5e6",
     "#2fad30",
     "#e71f8a",
     "#f60505",

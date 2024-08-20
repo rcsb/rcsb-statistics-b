@@ -56,6 +56,12 @@ const NavBar: React.FC = () => {
                 <span className="triangle" />
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu">
+                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH_OVERALL_STRUCTURES}>
+                  By Overall Structures
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH_OVERALL_SMALL_MOLECULES}>
+                  By Overall Small Molecules
+                </DropdownItem>
                 <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL}>
                   By Experimental Method
                 </DropdownItem>

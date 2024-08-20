@@ -1,8 +1,11 @@
 import { lazy } from 'react';
 import paths from './paths';
+import path from 'path';
 
 const routes = [
   { path: paths.HOME, element: lazy(() => import('../pages/Home')), exact: true },
+  { path: paths.PDB_DATA_GROWTH_OVERALL_STRUCTURES, element: lazy(() => import('../pages/PdbDataGrowth/OverallStructures'))},
+  { path: paths.PDB_DATA_GROWTH_OVERALL_SMALL_MOLECULES, element: lazy(() => import('../pages/PdbDataGrowth/OverallSmallMolecules')) },
   { path: paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL, element: lazy(() => import('../pages/PdbDataGrowth/ExperimentalMethod')) },
   { path: paths.PDB_DATA_GROWTH_BY_MOLECULAR, element: lazy(() => import('../pages/PdbDataGrowth/MolecularComposition')) },
   { path: paths.PDB_DATA_GROWTH_BY_ASSEMBLY, element: lazy(() => import('../pages/PdbDataGrowth/AssemblySymmetry')) },

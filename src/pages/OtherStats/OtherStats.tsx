@@ -17,18 +17,31 @@ const OtherStats: React.FC = () => {
         <div>
           <FacetPlot2
             firstDim={{
-                name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-                aggregation_type: AggregationType.DateHistogram,
-                attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-                interval: Interval.Year,
-                min_interval_population: 1
-            }}
-            secondDim={{
-              "name": "Experimental Method",
-              "aggregation_type": "terms",
-              "attribute": "rcsb_entry_info.experimental_method",
-              "min_interval_population": 1
-            }}
+              name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+              aggregation_type: AggregationType.DateHistogram,
+              attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+              interval: Interval.Year,
+              min_interval_population: 1
+          }}
+          secondDim={{
+            "name": "Experimental Method",
+            "aggregation_type": "terms",
+            "attribute": "rcsb_entry_info.experimental_method",
+            "min_interval_population": 1
+          }}
+            // firstDim={{
+            //     name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+            //     aggregation_type: AggregationType.DateHistogram,
+            //     attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+            //     interval: Interval.Year,
+            //     min_interval_population: 1
+            // }}
+            // secondDim={{
+            //   "name": "Experimental Method",
+            //   "aggregation_type": "terms",
+            //   "attribute": "rcsb_entry_info.experimental_method",
+            //   "min_interval_population": 1
+            // }}
             chartType={ChartType.histogram}
             returnType={ReturnType.Entry}
             chartConfig={{
