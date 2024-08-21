@@ -41,10 +41,11 @@ const StyledLabel = styled.label`
   margin-bottom: -7px;
 `;
 
+
 const DataOptionsHeader = styled.div`
   font-weight: bold;
   font-size: 1.2em;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
 const FiltersShownText = styled.div`
@@ -208,7 +209,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                 </Col>
                 <Col md={2}>
                     <ControlSection>
-                        {/* <DataOptionsHeader>Data Options</DataOptionsHeader> */}
+                        <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <div>
                             <FiltersShownText>Data Set</FiltersShownText>
                             {dataSets.length > 1 ? (

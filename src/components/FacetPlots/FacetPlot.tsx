@@ -46,12 +46,12 @@ const StyledLabel = styled.label`
 const DataOptionsHeader = styled.div`
   font-weight: bold;
   font-size: 1.2em;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
 const FiltersShownText = styled.div`
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 `;
 
  const FullWidthCol = styled.div`
@@ -98,6 +98,10 @@ const StyledRadioLabel = styled.label`
   margin-left: 5px;
   font-weight: normal;
   margin-bottom: -7px;
+`;
+
+const FilterSection = styled.div`
+  margin-bottom: 35px;
 `;
 
 
@@ -207,7 +211,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                 <Col md={2}>
                     <ControlSection>
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
-                        <div>
+                        <FilterSection>
                             <FiltersShownText>Methods Shown</FiltersShownText>
                             {methods.map(method => {
                                 const checkboxId = `checkbox-${method}`;
@@ -226,34 +230,34 @@ export function FacetPlot(props: FacetPlotInterface) {
                                     </CheckboxContainer>
                                 );
                             })}
-                        </div>
-                        <div>
+                        </FilterSection>
+                        <FilterSection>
                             <FiltersShownText>Data Set</FiltersShownText>
-                                <RadioBoxContainer>
-                                    <StyledRadio
-                                        type="radio"
-                                        id="cumulative"
-                                        value="cumulative"
-                                        checked={selectedRadio === 'cumulative'}
-                                        onChange={handleRadioChange}
-                                    />
-                                    <StyledRadioLabel htmlFor="cumulative">
-                                        Cumulative
-                                    </StyledRadioLabel>
-                                </RadioBoxContainer>
-                                <RadioBoxContainer>
-                                    <StyledRadio
-                                        type="radio"
-                                        id="released-annually"
-                                        value="released-annually"
-                                        checked={selectedRadio === 'released-annually'}
-                                        onChange={handleRadioChange}
-                                    />
-                                    <StyledRadioLabel htmlFor="released-annually">
-                                        Released Annually
-                                    </StyledRadioLabel>
-                                </RadioBoxContainer>
-                        </div>
+                            <RadioBoxContainer>
+                                <StyledRadio
+                                    type="radio"
+                                    id="cumulative"
+                                    value="cumulative"
+                                    checked={selectedRadio === 'cumulative'}
+                                    onChange={handleRadioChange}
+                                />
+                                <StyledRadioLabel htmlFor="cumulative">
+                                    Cumulative
+                                </StyledRadioLabel>
+                            </RadioBoxContainer>
+                            <RadioBoxContainer>
+                                <StyledRadio
+                                    type="radio"
+                                    id="released-annually"
+                                    value="released-annually"
+                                    checked={selectedRadio === 'released-annually'}
+                                    onChange={handleRadioChange}
+                                />
+                                <StyledRadioLabel htmlFor="released-annually">
+                                    Released Annually
+                                </StyledRadioLabel>
+                            </RadioBoxContainer>
+                        </FilterSection>
                     </ControlSection>
                 </Col>
             </Row>
