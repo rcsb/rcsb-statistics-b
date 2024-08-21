@@ -26,27 +26,8 @@ interface DataGrowthExpState {
 const ExperimentalMethod: React.FC = () => {
   const [state, setState] = useState<DataGrowthExpState>({
     mainAttribute: FACET_STORE[0],
-    selectedDataSet: 'cumulative'
+    selectedDataSet: 'annual'
   });
-
-  const selectorObserver: Observer<{ facet: StatsFacetInterface; role: SelectorRoleType }> = {
-    next: (selector) => {
-      setState((prevState) => ({
-        ...prevState,
-        [selector.role === 'main' ? 'mainAttribute' : 'additionalAttribute']: selector.facet,
-      }));
-    },
-    error: () => {},
-    complete: () => {},
-  };
-
-
-  const handleDataSetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedDataSet: event.target.value,
-    }));
-  };
 
   return state.mainAttribute.facet && state.mainAttribute.chartType ? (
     <Article>

@@ -105,18 +105,47 @@ export function FacetPlot(props: FacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
     const [methods, setMethods] = useState<string[]>([]);
     const [selectedMethods, setSelectedMethods] = useState<Set<string>>(new Set());
-    const [selectedRadio, setSelectedRadio] = useState<string>('cumulative');
+    const [selectedRadio, setSelectedRadio] = useState<string>('released-annually');
 
     useEffect(() => {
         setData([]);
         chartFacets(props).then(data => {
-            setData(data);
-            const methodsSet = extractMethods(data);
+            const updatedData = calculateDataBasedOnSelection(data, selectedRadio);
+            setData(updatedData);
+            const methodsSet = extractMethods(updatedData);
             setMethods(Array.from(methodsSet));
-            setSelectedMethods(methodsSet)
+            setSelectedMethods(methodsSet);
         });
-        console.log("props", props);
-    }, [props]);
+    }, [props, selectedRadio]);
+
+    const calculateDataBasedOnSelection = (data: ChartObjectInterface[][], radioSelection: string): ChartObjectInterface[][] => {
+        if (radioSelection === 'cumulative') {
+            return calculateCumulativeData(data);
+        } else {
+            return data; // If 'released-annually' is selected, return the original data
+        }
+    };
+
+    const calculateCumulativeData = (data: ChartObjectInterface[][]): ChartObjectInterface[][] => {
+        return data.map(item => {
+            const cumulativeDataArray: ChartObjectInterface[] = [];
+            let cumulativeSum = 0;
+
+            item.forEach(subItem => {
+                cumulativeSum += subItem.population;
+                cumulativeDataArray.push({
+                    ...subItem,
+                    population: cumulativeSum,
+                    objectConfig: {
+                        ...subItem.objectConfig,
+                        color: subItem.objectConfig?.color || getMethodColor(subItem.objectConfig?.objectId[1]) // Use the original color
+                    }
+                });
+            });
+
+            return cumulativeDataArray;
+        });
+    };
 
     const extractMethods = (data: ChartObjectInterface[][]): Set<string> => {
         const methodsSet = new Set<string>();
@@ -230,7 +259,7 @@ export function FacetPlot(props: FacetPlotInterface) {
             </Row>
             <Row>
                 <FullWidthCol>
-                    <div>Cumulative (available each year) number of PDB structures determined by</div>
+                    <div>{selectedRadio === 'cumulative' ? 'Cumulative (available each year)' : 'Annual'} number of PDB structures determined by</div>
                     <ColorBoxesContainer>
                         {Array.from(selectedMethods).map((method, index) => (
                             <ColorBoxWrapper key={index}>
@@ -244,6 +273,8 @@ export function FacetPlot(props: FacetPlotInterface) {
         </Container>
     );
 }
+
+
 
 export function ChartFacetPlot(props: ChartFacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
