@@ -1,1 +1,1 @@
-export * from './Growth/FacetPlot';
+export * from './Growth/FacetPlotExperimentalMethod';
