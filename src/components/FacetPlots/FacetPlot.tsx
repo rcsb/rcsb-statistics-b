@@ -274,8 +274,6 @@ export function FacetPlot(props: FacetPlotInterface) {
     );
 }
 
-
-
 export function ChartFacetPlot(props: ChartFacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
 

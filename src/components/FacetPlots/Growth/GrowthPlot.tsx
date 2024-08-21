@@ -168,6 +168,18 @@ export function FacetPlot(props: FacetPlotInterface) {
         setSelectedDataSets(updatedDataSets);
     };
 
+    const getSelectedDataText = (): string => {
+        if (selectedDataSets.size === 2) {
+            return "Cumulative (available each year) and annual number of released entries";
+        } else if (selectedDataSets.has("Cumulative")) {
+            return "Cumulative (available each year) number of released entries";
+        } else if (selectedDataSets.has("Annual")) {
+            return "Annual number of released entries";
+        } else {
+            return "No datasets selected";
+        }
+    };
+
     const filteredData = data.length > 0 ? data.map(item =>
         item.filter(subItem =>
             selectedDataSets.has(subItem.objectConfig ? subItem.objectConfig.objectId[0] : "Unknown")
@@ -196,9 +208,9 @@ export function FacetPlot(props: FacetPlotInterface) {
                 </Col>
                 <Col md={2}>
                     <ControlSection>
-                        <DataOptionsHeader>Data Options</DataOptionsHeader>
+                        {/* <DataOptionsHeader>Data Options</DataOptionsHeader> */}
                         <div>
-                            <FiltersShownText>Methods Shown</FiltersShownText>
+                            <FiltersShownText>Data Set</FiltersShownText>
                             {dataSets.length > 1 ? (
                                 dataSets.map(dataSet => {
                                     const checkboxId = `checkbox-${dataSet}`;
@@ -235,7 +247,7 @@ export function FacetPlot(props: FacetPlotInterface) {
             </Row>
             <Row>
                 <FullWidthCol>
-                    <div>Cumulative (available each year) and annual number of released entries</div>
+                    <div>{getSelectedDataText()}</div>
                     <ColorBoxesContainer>
                         {Array.from(selectedDataSets).map((dataSet, index) => (
                             <ColorBoxWrapper key={index}>
@@ -249,6 +261,8 @@ export function FacetPlot(props: FacetPlotInterface) {
         </Container>
     );
 }
+
+
 
 async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promise<ChartObjectInterface[][]> {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
