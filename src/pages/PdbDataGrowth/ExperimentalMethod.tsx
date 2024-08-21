@@ -36,18 +36,6 @@ const ExperimentalMethod: React.FC = () => {
         <Row>
           <Col md={10}>
             <FacetPlot
-              // firstDim={{
-              //     name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-              //     aggregation_type: AggregationType.DateHistogram,
-              //     attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-              //     interval: Interval.Year,
-              //     min_interval_population: 0
-              // }}
-              // secondDim={{
-              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-              //     aggregation_type: AggregationType.Terms,
-              //     attribute: RcsbSearchMetadata.Exptl.Method.path
-              // }}
               firstDim={{
                 name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
                 aggregation_type: AggregationType.DateHistogram,
