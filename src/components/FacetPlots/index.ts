@@ -1,1 +1,1 @@
-export * from './FacetPlot';
+export * from './Growth/FacetPlot';

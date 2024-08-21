@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ChartFacetPlotInterface, FacetPlotInterface } from "../../interfaces/FacetPlotInterface";
+import { ChartFacetPlotInterface, FacetPlotInterface } from "../../../interfaces/FacetPlotInterface";
 import { SearchQueryType, SearchRequestType } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryInterfaces";
 import { buildAttributeQuery, buildMultiFacet, buildRequestFromSearchQuery } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryTools";
 import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
@@ -126,7 +126,7 @@ export function FacetPlot(props: FacetPlotInterface) {
         if (radioSelection === 'cumulative') {
             return calculateCumulativeData(data);
         } else {
-            return data; // If 'released-annually' is selected, return the original data
+            return data;
         }
     };
 
@@ -212,7 +212,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                     <ControlSection>
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <FilterSection>
-                            <FiltersShownText>Methods Shown</FiltersShownText>
+                            <FiltersShownText>Symmetries Shown</FiltersShownText>
                             {methods.map(method => {
                                 const checkboxId = `checkbox-${method}`;
                                 return (
@@ -263,7 +263,7 @@ export function FacetPlot(props: FacetPlotInterface) {
             </Row>
             <Row>
                 <FullWidthCol>
-                    <div>{selectedRadio === 'cumulative' ? 'Cumulative (available each year)' : 'Annual'} number of PDB structures determined by</div>
+                    <div>{selectedRadio === 'cumulative' ? 'Cumulative (available each year)' : 'Annual'} number of Global Assembly Symmetries per Year</div>
                     <ColorBoxesContainer>
                         {Array.from(selectedMethods).map((method, index) => (
                             <ColorBoxWrapper key={index}>

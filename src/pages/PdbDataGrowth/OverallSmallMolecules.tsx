@@ -3,7 +3,7 @@ import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector'
 import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
 import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
 //import { FacetPlot } from '../../components/FacetPlots';
-import { FacetPlot } from '../../components/FacetPlots/Growth/GrowthPlot';
+import { FacetPlot } from '../../components/FacetPlots/Growth/FacetPlotOverallSmallMol';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
 import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';

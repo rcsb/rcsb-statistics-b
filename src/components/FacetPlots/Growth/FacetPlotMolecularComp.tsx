@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ChartFacetPlotInterface, FacetPlotInterface } from "../../interfaces/FacetPlotInterface";
+import { ChartFacetPlotInterface, FacetPlotInterface } from "../../../interfaces/FacetPlotInterface";
 import { SearchQueryType, SearchRequestType } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryInterfaces";
 import { buildAttributeQuery, buildMultiFacet, buildRequestFromSearchQuery } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryTools";
 import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
@@ -212,7 +212,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                     <ControlSection>
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <FilterSection>
-                            <FiltersShownText>Methods Shown</FiltersShownText>
+                            <FiltersShownText>Compositions Shown</FiltersShownText>
                             {methods.map(method => {
                                 const checkboxId = `checkbox-${method}`;
                                 return (
