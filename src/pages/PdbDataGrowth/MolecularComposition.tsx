@@ -43,11 +43,11 @@ const MolecularComposition: React.FC = () => {
                   interval: Interval.Year,
                   min_interval_population: 0
               }}
-              // secondDim={{
-              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-              //     aggregation_type: AggregationType.Terms,
-              //     attribute: RcsbSearchMetadata.Exptl.Method.path
-              // }}
+              secondDim={{
+                  name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+                  aggregation_type: AggregationType.Terms,
+                  attribute: "rcsb_entry_info.selected_polymer_entity_types"
+              }}
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
