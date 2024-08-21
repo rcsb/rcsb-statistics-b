@@ -51,7 +51,7 @@ const NumberOfDomains: React.FC = () => {
                   facets: [
                     {
                       "name": "Unique Domains Count",
-                      "aggregation_type": "cardinality",
+                      aggregation_type: AggregationType.Cardinality,
                       "attribute": "rcsb_polymer_instance_annotation.annotation_id"
                     }
                   ]

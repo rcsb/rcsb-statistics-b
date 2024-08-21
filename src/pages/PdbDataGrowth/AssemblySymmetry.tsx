@@ -44,7 +44,7 @@ const AssemblySymmetry: React.FC = () => {
                   min_interval_population: 0
               }}
               secondDim={{
-                  name: `FACET/Global Symmetry`,
+                  name: `FACET/${RcsbSearchMetadata.RcsbStructSymmetry.Kind.enum['Global Symmetry']}`,
                   aggregation_type: AggregationType.Terms,
                   attribute: "rcsb_struct_symmetry.type",
               }}

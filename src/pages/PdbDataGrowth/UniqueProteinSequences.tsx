@@ -35,32 +35,31 @@ const UniqueProteinSequences: React.FC = () => {
       <Container>
         <Row>
           <Col md={10}>
-          <FacetPlot
-            firstDim={{
-              name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-              aggregation_type: AggregationType.DateHistogram,
-              attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-              interval: Interval.Year,
-              min_interval_population: 0
-            }}
-            secondDim={{
-              name: `FACET/Domain Classification`,
-              aggregation_type: AggregationType.Terms,
-              attribute: "rcsb_polymer_instance_annotation.type",
-              min_interval_population: 1,
-              facets: [
-                {
-                  name: "Unique Domains Count",
-                  aggregation_type: AggregationType.Cardinality,
-                  attribute: "rcsb_polymer_instance_annotation.annotation_id"
-                }
-              ]
-            }}
-            chartType={state.mainAttribute.chartType}
-            returnType={ReturnType.Entry}
-            chartConfig={state.mainAttribute.chartConfig}
-          />
-
+            <FacetPlot
+              firstDim={{
+                name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+                aggregation_type: AggregationType.DateHistogram,
+                attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+                interval: Interval.Year,
+                min_interval_population: 0
+              }}
+              secondDim={{
+                name: `FACET/Domain Classification`,
+                aggregation_type: AggregationType.Terms,
+                attribute: "rcsb_polymer_instance_annotation.type",
+                min_interval_population: 1,
+                facets: [
+                  {
+                    name: "Unique Domains Count",
+                    aggregation_type: AggregationType.Cardinality,
+                    attribute: "rcsb_polymer_instance_annotation.annotation_id"
+                  }
+                ]
+              }}
+              chartType={state.mainAttribute.chartType}
+              returnType={ReturnType.Entry}
+              chartConfig={state.mainAttribute.chartConfig}
+            />
           </Col>
           <Col md={2}>
           </Col>

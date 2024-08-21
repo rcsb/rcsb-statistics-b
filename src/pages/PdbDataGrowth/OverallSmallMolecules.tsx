@@ -57,7 +57,7 @@ const OverallSmallMolecules: React.FC = () => {
           <Col md={10}>
             <FacetPlot
               firstDim={{
-                  name: `FACET/Release Date`,
+                  name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
                   aggregation_type: AggregationType.DateHistogram,
                   attribute: "rcsb_chem_comp_info.initial_release_date",
                   interval: Interval.Year,
