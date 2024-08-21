@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
 import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
 import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
-import { FacetPlot } from '../../components/FacetPlots';
+import { FacetPlot } from '../../components/FacetPlots/FacetPlotAssemblySymmetry';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
 import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
@@ -35,8 +35,7 @@ const AssemblySymmetry: React.FC = () => {
       <Container>
         <Row>
           <Col md={10}>
-            Chart Coming Soon...
-            {/* <FacetPlot
+          <FacetPlot
               firstDim={{
                   name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
                   aggregation_type: AggregationType.DateHistogram,
@@ -44,15 +43,15 @@ const AssemblySymmetry: React.FC = () => {
                   interval: Interval.Year,
                   min_interval_population: 0
               }}
-              // secondDim={{
-              //     name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
-              //     aggregation_type: AggregationType.Terms,
-              //     attribute: RcsbSearchMetadata.Exptl.Method.path
-              // }}
+              secondDim={{
+                  name: `FACET/Global Symmetry`,
+                  aggregation_type: AggregationType.Terms,
+                  attribute: "rcsb_struct_symmetry.type",
+              }}
               chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
-            /> */}
+            />
           </Col>
           <Col md={2}>
           </Col>
