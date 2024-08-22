@@ -2219,8 +2219,8 @@ const DataDistribution: React.FC = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top' as const,
-        align: 'center',
+        position: 'bottom',
+        align: 'start',
         labels: {
           boxWidth: 40,
           padding: 20,
@@ -2233,20 +2233,6 @@ const DataDistribution: React.FC = () => {
           usePointStyle: false,
           pointStyle: 'circle',
         },
-      },
-      title: {
-        display: true,
-        text: 'PDB Data Distribution by Natural Source Organism',
-        padding: {
-          top: 20,
-          bottom: 20,
-        },
-        font: {
-          size: 20,
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-          weight: 'bold',
-        },
-        color: '#333',
       },
       tooltip: {
         enabled: true,
@@ -2305,7 +2291,7 @@ const DataDistribution: React.FC = () => {
           text: 'Year',
           font: {
             size: 14,
-            weight: 'bold',
+            weight: 'normal',
           },
           color: '#333',
         },
@@ -2326,14 +2312,14 @@ const DataDistribution: React.FC = () => {
             size: 12,
           },
           color: '#333',
-          callback: (value: number | string) => `${value}`,
+          callback: (value: number | string) => `${value}`, // Specify type here
         },
         title: {
           display: true,
-          text: 'Population',
+          text: 'Number of Entries',
           font: {
-            size: 14,
-            weight: 'bold',
+            size: 11,
+            weight: 'normal',
           },
           color: '#333',
         },

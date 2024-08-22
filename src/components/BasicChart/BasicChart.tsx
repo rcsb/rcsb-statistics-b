@@ -8,6 +8,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  ActiveElement,
+  ChartEvent
 } from 'chart.js';
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -50,6 +52,10 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 15px;
 `;
 
+const StyledChartContainer = styled.div`
+  height: 550px;
+`;
+
 const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
   const chartRef = useRef<any>(null);
   const [visibility, setVisibility] = useState<DatasetVisibility[]>(
@@ -57,16 +63,42 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
   );
 
   useEffect(() => {
-    setVisibility((prevVisibility) => {
-      const newVisibility = [...prevVisibility];
-      data.datasets.forEach((dataset: any) => {
-        if (!newVisibility.find((item) => item.label === dataset.label)) {
-          newVisibility.push({ label: dataset.label, visible: true });
-        }
-      });
-      return newVisibility.filter((item) => data.datasets.find((dataset: any) => dataset.label === item.label));
-    });
+    const syncVisibilityWithChart = () => {
+      if (chartRef.current) {
+        const newVisibility = chartRef.current.data.datasets.map((dataset: any) => ({
+          label: dataset.label,
+          visible: !dataset.hidden,
+        }));
+        setVisibility(newVisibility);
+      }
+    };
+
+    syncVisibilityWithChart(); // Sync the visibility state initially
   }, [data.datasets]);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (chart) {
+      chart.options.plugins.legend.onClick = function (
+        e: ChartEvent,
+        legendItem: ActiveElement
+      ) {
+        const datasetIndex = legendItem.datasetIndex;
+        const dataset = chart.data.datasets[datasetIndex];
+  
+        // Toggle visibility
+        dataset.hidden = !dataset.hidden;
+        chart.update();
+  
+        // Sync checkbox visibility
+        setVisibility((prevVisibility) =>
+          prevVisibility.map((item) =>
+            item.label === dataset.label ? { ...item, visible: !dataset.hidden } : item
+          )
+        );
+      };
+    }
+  }, []);
 
   const updateChart = (callback: (chart: any) => void) => {
     if (chartRef.current) {
@@ -95,7 +127,9 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
     <Container>
       <Row>
         <Col md={10}>
-          <Bar ref={chartRef} data={data} options={options} />
+          <StyledChartContainer>
+            <Bar ref={chartRef} data={data} options={options} />
+          </StyledChartContainer>
         </Col>
         <Col md={2}>
           <ControlSection>
