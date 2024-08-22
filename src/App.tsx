@@ -1,9 +1,14 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/NavBar';  
 import ErrorBoundary from './components/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import routes from './routes';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+interface AppProps {
+  basename: string;
+}
 
 const NotFound = () => (
   <div>
@@ -33,16 +38,28 @@ const StatisticsAppContent: React.FC = () => {
   );
 };
 
-interface AppProps {
-  basename: string;
-}
-
 const App: React.FC<AppProps> = ({ basename }) => {
+  // Set up the Query Client with global defaults
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 2, 
+        refetchOnWindowFocus: false, // Disable refetching when window regains focus
+        staleTime: 1000 * 60 * 5, // Data is considered fresh for 5 minutes
+      },
+      mutations: {
+        retry: 2, 
+      },
+    },
+  });
+
   return (
     <ErrorBoundary>
-      <Router basename={basename}>
-        <StatisticsAppContent />
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router basename={basename}>
+          <StatisticsAppContent />
+        </Router>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 };

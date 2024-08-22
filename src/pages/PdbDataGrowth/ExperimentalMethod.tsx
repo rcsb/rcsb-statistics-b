@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
-import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
-import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
+import React, { useState} from 'react';
+import {FACET_STORE } from './FacetStore';
 import { FacetPlot } from '../../components/FacetPlots/Growth/FacetPlotExperimentalMethod';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
-import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col} from 'react-bootstrap';
 import {RcsbSearchMetadata} from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
 import {
     AggregationType,
     Interval
 } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
-import {ChartType} from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 import {
   Article,
 } from './GrowthStyles';
@@ -49,7 +45,7 @@ const ExperimentalMethod: React.FC = () => {
                 attribute: "rcsb_entry_info.experimental_method",
                 min_interval_population: 1
               }}
-                chartType={state.mainAttribute.chartType}
+              chartType={state.mainAttribute.chartType}
               returnType={ReturnType.Entry}
               chartConfig={state.mainAttribute.chartConfig}
             />

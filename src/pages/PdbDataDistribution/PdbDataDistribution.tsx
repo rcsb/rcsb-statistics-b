@@ -1,14 +1,21 @@
 import React from 'react';
 import BasicChart from '../../components/BasicChart/BasicChart';
 import { ChartOptions, ChartData } from 'chart.js';
-import experimentalMethodsData from './experimentalMethodsData';
+import useGetExperimentalMethodsData from '../../hooks/useGetExperimentalMethodsData';
 
 const DataDistribution: React.FC = () => {
-  const rawData = experimentalMethodsData;
+  const { data, isLoading, error } = useGetExperimentalMethodsData();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
+  if (!data || data.length === 0) {
+    return <div>No data available</div>;
+  }
 
   const chartData: ChartData<'bar'> = {
-    labels: rawData[0].map((item: any) => item.label),
-    datasets: rawData.map((dataset: any[], index: number) => ({
+    labels: data[0].map((item: any) => item.label),
+    datasets: data.map((dataset: any[], index: number) => ({
       label: dataset[0].objectConfig.objectId[1],
       data: dataset.map(item => item.population),
       backgroundColor: dataset[0].objectConfig.color,
@@ -16,7 +23,7 @@ const DataDistribution: React.FC = () => {
       borderWidth: 1,
     })),
   };
-  
+
   const chartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -180,11 +187,9 @@ const DataDistribution: React.FC = () => {
       },
     },
   };
-  
+
   return (
-    <article className="col-12">
-      <BasicChart data={chartData} options={chartOptions} />
-    </article>
+    <BasicChart data={chartData} options={chartOptions} />
   );
 };
 
