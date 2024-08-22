@@ -140,7 +140,7 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
         </Col>
         <Col md={2}>
           <ControlSection>
-            <DataOptionsHeader>Dataset Visibility</DataOptionsHeader>
+            <DataOptionsHeader>Data Options</DataOptionsHeader>
             {visibility.map((item) => (
               <CheckboxContainer key={item.label}>
                 <StyledCheckbox

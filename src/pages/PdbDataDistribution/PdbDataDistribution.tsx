@@ -31,7 +31,7 @@ const DataDistribution: React.FC = () => {
         },
         color: '#333',
         padding: {
-          top: 20,
+          top: 0,
           bottom: 40,
         },
         align: 'start',
@@ -173,15 +173,14 @@ const DataDistribution: React.FC = () => {
     },
     layout: {
       padding: {
-        left: 10,
-        right: 10,
-        top: 20,
-        bottom: 10,
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
       },
     },
   };
   
-
   return (
     <article className="col-12">
       <BasicChart data={chartData} options={chartOptions} />
