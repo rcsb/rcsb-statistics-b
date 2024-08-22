@@ -188,6 +188,8 @@ export function FacetPlot(props: FacetPlotInterface) {
         return COLORS[methodIndex % COLORS.length];
     };
 
+    console.log("filteredData", filteredData);
+
     return (
         <Container>
             <Row>
