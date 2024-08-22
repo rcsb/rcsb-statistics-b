@@ -112,16 +112,21 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
         item.label === label ? { ...item, visible: !item.visible } : item
       )
     );
-
+  
     updateChart((chart) => {
       const datasetIndex = chart.data.datasets.findIndex((dataset: any) => dataset.label === label);
       if (datasetIndex >= 0) {
         const dataset = chart.data.datasets[datasetIndex];
         dataset.hidden = !dataset.hidden;
+  
+        chart.update({
+          duration: 1000,
+          easing: 'easeInOutQuart',
+        });
       }
-      chart.update();
     });
   };
+  
 
   return (
     <Container>
