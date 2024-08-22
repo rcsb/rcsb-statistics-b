@@ -1,27 +1,41 @@
 import React from 'react';
 import BasicChart from '../../components/BasicChart/BasicChart';
-import experimentalMethodsData from './experimentalMethodsData'
-
+import { ChartOptions, ChartData } from 'chart.js';
+import experimentalMethodsData from './experimentalMethodsData';
 
 const DataDistribution: React.FC = () => {
-  const rawData = experimentalMethodsData
+  const rawData = experimentalMethodsData;
 
-  // Transform rawData into the format that Chart.js expects
-  const chartData = {
-    labels: rawData[0].map((item: any) => item.label), // Assume all datasets share the same labels
+  const chartData: ChartData<'bar'> = {
+    labels: rawData[0].map((item: any) => item.label),
     datasets: rawData.map((dataset: any[], index: number) => ({
-      label: dataset[0].objectConfig.objectId[1], // Was Using the "X-ray", "Multiple methods", etc. as labels
+      label: dataset[0].objectConfig.objectId[1],
       data: dataset.map(item => item.population),
       backgroundColor: dataset[0].objectConfig.color,
       borderColor: dataset[0].objectConfig.color,
       borderWidth: 1,
     })),
   };
-
-  const chartOptions = {
+  
+  const chartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
+      title: {
+        display: true,
+        text: 'PDB Data Distribution by Natural Source Organism',
+        font: {
+          size: 18,
+          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          weight: 'bold',
+        },
+        color: '#333',
+        padding: {
+          top: 20,
+          bottom: 40,
+        },
+        align: 'start',
+      },
       legend: {
         display: true,
         position: 'bottom',
@@ -41,7 +55,7 @@ const DataDistribution: React.FC = () => {
       },
       tooltip: {
         enabled: true,
-        mode: 'index' as const,
+        mode: 'index',
         intersect: false,
         backgroundColor: 'rgba(0,0,0,0.8)',
         titleFont: {
@@ -59,10 +73,10 @@ const DataDistribution: React.FC = () => {
         borderColor: 'rgba(0,0,0,0)',
         borderWidth: 1,
         callbacks: {
-          label: function (tooltipItem: { dataset: { label: string }, raw: any }) {
+          label: function (tooltipItem) {
             return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
           },
-          title: function (tooltipItems: { label: string }[]) {
+          title: function (tooltipItems) {
             return `Year: ${tooltipItems[0].label}`;
           },
           footer: function () {
@@ -73,10 +87,25 @@ const DataDistribution: React.FC = () => {
       filler: {
         propagate: true,
       },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'x',
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: 'x',
+        },
+      },
     },
     scales: {
       x: {
-        type: 'category' as const,
+        type: 'category',
         display: true,
         stacked: true,
         grid: {
@@ -102,14 +131,14 @@ const DataDistribution: React.FC = () => {
         },
       },
       y: {
-        type: 'linear' as const,
+        type: 'linear',
         display: true,
         stacked: true,
         beginAtZero: true,
         grid: {
           display: true,
-          drawBorder: false,
           color: '#e4e4e4',
+          lineWidth: 1,
         },
         ticks: {
           stepSize: 1000,
@@ -133,7 +162,7 @@ const DataDistribution: React.FC = () => {
     elements: {
       bar: {
         borderWidth: 1,
-        borderRadius: 4,
+        borderRadius: 2,
         hoverBackgroundColor: 'rgba(0,0,0,0.2)',
         hoverBorderColor: '#333',
       },
@@ -152,13 +181,10 @@ const DataDistribution: React.FC = () => {
     },
   };
   
+
   return (
     <article className="col-12">
-      <h4>PDB Data Distribution by Natural Source Organism</h4>
-
-      <div>
-        <BasicChart data={chartData} options={chartOptions} />
-      </div>
+      <BasicChart data={chartData} options={chartOptions} />
     </article>
   );
 };

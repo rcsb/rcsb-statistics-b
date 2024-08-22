@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
+  ChartData,
+  ChartOptions,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -11,14 +13,15 @@ import {
   ActiveElement,
   ChartEvent
 } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
 
 interface BasicChartProps {
-  data: any;
-  options: any;
+  data: ChartData<'bar'>;
+  options: ChartOptions<'bar'>;
 }
 
 interface DatasetVisibility {
@@ -126,7 +129,6 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
       }
     });
   };
-  
 
   return (
     <Container>
@@ -150,6 +152,9 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
                 <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
               </CheckboxContainer>
             ))}
+            
+
+            {/* <button onClick={() => chartRef.current.resetZoom()}>Reset Zoom</button> */}
           </ControlSection>
         </Col>
       </Row>
