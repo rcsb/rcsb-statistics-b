@@ -1,0 +1,240 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ChartData,
+  ChartOptions,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartDataset
+} from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
+import styled from 'styled-components';
+import { Container, Row, Col, Form } from 'react-bootstrap';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
+
+interface BasicChartProps {
+  data: ChartData<'bar'>;
+  options: ChartOptions<'bar'>;
+}
+
+interface DatasetVisibility {
+  label: string;
+  visible: boolean;
+}
+
+const ControlSection = styled.div`
+  padding-left: 20px;
+  margin-top: 40px;
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+`;
+
+const StyledCheckbox = styled.input`
+  margin-right: 20px;
+`;
+
+const StyledLabel = styled.label`
+  font-size: 12px;
+  margin-left: 5px;
+  font-weight: normal;
+  margin-bottom: 0 !important;
+`;
+
+const DataOptionsHeader = styled.div`
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+`;
+
+const StyledChartContainer = styled.div`
+  height: 550px;
+`;
+
+const ToggleRadioContainer = styled.div`
+  margin-top: 20px;
+  label {
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 5px;
+    margin-bottom: 0 !important;
+    margin-top: 4px !important;
+  }
+  .form-check {
+      display: flex;
+      align-items: center;
+  }
+`;
+
+const FilterSection = styled.div`
+  margin-bottom: 35px;
+`;
+
+const FiltersShownText = styled.div`
+  font-weight: bold;
+  margin-bottom: 5px;
+`;
+
+const BarChart: React.FC<BasicChartProps> = ({ data, options }) => {
+  const chartRef = useRef<ChartJS<'bar'>>(null);
+  const [visibility, setVisibility] = useState<DatasetVisibility[]>(
+    data.datasets.map((dataset) => ({ label: dataset.label || '', visible: true }))
+  );
+  const [selectedView, setSelectedView] = useState<'Annual' | 'Cumulative'>('Annual');
+  const [currentData, setCurrentData] = useState<ChartData<'bar'>>(data);
+
+  useEffect(() => {
+    const syncVisibilityWithChart = () => {
+      if (chartRef.current) {
+        const newVisibility = chartRef.current.data.datasets.map((dataset) => ({
+          label: dataset.label || '',
+          visible: !dataset.hidden,
+        }));
+        setVisibility(newVisibility);
+      }
+    };
+
+    syncVisibilityWithChart();
+  }, [currentData]);
+
+  const updateChart = (newData: ChartData<'bar'>) => {
+    if (chartRef.current) {
+      chartRef.current.data.datasets.forEach((dataset, index) => {
+        dataset.data = newData.datasets[index].data;
+        dataset.label = newData.datasets[index].label;
+        dataset.backgroundColor = newData.datasets[index].backgroundColor;
+        dataset.borderColor = newData.datasets[index].borderColor;
+        dataset.hidden = newData.datasets[index].hidden;
+      });
+      chartRef.current.update();
+    }
+  };
+
+  const toggleDatasetVisibility = (label: string) => {
+    setVisibility((prevVisibility) => {
+      const newVisibility = prevVisibility.map((item) =>
+        item.label === label ? { ...item, visible: !item.visible } : item
+      );
+
+      updateChart({
+        ...currentData,
+        datasets: currentData.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !newVisibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      });
+
+      return newVisibility;
+    });
+  };
+
+  const handleViewChange = (view: 'Annual' | 'Cumulative') => {
+    setSelectedView(view);
+    if (view === 'Cumulative') {
+      const cumulativeData = calculateCumulativeData(data.datasets);
+      const updatedData: ChartData<'bar'> = {
+        labels: data.labels,
+        datasets: cumulativeData.map((dataset, index) => ({
+          label: dataset.label,
+          data: dataset.data,
+          backgroundColor: dataset.backgroundColor,
+          borderColor: dataset.borderColor,
+          borderWidth: 1,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      };
+      setCurrentData(updatedData);
+      updateChart(updatedData);
+    } else {
+      const updatedData: ChartData<'bar'> = {
+        ...data,
+        datasets: data.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      };
+      setCurrentData(updatedData);
+      updateChart(updatedData);
+    }
+  };
+
+  const calculateCumulativeData = (datasets: ChartDataset<'bar'>[]): ChartDataset<'bar'>[] => {
+    return datasets.map(dataset => {
+      const cumulativeDataArray: number[] = [];
+      let cumulativeSum = 0;
+
+      dataset.data.forEach((value) => {
+        cumulativeSum += value as number; // Ensure value is treated as a number
+        cumulativeDataArray.push(cumulativeSum);
+      });
+
+      return {
+        ...dataset,
+        data: cumulativeDataArray,
+      };
+    });
+  };
+
+  return (
+    <Container>
+      <Row>
+        <Col md={10}>
+          <StyledChartContainer>
+            <Bar ref={chartRef} data={currentData} options={options} />
+          </StyledChartContainer>
+        </Col>
+        <Col md={2}>
+          <ControlSection>
+            <DataOptionsHeader>Data Options</DataOptionsHeader>
+            <FilterSection>
+            <FiltersShownText>Data Shown</FiltersShownText>
+            {visibility.map((item) => (
+              <CheckboxContainer key={item.label}>
+                <StyledCheckbox
+                  type="checkbox"
+                  id={item.label}
+                  checked={item.visible}
+                  onChange={() => toggleDatasetVisibility(item.label)}
+                />
+                <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
+              </CheckboxContainer>
+            ))}
+            </FilterSection>
+            <ToggleRadioContainer>
+            <FiltersShownText>Data Set</FiltersShownText>
+              <Form.Check
+                type="radio"
+                id="view-annual"
+                label="Annual"
+                name="view-switch"
+                value="Annual"
+                checked={selectedView === 'Annual'}
+                onChange={() => handleViewChange('Annual')}
+              />
+              <Form.Check
+                type="radio"
+                id="view-cumulative"
+                label="Cumulative"
+                name="view-switch"
+                value="Cumulative"
+                checked={selectedView === 'Cumulative'}
+                onChange={() => handleViewChange('Cumulative')}
+              />
+            </ToggleRadioContainer>
+          </ControlSection>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default BarChart;
