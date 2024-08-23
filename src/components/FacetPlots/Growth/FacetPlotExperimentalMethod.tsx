@@ -113,14 +113,16 @@ export function FacetPlot(props: FacetPlotInterface) {
 
     useEffect(() => {
         setData([]);
-        console.log("FacetPlot props passed to chartfacets", props);
+        // console.log("FacetPlot props passed to chartfacets", props);
         chartFacets(props).then(data => {
+            console.log("FacetPlot data passed to chartfacets", data);
             const updatedData = calculateDataBasedOnSelection(data, selectedRadio);
             setData(updatedData);
             const methodsSet = extractMethods(updatedData);
             setMethods(Array.from(methodsSet));
             setSelectedMethods(methodsSet);
         });
+        
     }, [props, selectedRadio]);
 
     const calculateDataBasedOnSelection = (data: ChartObjectInterface[][], radioSelection: string): ChartObjectInterface[][] => {
@@ -189,7 +191,7 @@ export function FacetPlot(props: FacetPlotInterface) {
         return COLORS[methodIndex % COLORS.length];
     };
 
-    console.log("filteredData", filteredData);
+    // console.log("filteredData", filteredData);
 
     return (
         <Container>
@@ -319,9 +321,7 @@ async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promis
     const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
     if (!queryResults)
         return [[]];
-    console.log("queryResults data passed to get Facets", queryResults);
     const buckets = getFacetsFromSearch(queryResults);
-   // console.log("queryResults", queryResults);
     const secondDim = props.secondDim;
     if (secondDim)
         return drillFacets(buckets.filter(f => f.name === getFacetName(secondDim)));

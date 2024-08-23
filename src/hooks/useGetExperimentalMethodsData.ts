@@ -14,7 +14,7 @@ import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchCli
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 
 
-const fetchExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]> => {
+const GetExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]> => {
 
   const experimentalMethodsQuery: Omit<FacetPlotInterface, "chartType"> = {
     firstDim: {
@@ -122,16 +122,15 @@ const fetchExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]>
     "#85ff34",
     "#ea6c05"
 ];
+  const data = await chartFacets(experimentalMethodsQuery);
 
-  const apiData = await chartFacets(experimentalMethodsQuery);
-
-  return apiData;
+  return data;
 };
 
 const useGetExperimentalMethodsData = () => {
   return useQuery({
     queryKey: ['experimentalMethodsData'],
-    queryFn: fetchExperimentalMethodsData,
+    queryFn: GetExperimentalMethodsData,
   });
 };
 
