@@ -113,6 +113,7 @@ export function FacetPlot(props: FacetPlotInterface) {
 
     useEffect(() => {
         setData([]);
+        console.log("FacetPlot props passed to chartfacets", props);
         chartFacets(props).then(data => {
             const updatedData = calculateDataBasedOnSelection(data, selectedRadio);
             setData(updatedData);
@@ -318,7 +319,7 @@ async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promis
     const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
     if (!queryResults)
         return [[]];
-
+    console.log("queryResults data passed to get Facets", queryResults);
     const buckets = getFacetsFromSearch(queryResults);
    // console.log("queryResults", queryResults);
     const secondDim = props.secondDim;
