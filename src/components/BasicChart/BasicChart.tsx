@@ -10,14 +10,11 @@ import {
   Title,
   Tooltip,
   Legend,
-  LegendItem,
-  ChartEvent,
   ChartDataset
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import styled from 'styled-components';
 import { Container, Row, Col, Form } from 'react-bootstrap';
-import { ChartObjectInterface } from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
 
@@ -104,28 +101,35 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
 
   const updateChart = (newData: ChartData<'bar'>) => {
     if (chartRef.current) {
-      chartRef.current.data = newData;
+      // Update the datasets directly
+      chartRef.current.data.datasets.forEach((dataset, index) => {
+        dataset.data = newData.datasets[index].data;
+        dataset.label = newData.datasets[index].label;
+        dataset.backgroundColor = newData.datasets[index].backgroundColor;
+        dataset.borderColor = newData.datasets[index].borderColor;
+        dataset.hidden = newData.datasets[index].hidden;
+      });
       chartRef.current.update();
     }
   };
 
   const toggleDatasetVisibility = (label: string) => {
     setVisibility((prevVisibility) => {
-        const newVisibility = prevVisibility.map((item) =>
-            item.label === label ? { ...item, visible: !item.visible } : item
-        );
+      const newVisibility = prevVisibility.map((item) =>
+        item.label === label ? { ...item, visible: !item.visible } : item
+      );
 
-        updateChart({
-            ...currentData,
-            datasets: currentData.datasets.map((dataset) => ({
-                ...dataset,
-                hidden: !newVisibility.find((item) => item.label === dataset.label)?.visible,
-            })),
-        });
+      updateChart({
+        ...currentData,
+        datasets: currentData.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !newVisibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      });
 
-        return newVisibility;
+      return newVisibility;
     });
-};
+  };
 
   const handleViewChange = (view: 'Annual' | 'Cumulative') => {
     setSelectedView(view);
@@ -139,13 +143,21 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
           backgroundColor: dataset.backgroundColor,
           borderColor: dataset.borderColor,
           borderWidth: 1,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
         })),
       };
       setCurrentData(updatedData);
       updateChart(updatedData);
     } else {
-      setCurrentData(data); // Reset to original data
-      updateChart(data);
+      const updatedData: ChartData<'bar'> = {
+        ...data,
+        datasets: data.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      };
+      setCurrentData(updatedData);
+      updateChart(updatedData);
     }
   };
 
