@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { FacetSelector, SelectorRoleType } from '../../components/FacetSelector';
-import { FacetCheckbox, CheckboxRoleType } from '../../components/FacetCheckbox';
-import { ADDITIONAL_FACET_STORE, FACET_STORE } from './FacetStore';
+import React, { useState } from 'react';
+import { FACET_STORE } from './FacetStore';
 import { FacetPlot } from '../../components/FacetPlots/Growth/FacetPlotDomains';
 import { ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
-import { Observer } from 'rxjs';
 import { StatsFacetInterface } from '../../interfaces/StatsFacetInterface';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import {RcsbSearchMetadata} from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
 import {
     AggregationType,

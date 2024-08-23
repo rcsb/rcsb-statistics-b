@@ -1,5 +1,5 @@
 import React from 'react';
-import BasicChart from '../../components/BasicChart/BasicChart';
+import BasicChart from '../../components/BarChart/BarChart';
 import { ChartOptions, ChartData } from 'chart.js';
 import useGetExperimentalMethodsData from '../../hooks/useGetExperimentalMethodsData';
 
