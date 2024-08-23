@@ -74,7 +74,6 @@ const ToggleRadioContainer = styled.div`
       margin-bottom:3px;
   }
 `;
-
 const COLOR_PALETTE = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
 
 const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
@@ -101,7 +100,6 @@ const BasicChart: React.FC<BasicChartProps> = ({ data, options }) => {
 
   const updateChart = (newData: ChartData<'bar'>) => {
     if (chartRef.current) {
-      // Update the datasets directly
       chartRef.current.data.datasets.forEach((dataset, index) => {
         dataset.data = newData.datasets[index].data;
         dataset.label = newData.datasets[index].label;
