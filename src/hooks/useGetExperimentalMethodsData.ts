@@ -51,7 +51,6 @@ const fetchExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]>
   return experimentalMethodsData;
 };
 
-// Create a custom hook for fetching experimental methods data
 const useGetExperimentalMethodsData = () => {
   return useQuery({
     queryKey: ['experimentalMethodsData'],

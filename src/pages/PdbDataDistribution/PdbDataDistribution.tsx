@@ -9,187 +9,187 @@ const DataDistribution: React.FC = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
-  if (!data || data.length === 0) {
-    return <div>No data available</div>;
-  }
+    const chartData: ChartData<'bar'> | null = data && data.length > 0 ? {
+        labels: data[0].map((item: any) => item.label),
+        datasets: data.map((dataset: any[], index: number) => ({
+            label: dataset[0].objectConfig.objectId[1],
+            data: dataset.map(item => item.population),
+            backgroundColor: dataset[0].objectConfig.color,
+            borderColor: dataset[0].objectConfig.color,
+            borderWidth: 1,
+        })),
+    } : null;
 
-  const chartData: ChartData<'bar'> = {
-    labels: data[0].map((item: any) => item.label),
-    datasets: data.map((dataset: any[], index: number) => ({
-      label: dataset[0].objectConfig.objectId[1],
-      data: dataset.map(item => item.population),
-      backgroundColor: dataset[0].objectConfig.color,
-      borderColor: dataset[0].objectConfig.color,
-      borderWidth: 1,
-    })),
-  };
-
-  const chartOptions: ChartOptions<'bar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      title: {
-        display: true,
-        text: 'PDB Data Distribution by Natural Source Organism',
-        font: {
-          size: 18,
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-          weight: 'bold',
-        },
-        color: '#333',
-        padding: {
-          top: 0,
-          bottom: 40,
-        },
-        align: 'start',
-      },
-      legend: {
-        display: true,
-        position: 'bottom',
-        align: 'start',
-        labels: {
-          boxWidth: 40,
-          padding: 20,
-          font: {
-            size: 14,
+    const chartOptions: ChartOptions<'bar'> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        title: {
+            display: true,
+            text: 'PDB Data Distribution by Natural Source Organism',
+            font: {
+            size: 18,
             family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-            style: 'normal',
-          },
-          color: '#333',
-          usePointStyle: false,
-          pointStyle: 'circle',
+            weight: 'bold',
+            },
+            color: '#333',
+            padding: {
+            top: 0,
+            bottom: 40,
+            },
+            align: 'start',
         },
-      },
-      tooltip: {
-        enabled: true,
-        mode: 'index',
-        intersect: false,
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        titleFont: {
-          size: 16,
-          weight: 'bold',
+        legend: {
+            display: true,
+            position: 'bottom',
+            align: 'start',
+            labels: {
+            boxWidth: 40,
+            padding: 20,
+            font: {
+                size: 14,
+                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                style: 'normal',
+            },
+            color: '#333',
+            usePointStyle: false,
+            pointStyle: 'circle',
+            },
         },
-        bodyFont: {
-          size: 14,
+        tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            titleFont: {
+            size: 16,
+            weight: 'bold',
+            },
+            bodyFont: {
+            size: 14,
+            },
+            footerFont: {
+            size: 12,
+            },
+            padding: 10,
+            displayColors: true,
+            borderColor: 'rgba(0,0,0,0)',
+            borderWidth: 1,
+            callbacks: {
+            label: function (tooltipItem) {
+                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+            },
+            title: function (tooltipItems) {
+                return `Year: ${tooltipItems[0].label}`;
+            },
+            footer: function () {
+                return 'Additional information';
+            },
+            },
         },
-        footerFont: {
-          size: 12,
-        },
-        padding: 10,
-        displayColors: true,
-        borderColor: 'rgba(0,0,0,0)',
-        borderWidth: 1,
-        callbacks: {
-          label: function (tooltipItem) {
-            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-          },
-          title: function (tooltipItems) {
-            return `Year: ${tooltipItems[0].label}`;
-          },
-          footer: function () {
-            return 'Additional information';
-          },
-        },
-      },
-      filler: {
-        propagate: true,
-      },
-      zoom: {
-        pan: {
-          enabled: true,
-          mode: 'x',
+        filler: {
+            propagate: true,
         },
         zoom: {
-          wheel: {
+            pan: {
             enabled: true,
-          },
-          pinch: {
-            enabled: true,
-          },
-          mode: 'x',
+            mode: 'x',
+            },
+            zoom: {
+            wheel: {
+                enabled: true,
+            },
+            pinch: {
+                enabled: true,
+            },
+            mode: 'x',
+            },
         },
-      },
-    },
-    scales: {
-      x: {
-        type: 'category',
-        display: true,
-        stacked: true,
-        grid: {
-          display: false,
         },
-        ticks: {
-          autoSkip: true,
-          maxRotation: 45,
-          minRotation: 0,
-          font: {
-            size: 12,
-          },
-          color: '#333',
+        scales: {
+        x: {
+            type: 'category',
+            display: true,
+            stacked: true,
+            grid: {
+            display: false,
+            },
+            ticks: {
+            autoSkip: true,
+            maxRotation: 45,
+            minRotation: 0,
+            font: {
+                size: 12,
+            },
+            color: '#333',
+            },
+            title: {
+            display: true,
+            text: 'Year',
+            font: {
+                size: 14,
+                weight: 'normal',
+            },
+            color: '#333',
+            },
         },
-        title: {
-          display: true,
-          text: 'Year',
-          font: {
-            size: 14,
-            weight: 'normal',
-          },
-          color: '#333',
+        y: {
+            type: 'linear',
+            display: true,
+            stacked: true,
+            beginAtZero: true,
+            grid: {
+            display: true,
+            color: '#e4e4e4',
+            lineWidth: 1,
+            },
+            ticks: {
+            stepSize: 1000,
+            font: {
+                size: 12,
+            },
+            color: '#333',
+            callback: (value: number | string) => `${value}`,
+            },
+            title: {
+            display: true,
+            text: 'Number of Entries',
+            font: {
+                size: 11,
+                weight: 'normal',
+            },
+            color: '#333',
+            },
         },
-      },
-      y: {
-        type: 'linear',
-        display: true,
-        stacked: true,
-        beginAtZero: true,
-        grid: {
-          display: true,
-          color: '#e4e4e4',
-          lineWidth: 1,
         },
-        ticks: {
-          stepSize: 1000,
-          font: {
-            size: 12,
-          },
-          color: '#333',
-          callback: (value: number | string) => `${value}`,
+        elements: {
+        bar: {
+            borderWidth: 1,
+            borderRadius: 2,
+            hoverBackgroundColor: 'rgba(0,0,0,0.2)',
+            hoverBorderColor: '#333',
         },
-        title: {
-          display: true,
-          text: 'Number of Entries',
-          font: {
-            size: 11,
-            weight: 'normal',
-          },
-          color: '#333',
         },
-      },
-    },
-    elements: {
-      bar: {
-        borderWidth: 1,
-        borderRadius: 2,
-        hoverBackgroundColor: 'rgba(0,0,0,0.2)',
-        hoverBorderColor: '#333',
-      },
-    },
-    animation: {
-      duration: 500,
-      easing: 'easeInOutQuart',
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-      },
-    },
-  };
+        animation: {
+        duration: 500,
+        easing: 'easeInOutQuart',
+        },
+        layout: {
+        padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+        },
+        },
+    };
 
   return (
-    <BasicChart data={chartData} options={chartOptions} />
+    chartData ? (
+      <BasicChart data={chartData} options={chartOptions} />
+    ) : (
+      <div>No data available</div>
+    )
   );
 };
 
