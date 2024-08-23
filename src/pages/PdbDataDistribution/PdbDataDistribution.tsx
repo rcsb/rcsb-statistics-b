@@ -89,17 +89,18 @@ const DataDistribution: React.FC = () => {
                 }
                 return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
             },
-            
-        title: function (tooltipItems) {
-            return `Year: ${tooltipItems[0].label}`;
-        },
-        footer: function (tooltipItems) {
-            // Calculate the total
-            const total = tooltipItems.reduce((sum, tooltipItem) => {
-              return sum + Number(tooltipItem.raw);
-            }, 0);
-            return `Total: ${total}`;
-          },
+            title: function (tooltipItems) {
+                return `Year: ${tooltipItems[0].label}`;
+            },
+            footer: function (tooltipItems) {
+                if (tooltipItems.length > 1) {
+                    const total = tooltipItems.reduce((sum, tooltipItem) => {
+                        return sum + Number(tooltipItem.raw);
+                    }, 0);
+                    return `Total: ${total}`;
+                }
+                return '';
+            },
         },
     },
     filler: {
