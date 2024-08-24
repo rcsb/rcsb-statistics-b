@@ -1,6 +1,43 @@
 import React, { useState } from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import { useSettings } from '../../contexts/SettingsContext';
+import styled from 'styled-components';
+
+const ColorGrid = styled.div`
+  display: flex;
+  margin-left: 10px;
+`;
+
+const ColorBox = styled.div<{ color: string }>`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.color};
+  margin-right: 1px;
+  border-radius: 2px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+const ColorSchemeContainer = styled.label`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  width: 100%;
+`;
+
+const SchemeName = styled.span`
+ margin-left: 5px;
+  min-width: 60px;
+  text-transform: capitalize;
+  margin-right: 10px;
+`;
+
+const RadioInput = styled.input`
+  margin-right: 10px;
+`;
 
 const SettingsModal: React.FC = () => {
   const { showModal, handleCloseModal } = useModal();
@@ -20,20 +57,11 @@ const SettingsModal: React.FC = () => {
   if (!showModal) return null;
 
   const renderColorGrid = (colors: string[]) => (
-    <div style={{ display: 'flex' }}>
-      {colors.map((color, index) => (
-        <div
-          key={index}
-          style={{
-            width: '20px',
-            height: '20px',
-            backgroundColor: color,
-            marginRight: index === colors.length - 1 ? '0' : '2px', // No margin on last box
-            borderRadius: '4px',
-          }}
-        />
+    <ColorGrid>
+      {colors.map((color: string, index: number) => (
+        <ColorBox key={index} color={color} />
       ))}
-    </div>
+    </ColorGrid>
   );
 
   return (
@@ -53,30 +81,17 @@ const SettingsModal: React.FC = () => {
             <label>Select Color Scheme:</label>
             <div>
               {Object.keys(settings.colorSchemes).map((schemeName) => (
-                <label
-                  key={schemeName}
-                  className="radio"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '10px',
-                    cursor: 'pointer',
-                    width: '100%', 
-                  }}
-                >
-                  <input
+                <ColorSchemeContainer key={schemeName}>
+                  <RadioInput
                     type="radio"
                     name="color-scheme"
                     value={schemeName}
                     checked={selectedScheme === schemeName}
                     onChange={handleSchemeChange}
-                    style={{ marginRight: '10px' }}
                   />
-                  <span style={{ minWidth: '80px', textTransform: 'capitalize', marginRight: '10px' }}>
-                    {schemeName}
-                  </span>
+                  <SchemeName>{schemeName}</SchemeName>
                   {renderColorGrid(settings.colorSchemes[schemeName])}
-                </label>
+                </ColorSchemeContainer>
               ))}
             </div>
           </div>

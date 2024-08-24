@@ -118,11 +118,11 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
 
 const useGetExperimentalMethodsData = () => {
   const { settings } = useSettings();
-  console.log("settings", settings);
+  console.log("settings.colorScheme", settings.colorScheme);
 
   return useQuery({
     queryKey: ['experimentalMethodsData'],
-    queryFn: () => GetExperimentalMethodsData(settings.colorScheme), // Pass the default color scheme
+    queryFn: () => GetExperimentalMethodsData(settings.colorScheme),
   });
 };
 
