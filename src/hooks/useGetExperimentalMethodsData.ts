@@ -7,15 +7,14 @@ import { buildAttributeQuery, buildMultiFacet, buildRequestFromSearchQuery } fro
 import { FacetPlotInterface } from "../../src/interfaces/FacetPlotInterface";
 import { SearchQueryType, SearchRequestType } from "@rcsb/rcsb-search-tools/lib/SearchQueryTools/SearchQueryInterfaces";
 import { Service } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
-import { AttributeFacetType, FilterFacetType, SearchBucketFacetType} from "@rcsb/rcsb-search-tools/lib/SearchParseTools/SearchFacetInterface";
+import { AttributeFacetType, FilterFacetType, SearchBucketFacetType } from "@rcsb/rcsb-search-tools/lib/SearchParseTools/SearchFacetInterface";
 import { cloneDeep } from "lodash";
 import { QueryResult } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchResultInterface";
 import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchClient";
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
+import { useSettings } from '../../src/contexts/SettingsContext';
 
-
-const GetExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]> => {
-
+const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
   const experimentalMethodsQuery: Omit<FacetPlotInterface, "chartType"> = {
     firstDim: {
       name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -94,7 +93,7 @@ const GetExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]> =
             population: valueMap.get(dom)?.get(label) ?? 0,
             objectConfig: {
               objectId: [dom, label, valueMap.get(dom)?.get(label)],
-               color: COLORS[n % COLORS.length],
+               color: colors[n % colors.length], // Use colors from settings
             }
           });
       });
@@ -112,25 +111,18 @@ const GetExperimentalMethodsData = async (): Promise<ChartObjectInterface[][]> =
     return getFacetName(facet.facets[0]);
   }
 
-  const COLORS: string[] = [
-    "#86b5e6",
-    "#2fad30",
-    "#e71f8a",
-    "#f60505",
-    "#a27206",
-    "#60e5bd",
-    "#85ff34",
-    "#ea6c05"
-];
   const data = await chartFacets(experimentalMethodsQuery);
 
   return data;
 };
 
 const useGetExperimentalMethodsData = () => {
+  const { settings } = useSettings();
+  console.log("settings", settings);
+
   return useQuery({
     queryKey: ['experimentalMethodsData'],
-    queryFn: GetExperimentalMethodsData,
+    queryFn: () => GetExperimentalMethodsData(settings.colorScheme), // Pass the default color scheme
   });
 };
 

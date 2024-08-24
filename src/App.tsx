@@ -5,6 +5,9 @@ import ErrorBoundary from './components/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import routes from './routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SettingsProvider } from '../src/contexts/SettingsContext';
+import { ModalProvider, useModal } from '../src/contexts/ModalContext';
+import SettingsModal from './components/Modals/SettingsModal';
 
 interface AppProps {
   basename: string;
@@ -21,6 +24,7 @@ const StatisticsAppContent: React.FC = () => {
     <main className="container mt-5">
       <section className="row">
         <Navbar />
+        <SettingsModal />
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             {routes.map((route, index) => (
@@ -39,13 +43,12 @@ const StatisticsAppContent: React.FC = () => {
 };
 
 const App: React.FC<AppProps> = ({ basename }) => {
-  // Set up the Query Client with global defaults
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         retry: 2, 
-        refetchOnWindowFocus: false, // Disable refetching when window regains focus
-        staleTime: 1000 * 60 * 5, // Data is considered fresh for 5 minutes
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 5,
       },
       mutations: {
         retry: 2, 
@@ -56,12 +59,17 @@ const App: React.FC<AppProps> = ({ basename }) => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <Router basename={basename}>
-          <StatisticsAppContent />
-        </Router>
+        <SettingsProvider>
+          <Router basename={basename}>
+            <ModalProvider>
+              <StatisticsAppContent />
+            </ModalProvider>
+          </Router>
+        </SettingsProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
 };
 
 export default App;
+
