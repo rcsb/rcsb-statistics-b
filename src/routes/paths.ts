@@ -1,6 +1,6 @@
 const paths = {
   HOME: '/',
-  PDB_DATA_GROWTH2: '/growth2',
+  PDB_DATA_GROWTH2: (plotname: string) => `/growth2/${plotname}`,
   PDB_DATA_GROWTH_OVERALL_STRUCTURES: '/growth/overall-structures',
   PDB_DATA_GROWTH_OVERALL_SMALL_MOLECULES: '/growth/overall-small-molecules',
   PDB_DATA_GROWTH_BY_EXPERIMENTAL: '/growth/experimental-method',

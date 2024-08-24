@@ -24,6 +24,7 @@ const isActivePath = (locationPathname: string, basePath: string): boolean => {
 const NavBar: React.FC = () => {
   const location = useLocation();
   const isDataGrowthActive = isActivePath(location.pathname, paths.PDB_DATA_GROWTH_BY_EXPERIMENTAL);
+  const isDataGrowthActive2 = isActivePath(location.pathname, '/growth2'); // Use the base part of the dynamic route
   const isDataDistributionActive = isActivePath(location.pathname, paths.PDB_DATA_DISTRIBUTION);
 
   const { handleOpenModal } = useModal();
@@ -80,6 +81,35 @@ const NavBar: React.FC = () => {
                     By Number of Domains
                   </DropdownItem>
                   <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH_BY_UNIQUE}>
+                    By Unique Protein Sequences
+                  </DropdownItem>
+                </DropdownMenu>
+              </NavDropdown>
+              <NavDropdown className={`nav-item dropdown ${isDataGrowthActive2 ? 'active' : ''}`}>
+                <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname.startsWith('/growth2') ? 'active' : ''}`} as="a">
+                  Data Growth 2
+                  <span className="triangle" />
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu">
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH2('overall-structures')}>
+                    By Overall Structures
+                  </DropdownItem>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH2('overall-small-molecules')}>
+                    By Overall Small Molecules
+                  </DropdownItem>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH2('experimental-method')}>
+                    By Experimental Method
+                  </DropdownItem>
+                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH2('molecular-composition')}>
+                    By Molecular Composition
+                  </DropdownItem>
+                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH2('assembly-symmetry')}>
+                    By Assembly Symmetry
+                  </DropdownItem>
+                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH2('number-of-domains')}>
+                    By Number of Domains
+                  </DropdownItem>
+                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH2('unique-protein-sequences')}>
                     By Unique Protein Sequences
                   </DropdownItem>
                 </DropdownMenu>

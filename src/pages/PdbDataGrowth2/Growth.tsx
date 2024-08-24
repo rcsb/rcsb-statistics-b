@@ -1,18 +1,23 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import BarChart from '../../components/BarChart/BarChart';
 import { ChartData } from 'chart.js';
-import useGetExperimentalMethodsData from '../../hooks/useGetExperimentalMethodsData';
+import useGetData from '../../hooks/useGetData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
-import { experimentalMethodChartOptions } from '../config/chartConfigs';
+import { experimentalMethodChartOptions } from '../../config/chartConfigs';
 
 const Growth: React.FC = () => {
-    const { data, isLoading, error } = useGetExperimentalMethodsData();
+    const { plotname } = useParams<{ plotname: string }>();
+
+    const key = plotname || 'defaultKey';
+
+    const { data, isLoading, error } = useGetData(key, 'specificParameter');
 
     if (isLoading) {
         return <ChartSkeleton />;
     }
 
-    if (error) return <div>Error loading data</div>;
+    if (error) return <div>Error loading data: {error.message}</div>;
 
     const chartData: ChartData<'bar'> | null = data && data.length > 0 ? {
         labels: data[0].map((item: any) => item.label),
@@ -33,12 +38,15 @@ const Growth: React.FC = () => {
     } : null;
 
     return (
-        chartData ? (
-            <BarChart data={chartData} options={experimentalMethodChartOptions} />
-        ) : (
-            <div>No data available</div>
-        )
+        <div key={plotname}>
+            {chartData ? (
+                <BarChart data={chartData} options={experimentalMethodChartOptions} />
+            ) : (
+                <div>No data available</div>
+            )}
+        </div>
     );
+    
 };
 
 export default Growth;

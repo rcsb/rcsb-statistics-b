@@ -1,5 +1,8 @@
-import { MetaInfo, RefUrl, Facet } from '../../interfaces/MetaInfoTypes';
-import { findObjectInArrayByKey, findQueryObjectInArrayByKey } from '../../utils/utils';
+import { MetaInfo, RefUrl, Facet } from '../interfaces/MetaInfoTypes';
+import { findObjectInArrayByKey, findQueryObjectInArrayByKey } from '../utils/utils';
+import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
+import { AggregationType, Interval, ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
+
 
 export const statsDataMetaInfo: MetaInfo[] = [
   {
@@ -415,9 +418,52 @@ export const statsDataMetaInfo: MetaInfo[] = [
   },
 ];
 
-
-
 export const growthRelatedKeys: MetaInfo[] = [
+  {
+    key: 'experimental-method',
+    title: 'Growth',
+    description: 'Overall Growth By Experimental Method',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entry_info.experimental_method',
+            operator: 'exact_match',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: 'date_histogram',
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 1,
+        facets: [
+          {
+            name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+            aggregation_type: AggregationType.Terms,
+            attribute: "rcsb_entry_info.experimental_method",
+            min_interval_population: 1,
+          },
+        ],
+      },
+    ],
+    return_type: ReturnType.Entry,
+  },
   {
     key: 'growth-released-structures',
     title: 'Overall',

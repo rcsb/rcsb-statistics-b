@@ -3,7 +3,7 @@ import BarChart from '../../components/BarChart/BarChart';
 import { ChartData } from 'chart.js';
 import useGetExperimentalMethodsData from '../../hooks/useGetExperimentalMethodsData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
-import { experimentalMethodChartOptions } from '../config/chartConfigs';
+import { experimentalMethodChartOptions } from '../../config/chartConfigs';
 
 const ExperimentalMethod: React.FC = () => {
     const { data, isLoading, error } = useGetExperimentalMethodsData();
