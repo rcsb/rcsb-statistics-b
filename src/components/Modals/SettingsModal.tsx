@@ -23,6 +23,7 @@ const ColorBox = styled.div<{ color: string }>`
 const ColorSchemeContainer = styled.label`
   display: flex;
   align-items: center;
+  margin-top: 10px;
   margin-bottom: 10px;
   cursor: pointer;
   width: 100%;
@@ -75,10 +76,7 @@ const SettingsModal: React.FC = () => {
             <h4 className="modal-title">RCSB Chart Settings</h4>
           </div>
           <div className="modal-body">
-            <div className="current-scheme">
-              <strong>Current Color Scheme:</strong> {settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
-            </div>
-            <label>Select Color Scheme:</label>
+            <label>Current Color Scheme:</label> {settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
             <div>
               {Object.keys(settings.colorSchemes).map((schemeName) => (
                 <ColorSchemeContainer key={schemeName}>
