@@ -82,6 +82,11 @@ export const NavItem = styled.li`
     height: 30px;
     padding: 5px 15px !important;
   }
+  
+  button {
+    margin-top: 5px;
+    padding: 0 !important;
+  }
 `;
 
 export const NavbarCollapse = styled.div`
