@@ -6,8 +6,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import routes from './routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SettingsProvider } from '../src/contexts/SettingsContext';
-import { ModalProvider, useModal } from '../src/contexts/ModalContext';
+import { ModalProvider} from '../src/contexts/ModalContext';
 import SettingsModal from './components/Modals/SettingsModal';
+import  ChartSkeleton from './components/BarChart/BarChartSkeleton';
+
 
 interface AppProps {
   basename: string;
@@ -25,7 +27,7 @@ const StatisticsAppContent: React.FC = () => {
       <section className="row">
         <Navbar />
         <SettingsModal />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={(<ChartSkeleton />)}>
           <Routes>
             {routes.map((route, index) => (
               <Route 
