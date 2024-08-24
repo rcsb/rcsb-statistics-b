@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import styled from 'styled-components';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ColorGrid = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const ColorSchemeContainer = styled.label`
 `;
 
 const SchemeName = styled.span`
- margin-left: 5px;
+  margin-left: 5px;
   min-width: 60px;
   text-transform: capitalize;
   margin-right: 10px;
@@ -43,6 +44,7 @@ const RadioInput = styled.input`
 const SettingsModal: React.FC = () => {
   const { showModal, handleCloseModal } = useModal();
   const { settings, changeColorScheme } = useSettings();
+  const queryClient = useQueryClient();
 
   const [selectedScheme, setSelectedScheme] = useState(settings.schemeName);
 
@@ -52,6 +54,7 @@ const SettingsModal: React.FC = () => {
 
   const handleSaveChanges = () => {
     changeColorScheme(selectedScheme);
+    queryClient.invalidateQueries({ queryKey: ['experimentalMethodsData', selectedScheme] }); // Correct query invalidation
     handleCloseModal();
   };
 

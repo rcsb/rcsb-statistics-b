@@ -29,7 +29,7 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
       attribute: "rcsb_entry_info.experimental_method",
       min_interval_population: 1
     },
-    returnType:ReturnType.Entry
+    returnType: ReturnType.Entry
   };
 
   async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promise<ChartObjectInterface[][]> {
@@ -41,8 +41,9 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
     });
 
     const facet: AttributeFacetType | FilterFacetType = cloneDeep(props.firstDim);
-    if (props.secondDim)
+    if (props.secondDim) {
       buildMultiFacet(props.secondDim, facet);
+    }
 
     const searchRequest: SearchRequestType = buildRequestFromSearchQuery(
       searchQuery,
@@ -53,19 +54,19 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
     );
 
     const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
-    if (!queryResults)
-      return [[]];
+    if (!queryResults) return [[]];
     const buckets = getFacetsFromSearch(queryResults);
     const secondDim = props.secondDim;
-    if (secondDim)
+    if (secondDim) {
       return drillFacets(buckets.filter(f => f.name === getFacetName(secondDim)));
-    else
+    } else {
       return [buckets[0].data.map(d => ({
         ...d,
         objectConfig: {
           objectId: [d.label, d.population]
         }
       }))];
+    }
   }
 
   function drillFacets(facets: SearchBucketFacetType[]): ChartObjectInterface[][] {
@@ -76,8 +77,9 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
       domList.push(f.labelPath[0]);
       f.data.forEach(d => {
         labelSet.add(d.label.toString());
-        if (!valueMap.has(f.labelPath[0]))
+        if (!valueMap.has(f.labelPath[0])) {
           valueMap.set(f.labelPath[0], new Map());
+        }
         valueMap.get(f.labelPath[0])?.set(d.label.toString(), d.population);
       });
     });
@@ -87,15 +89,16 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
     labelList.forEach((label, n) => {
       const row: ChartObjectInterface[] = [];
       domList.forEach(dom => {
-        if (valueMap.get(dom)?.get(label))
+        if (valueMap.get(dom)?.get(label)) {
           row.push({
             label: dom,
             population: valueMap.get(dom)?.get(label) ?? 0,
             objectConfig: {
               objectId: [dom, label, valueMap.get(dom)?.get(label)],
-               color: colors[n % colors.length], // Use colors from settings
+              color: colors[n % colors.length], // Use colors from settings
             }
           });
+        }
       });
       out.push(row);
     });
@@ -104,10 +107,8 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
   }
 
   function getFacetName(facet: AttributeFacetType | FilterFacetType): string {
-    if ('name' in facet)
-      return facet.name;
-    if (!facet.facets || facet.facets.length !== 1)
-      throw new Error("Multiple facets are not allowed");
+    if ('name' in facet) return facet.name;
+    if (!facet.facets || facet.facets.length !== 1) throw new Error("Multiple facets are not allowed");
     return getFacetName(facet.facets[0]);
   }
 
@@ -118,10 +119,9 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
 
 const useGetExperimentalMethodsData = () => {
   const { settings } = useSettings();
-  console.log("settings.colorScheme", settings.colorScheme);
 
   return useQuery({
-    queryKey: ['experimentalMethodsData'],
+    queryKey: ['experimentalMethodsData', settings.colorScheme],
     queryFn: () => GetExperimentalMethodsData(settings.colorScheme),
   });
 };
