@@ -5,7 +5,7 @@ import useGetExperimentalMethodsData from '../../hooks/useGetExperimentalMethods
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
 import { experimentalMethodChartOptions } from '../config/chartConfigs';
 
-const ExperimentalMethod: React.FC = () => {
+const Growth: React.FC = () => {
     const { data, isLoading, error } = useGetExperimentalMethodsData();
 
     if (isLoading) {
@@ -41,4 +41,4 @@ const ExperimentalMethod: React.FC = () => {
     );
 };
 
-export default ExperimentalMethod;
+export default Growth;

@@ -11,6 +11,7 @@ const routes = [
   { path: paths.PDB_DATA_GROWTH_BY_ASSEMBLY, element: lazy(() => import('../pages/PdbDataGrowth/AssemblySymmetry')) },
   { path: paths.PDB_DATA_GROWTH_BY_DOMAINS, element: lazy(() => import('../pages/PdbDataGrowth/NumberOfDomains')) },
   { path: paths.PDB_DATA_GROWTH_BY_UNIQUE, element: lazy(() => import('../pages/PdbDataGrowth/UniqueProteinSequences')) },
+  { path: paths.PDB_DATA_GROWTH2, element: lazy(() => import('../pages/PdbDataGrowth2/Growth')) },
   { path: paths.PDB_DATA_DISTRIBUTION, element: lazy(() => import('../pages/PdbDataDistribution')) },
   { path: paths.OTHER_STATISTICS, element: lazy(() => import('../pages/OtherStats')) },
   { path: paths.PDB_DATA_SNAPSHOT, element: lazy(() => import('../pages/PdbDataSnapshot')) }
