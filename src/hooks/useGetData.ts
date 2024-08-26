@@ -27,7 +27,7 @@ interface BucketDataWithConfig extends BucketDataType {
     };
 }
 
-const GetOverallStructures = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -39,10 +39,10 @@ const GetOverallStructures = async (colors: string[]): Promise<ChartObjectInterf
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithPropsSingleSet(colors, overallStructuresQuery);
+    return fetchChartDataWithProps(colors, overallStructuresQuery, true);
 };
 
-const GetOverallSmallMolecules = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const overallSmallMoleculesQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -54,7 +54,7 @@ const GetOverallSmallMolecules = async (colors: string[]): Promise<ChartObjectIn
         returnType: ReturnType.MolDefinition
     };
 
-    return fetchChartDataWithPropsSingleSet(colors, overallSmallMoleculesQuery);
+    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, true);
 };
 
 const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
@@ -78,7 +78,7 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
     return fetchChartDataWithProps(colors, experimentalMethodsQuery);
 };
 
-const GetMolecularComposition = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const molecularCompositionQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -98,7 +98,7 @@ const GetMolecularComposition = async (colors: string[]): Promise<ChartObjectInt
     return fetchChartDataWithProps(colors, molecularCompositionQuery);
 };
 
-const GetAssemblySymmetry = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const assemblySymmetryQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -118,7 +118,7 @@ const GetAssemblySymmetry = async (colors: string[]): Promise<ChartObjectInterfa
     return fetchChartDataWithProps(colors, assemblySymmetryQuery);
 };
 
-const GetNumberOfDomains = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const numberOfDomainsQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -146,50 +146,43 @@ const GetNumberOfDomains = async (colors: string[]): Promise<ChartObjectInterfac
     return fetchChartDataWithProps(colors, numberOfDomainsQuery);
 };
 
-const fetchChartDataWithProps = async (
-    colors: string[],
-    props: Omit<FacetPlotInterface, "chartType">
-): Promise<ChartObjectInterface[][]> => {
-    const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
-        attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
-        value: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.enum.experimental,
-        operator: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.operator.ExactMatch,
-        service: Service.Text
-    });
+const GetNumberOfUniqueProtienSequenses = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const numberOfDomainsQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim: {
+            name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+            aggregation_type: AggregationType.DateHistogram,
+            attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+            interval: Interval.Year,
+            min_interval_population: 0
+        },
+        secondDim: {
+            "filter": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                  "operator": "exact_match",
+                  "value": "matching_uniprot_accession"
+                }
+              },
+              "facets": [
+                {
+                  "name": "Unique UniProtKB Entries",
+                  "aggregation_type": "cardinality",
+                  "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                }
+              ]
+        },
+        returnType: ReturnType.Entry
+    };
 
-    const facet: AttributeFacetType | FilterFacetType = cloneDeep(props.firstDim);
-    if (props.secondDim) {
-        buildMultiFacet(props.secondDim, facet);
-    }
-
-    const searchRequest: SearchRequestType = buildRequestFromSearchQuery(
-        searchQuery,
-        props.returnType,
-        {
-            facets: [facet]
-        }
-    );
-
-    const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
-    if (!queryResults) return [[]];
-    const buckets = getFacetsFromSearch(queryResults);
-    const secondDim = props.secondDim;
-    if (secondDim) {
-        return drillFacets(buckets.filter(f => f.name === getFacetName(secondDim)), colors);
-    } else {
-        return [buckets[0].data.map(d => ({
-            ...d,
-            objectConfig: {
-                objectId: [d.label, d.population],
-                color: colors[0 % colors.length],
-            }
-        }))];
-    }
+    return fetchChartDataWithProps(colors, numberOfDomainsQuery);
 };
 
-const fetchChartDataWithPropsSingleSet = async (
+const fetchChartDataWithProps = async (
     colors: string[],
-    props: Omit<FacetPlotInterface, "chartType">
+    props: Omit<FacetPlotInterface, "chartType">,
+    isCumulative: boolean = false
 ): Promise<ChartObjectInterface[][]> => {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
         attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
@@ -214,23 +207,20 @@ const fetchChartDataWithPropsSingleSet = async (
     const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
     if (!queryResults) return [[]];
     const buckets = getFacetsFromSearch(queryResults);
-
     const data = buckets[0].data as BucketDataWithConfig[];
 
-    if (data.length > 0) {
+    if (isCumulative && data.length > 0) {
         let cumulativeSum = 0;
 
-        // Create the original dataset with "Annual" label
         const originalDataWithColor = data.map(item => ({
             ...item,
             objectConfig: {
                 ...item.objectConfig,
                 color: colors[0 % colors.length],
-                label: 'Annual',  // Set the label to "Annual"
+                label: 'Annual',
             }
         }));
 
-        // Create the cumulative dataset with "Cumulative" label
         const cumulativeData = data.map(item => {
             cumulativeSum += item.population;
             return {
@@ -239,15 +229,23 @@ const fetchChartDataWithPropsSingleSet = async (
                 objectConfig: {
                     objectId: [item.label, cumulativeSum],
                     color: colors[1 % colors.length],
-                    label: 'Cumulative',  // Set the label to "Cumulative"
+                    label: 'Cumulative',  
                 }
             };
         });
 
         return [originalDataWithColor, cumulativeData];
+    } else if (props.secondDim) {
+        return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors);
+    } else {
+        return [data.map(d => ({
+            ...d,
+            objectConfig: {
+                objectId: [d.label, d.population],
+                color: colors[0 % colors.length],
+            }
+        }))];
     }
-
-    return [];
 };
 
 
@@ -303,21 +301,22 @@ const useGetData = (key: string, parameter: any) => {
             if (key === 'experimental-method') {
                 return GetExperimentalMethodsData(settings.colorScheme);
             } else if (key === 'molecular-composition') {
-                return GetMolecularComposition(settings.colorScheme);
+                return GetMolecularCompositionData(settings.colorScheme);
             } else if (key === 'assembly-symmetry') {
-                return GetAssemblySymmetry(settings.colorScheme);
+                return GetAssemblySymmetryData(settings.colorScheme);
             } else if (key === 'number-of-domains') {
-                return GetNumberOfDomains(settings.colorScheme);
+                return GetNumberOfDomainsData(settings.colorScheme);
             } else if (key === 'overall-structures') {
-                return GetOverallStructures(settings.colorScheme);
+                return GetOverallStructuresData(settings.colorScheme);
             } else if (key === 'overall-small-molecules') {
-                return GetOverallSmallMolecules(settings.colorScheme);
+                return GetOverallSmallMoleculesData(settings.colorScheme);
+            } else if (key === 'unique-protein-sequences') {
+                return GetNumberOfUniqueProtienSequenses(settings.colorScheme);
             }
-
 
             throw new Error(`Unknown query key: ${key}`);
         },
-        enabled: !!key && !!parameter, // Ensure query is only run if key and parameter are valid
+        enabled: !!key && !!parameter,
     });
 };
 
