@@ -123,7 +123,6 @@ export function FacetPlot(props: FacetPlotInterface) {
             setData(cumulativeData);
             const dataSetsShown = extractDataSets(cumulativeData);
             setDataSets(Array.from(dataSetsShown));
-            // Automatically select all datasets if there's more than one
             setSelectedDataSets(new Set(dataSetsShown));
         });
     }, [props]);
@@ -262,8 +261,6 @@ export function FacetPlot(props: FacetPlotInterface) {
         </Container>
     );
 }
-
-
 
 async function chartFacets(props: Omit<FacetPlotInterface, "chartType">): Promise<ChartObjectInterface[][]> {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({

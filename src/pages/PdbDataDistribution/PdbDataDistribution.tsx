@@ -202,7 +202,7 @@ const DataDistribution: React.FC = () => {
 
     return (
         chartData ? (
-        <BasicChart data={chartData} options={chartOptions} />
+        <BasicChart data={chartData} options={chartOptions} plotname='' />
         ) : (
         <div>No data available</div>
         )

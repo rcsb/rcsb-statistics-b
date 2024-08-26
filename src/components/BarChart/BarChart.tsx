@@ -21,7 +21,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
+  plotname: string; 
 }
+
 
 interface DatasetVisibility {
   label: string;
@@ -84,7 +86,8 @@ const FiltersShownText = styled.div`
   margin-bottom: 5px;
 `;
 
-const BarChart: React.FC<BasicChartProps> = ({ data, options }) => {
+
+const BarChart: React.FC<BasicChartProps> = ({ data, options, plotname }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const [visibility, setVisibility] = useState<DatasetVisibility[]>(
     data.datasets.map((dataset) => ({ label: dataset.label || '', visible: true }))
@@ -173,7 +176,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options }) => {
       let cumulativeSum = 0;
 
       dataset.data.forEach((value) => {
-        cumulativeSum += value as number; // Ensure value is treated as a number
+        cumulativeSum += value as number;
         cumulativeDataArray.push(cumulativeSum);
       });
 

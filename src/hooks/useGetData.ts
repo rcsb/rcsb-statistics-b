@@ -15,6 +15,18 @@ import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEn
 import { useSettings } from '../../src/contexts/SettingsContext';
 
 
+interface BucketDataType {
+    label: string | number;
+    population: number;
+}
+
+interface BucketDataWithConfig extends BucketDataType {
+    objectConfig?: {
+        objectId: (string | number)[];
+        color: string;
+    };
+}
+
 const GetOverallStructures = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
@@ -27,7 +39,7 @@ const GetOverallStructures = async (colors: string[]): Promise<ChartObjectInterf
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, overallStructuresQuery);
+    return fetchChartDataWithPropsSingleSet(colors, overallStructuresQuery);
 };
 
 const GetOverallSmallMolecules = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
@@ -42,7 +54,7 @@ const GetOverallSmallMolecules = async (colors: string[]): Promise<ChartObjectIn
         returnType: ReturnType.MolDefinition
     };
 
-    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery);
+    return fetchChartDataWithPropsSingleSet(colors, overallSmallMoleculesQuery);
 };
 
 const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
@@ -175,6 +187,70 @@ const fetchChartDataWithProps = async (
     }
 };
 
+const fetchChartDataWithPropsSingleSet = async (
+    colors: string[],
+    props: Omit<FacetPlotInterface, "chartType">
+): Promise<ChartObjectInterface[][]> => {
+    const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
+        attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
+        value: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.enum.experimental,
+        operator: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.operator.ExactMatch,
+        service: Service.Text
+    });
+
+    const facet: AttributeFacetType | FilterFacetType = cloneDeep(props.firstDim);
+    if (props.secondDim) {
+        buildMultiFacet(props.secondDim, facet);
+    }
+
+    const searchRequest: SearchRequestType = buildRequestFromSearchQuery(
+        searchQuery,
+        props.returnType,
+        {
+            facets: [facet]
+        }
+    );
+
+    const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
+    if (!queryResults) return [[]];
+    const buckets = getFacetsFromSearch(queryResults);
+
+    const data = buckets[0].data as BucketDataWithConfig[];
+
+    if (data.length > 0) {
+        let cumulativeSum = 0;
+
+        // Create the original dataset with "Annual" label
+        const originalDataWithColor = data.map(item => ({
+            ...item,
+            objectConfig: {
+                ...item.objectConfig,
+                color: colors[0 % colors.length],
+                label: 'Annual',  // Set the label to "Annual"
+            }
+        }));
+
+        // Create the cumulative dataset with "Cumulative" label
+        const cumulativeData = data.map(item => {
+            cumulativeSum += item.population;
+            return {
+                ...item,
+                population: cumulativeSum,
+                objectConfig: {
+                    objectId: [item.label, cumulativeSum],
+                    color: colors[1 % colors.length],
+                    label: 'Cumulative',  // Set the label to "Cumulative"
+                }
+            };
+        });
+
+        return [originalDataWithColor, cumulativeData];
+    }
+
+    return [];
+};
+
+
 const drillFacets = (facets: SearchBucketFacetType[], colors: string[]): ChartObjectInterface[][] => {
     const labelSet: Set<string> = new Set();
     const domList: string[] = [];
@@ -218,8 +294,6 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
     return getFacetName(facet.facets[0]);
 };
 
-
-
 const useGetData = (key: string, parameter: any) => {
     const { settings } = useSettings();
 
@@ -240,8 +314,7 @@ const useGetData = (key: string, parameter: any) => {
                 return GetOverallSmallMolecules(settings.colorScheme);
             }
 
-            //overall-structures overall-small-molecules
-            // You can add more conditions for other API calls as needed
+
             throw new Error(`Unknown query key: ${key}`);
         },
         enabled: !!key && !!parameter, // Ensure query is only run if key and parameter are valid

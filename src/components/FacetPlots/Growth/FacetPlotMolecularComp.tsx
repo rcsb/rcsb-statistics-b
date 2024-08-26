@@ -107,8 +107,8 @@ const FilterSection = styled.div`
 
 export function FacetPlot(props: FacetPlotInterface) {
     const [data, setData] = useState<ChartObjectInterface[][]>([]);
-    const [methods, setMethods] = useState<string[]>([]);
-    const [selectedMethods, setSelectedMethods] = useState<Set<string>>(new Set());
+    const [dataSets, setDataSets] = useState<string[]>([]);
+    const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
     const [selectedRadio, setSelectedRadio] = useState<string>('released-annually');
 
     useEffect(() => {
@@ -116,9 +116,9 @@ export function FacetPlot(props: FacetPlotInterface) {
         chartFacets(props).then(data => {
             const updatedData = calculateDataBasedOnSelection(data, selectedRadio);
             setData(updatedData);
-            const methodsSet = extractMethods(updatedData);
-            setMethods(Array.from(methodsSet));
-            setSelectedMethods(methodsSet);
+            const dataSetshown = extractDataSets(updatedData);
+            setDataSets(Array.from(dataSetshown));
+            setSelectedDataSets(dataSetshown);
         });
     }, [props, selectedRadio]);
 
@@ -151,26 +151,26 @@ export function FacetPlot(props: FacetPlotInterface) {
         });
     };
 
-    const extractMethods = (data: ChartObjectInterface[][]): Set<string> => {
-        const methodsSet = new Set<string>();
+    const extractDataSets = (data: ChartObjectInterface[][]): Set<string> => {
+        const dataSetshown = new Set<string>();
         data.forEach(item => {
             item.forEach(subItem => {
                 if (subItem.objectConfig) {
-                    methodsSet.add(subItem.objectConfig.objectId[1]);
+                    dataSetshown.add(subItem.objectConfig.objectId[1]);
                 }
             });
         });
-        return methodsSet;
+        return dataSetshown;
     };
 
     const handleCheckboxChange = (method: string) => {
-        const updatedMethods = new Set(selectedMethods);
+        const updatedMethods = new Set(selectedDataSets);
         if (updatedMethods.has(method)) {
             updatedMethods.delete(method);
         } else {
             updatedMethods.add(method);
         }
-        setSelectedMethods(updatedMethods);
+        setSelectedDataSets(updatedMethods);
     };
 
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,12 +179,12 @@ export function FacetPlot(props: FacetPlotInterface) {
 
     const filteredData = data.map(item => 
         item.filter(subItem => 
-            selectedMethods.has(subItem.objectConfig ? subItem.objectConfig.objectId[1] : "Unknown")
+            selectedDataSets.has(subItem.objectConfig ? subItem.objectConfig.objectId[1] : "Unknown")
         )
     );
 
     const getMethodColor = (method: string) => {
-        const methodIndex = methods.indexOf(method);
+        const methodIndex = dataSets.indexOf(method);
         return COLORS[methodIndex % COLORS.length];
     };
 
@@ -213,7 +213,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                         <DataOptionsHeader>Data Options</DataOptionsHeader>
                         <FilterSection>
                             <FiltersShownText>Compositions Shown</FiltersShownText>
-                            {methods.map(method => {
+                            {dataSets.map(method => {
                                 const checkboxId = `checkbox-${method}`;
                                 return (
                                     <CheckboxContainer key={method}>
@@ -221,7 +221,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                                             type="checkbox"
                                             id={checkboxId}
                                             value={method}
-                                            checked={selectedMethods.has(method)}
+                                            checked={selectedDataSets.has(method)}
                                             onChange={() => handleCheckboxChange(method)}
                                         />
                                         <StyledLabel htmlFor={checkboxId}>
@@ -265,7 +265,7 @@ export function FacetPlot(props: FacetPlotInterface) {
                 <FullWidthCol>
                     <div>{selectedRadio === 'cumulative' ? 'Cumulative (available each year)' : 'Annual'} number of entries composed of</div>
                     <ColorBoxesContainer>
-                        {Array.from(selectedMethods).map((method, index) => (
+                        {Array.from(selectedDataSets).map((method, index) => (
                             <ColorBoxWrapper key={index}>
                                 <ColorBox bgColor={getMethodColor(method)} />
                                 <BoxText>{method}</BoxText>

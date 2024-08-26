@@ -27,11 +27,17 @@ const Growth: React.FC = () => {
                 datasetMap[item.label] = item.population;
             });
 
+            const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
+
+            const datasetLabel = isOverallPlot
+                ? (index === 0 ? 'Annual' : 'Cumulative')
+                : dataset[0]?.objectConfig?.objectId?.[1] ?? `Dataset ${index + 1}`;
+
             return {
-                label: dataset[0].objectConfig.objectId[1],
+                label: datasetLabel,
                 data: data[0].map(labelItem => datasetMap[labelItem.label] || 0),
-                backgroundColor: dataset[0].objectConfig.color,
-                borderColor: dataset[0].objectConfig.color,
+                backgroundColor: dataset[0]?.objectConfig?.color || 'rgba(0, 0, 0, 0.1)',
+                borderColor: dataset[0]?.objectConfig?.color || 'rgba(0, 0, 0, 0.1)',
                 borderWidth: 1,
             };
         }),
@@ -40,13 +46,16 @@ const Growth: React.FC = () => {
     return (
         <div key={plotname}>
             {chartData ? (
-                <BarChart data={chartData} options={experimentalMethodChartOptions} />
+                <BarChart 
+                    data={chartData} 
+                    options={experimentalMethodChartOptions} 
+                    plotname={plotname || 'defaultPlotname'}
+                />
             ) : (
                 <div>No data available</div>
             )}
         </div>
     );
-    
 };
 
 export default Growth;
