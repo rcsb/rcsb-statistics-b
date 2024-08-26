@@ -34,7 +34,7 @@ const ExperimentalMethod: React.FC = () => {
 
     return (
         chartData ? (
-            <BarChart data={chartData} options={experimentalMethodChartOptions} plotname='' />
+            <BarChart data={chartData} options={experimentalMethodChartOptions} isOverallPlot={false}/>
         ) : (
             <div>No data available</div>
         )

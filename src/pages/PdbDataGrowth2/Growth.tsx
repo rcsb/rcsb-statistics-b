@@ -8,8 +8,8 @@ import { experimentalMethodChartOptions } from '../../config/chartConfigs';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
-
     const key = plotname || 'defaultKey';
+    const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
 
     const { data, isLoading, error } = useGetData(key, 'specificParameter');
 
@@ -27,7 +27,7 @@ const Growth: React.FC = () => {
                 datasetMap[item.label] = item.population;
             });
 
-            const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
+
 
             const datasetLabel = isOverallPlot
                 ? (index === 0 ? 'Annual' : 'Cumulative')
@@ -49,7 +49,7 @@ const Growth: React.FC = () => {
                 <BarChart 
                     data={chartData} 
                     options={experimentalMethodChartOptions} 
-                    plotname={plotname || 'defaultPlotname'}
+                    isOverallPlot={isOverallPlot}
                 />
             ) : (
                 <div>No data available</div>

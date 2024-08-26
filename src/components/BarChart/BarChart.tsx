@@ -21,9 +21,8 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
-  plotname: string; 
+  isOverallPlot: boolean; 
 }
-
 
 interface DatasetVisibility {
   label: string;
@@ -86,8 +85,7 @@ const FiltersShownText = styled.div`
   margin-bottom: 5px;
 `;
 
-
-const BarChart: React.FC<BasicChartProps> = ({ data, options, plotname }) => {
+const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const [visibility, setVisibility] = useState<DatasetVisibility[]>(
     data.datasets.map((dataset) => ({ label: dataset.label || '', visible: true }))
@@ -212,27 +210,29 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, plotname }) => {
               </CheckboxContainer>
             ))}
             </FilterSection>
-            <ToggleRadioContainer>
-            <FiltersShownText>Data Set</FiltersShownText>
-              <Form.Check
-                type="radio"
-                id="view-annual"
-                label="Annual"
-                name="view-switch"
-                value="Annual"
-                checked={selectedView === 'Annual'}
-                onChange={() => handleViewChange('Annual')}
-              />
-              <Form.Check
-                type="radio"
-                id="view-cumulative"
-                label="Cumulative"
-                name="view-switch"
-                value="Cumulative"
-                checked={selectedView === 'Cumulative'}
-                onChange={() => handleViewChange('Cumulative')}
-              />
-            </ToggleRadioContainer>
+            {!isOverallPlot && (
+              <ToggleRadioContainer>
+                <FiltersShownText>Data Set</FiltersShownText>
+                <Form.Check
+                  type="radio"
+                  id="view-annual"
+                  label="Annual"
+                  name="view-switch"
+                  value="Annual"
+                  checked={selectedView === 'Annual'}
+                  onChange={() => handleViewChange('Annual')}
+                />
+                <Form.Check
+                  type="radio"
+                  id="view-cumulative"
+                  label="Cumulative"
+                  name="view-switch"
+                  value="Cumulative"
+                  checked={selectedView === 'Cumulative'}
+                  onChange={() => handleViewChange('Cumulative')}
+                />
+              </ToggleRadioContainer>
+            )}
           </ControlSection>
         </Col>
       </Row>
