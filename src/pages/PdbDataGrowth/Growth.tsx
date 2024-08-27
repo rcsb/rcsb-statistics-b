@@ -67,7 +67,7 @@ const Growth: React.FC = () => {
                         options={selectedChartOptions}
                         isOverallPlot={isOverallPlot}
                     />
-                    <BarChartRace />
+                    {plotname === 'experimental-method' && <BarChartRace />}
                 </>
             ) : (
                 <div>No data available</div>
