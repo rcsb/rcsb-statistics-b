@@ -54,26 +54,6 @@ const baseChartOptions: ChartOptions<'bar'> = {
             displayColors: true,
             borderColor: 'rgba(0,0,0,0)',
             borderWidth: 1,
-            callbacks: {
-                label: function (tooltipItem) {
-                    if (tooltipItem.raw === 0) {
-                        return '';
-                    }
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-                },
-                title: function (tooltipItems) {
-                    return `Year: ${tooltipItems[0].label}`;
-                },
-                footer: function (tooltipItems) {
-                    if (tooltipItems.length > 1) {
-                        const total = tooltipItems.reduce((sum, tooltipItem) => {
-                            return sum + Number(tooltipItem.raw);
-                        }, 0);
-                        return `Total: ${total}`;
-                    }
-                    return '';
-                },
-            },
         },
         filler: {
             propagate: true,
@@ -173,53 +153,30 @@ const baseChartOptions: ChartOptions<'bar'> = {
 };
 
 const chartOptions: Record<string, ChartOptions<'bar'>> = {
-    'experimental-method': {
-        ...baseChartOptions,
-        plugins: {
-            ...baseChartOptions.plugins,
-            title: {
-                ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution by Experimental Method',
-            },
-        },
-    },
-    'molecular-composition': {
-        ...baseChartOptions,
-        plugins: {
-            ...baseChartOptions.plugins,
-            title: {
-                ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution by Molecular Composition',
-            },
-        },
-    },
-    'assembly-symmetry': {
-        ...baseChartOptions,
-        plugins: {
-            ...baseChartOptions.plugins,
-            title: {
-                ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution by Assembly Symmetry',
-            },
-        },
-    },
-    'number-of-domains': {
-        ...baseChartOptions,
-        plugins: {
-            ...baseChartOptions.plugins,
-            title: {
-                ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution by Number of Domains',
-            },
-        },
-    },
     'overall-structures': {
         ...baseChartOptions,
         plugins: {
             ...baseChartOptions.plugins,
             title: {
                 ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution of Overall Structures',
+                text: 'PDB Statistics: Growth of Overall Structures',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        const datasetIndex = tooltipItem.datasetIndex;
+                        if (datasetIndex === 0) {
+                            return `Structures Released Annually: ${tooltipItem.raw}`;
+                        } else if (datasetIndex === 1) {
+                            return `Entries Available: ${tooltipItem.raw}`;
+                        }
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    }
+                },
             },
         },
     },
@@ -229,7 +186,144 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
             ...baseChartOptions.plugins,
             title: {
                 ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution of Overall Small Molecules',
+                text: 'PDB Statistics: Growth of Released Small Small Molecules',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        const datasetIndex = tooltipItem.datasetIndex;
+                        if (datasetIndex === 0) {
+                            return `Small Molecules Released Annually: ${tooltipItem.raw}`;
+                        } else if (datasetIndex === 1) {
+                            return `Small Molecules Available: ${tooltipItem.raw}`;
+                        }
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                },
+            },
+        },
+    },
+    'experimental-method': {
+        ...baseChartOptions,
+        plugins: {
+            ...baseChartOptions.plugins,
+            title: {
+                ...baseChartOptions.plugins?.title,
+                text: 'PDB Statistics: Growth by Experimental Method',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                    footer: function (tooltipItems: any) {
+                        if (tooltipItems.length > 1) {
+                            const total = tooltipItems.reduce((sum: number, tooltipItem: any) => {
+                                return sum + Number(tooltipItem.raw);
+                            }, 0);
+                            return `Total: ${total}`;
+                        }
+                        return '';
+                    },
+                },
+            },
+        },
+    },
+    'molecular-composition': {
+        ...baseChartOptions,
+        plugins: {
+            ...baseChartOptions.plugins,
+            title: {
+                ...baseChartOptions.plugins?.title,
+                text: 'PDB Statistics: Growth by Molecular Composition',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                    footer: function (tooltipItems: any) {
+                        if (tooltipItems.length > 1) {
+                            const total = tooltipItems.reduce((sum: number, tooltipItem: any) => {
+                                return sum + Number(tooltipItem.raw);
+                            }, 0);
+                            return `Total: ${total}`;
+                        }
+                        return '';
+                    },
+                },
+            },
+        },
+    },
+    'assembly-symmetry': {
+        ...baseChartOptions,
+        plugins: {
+            ...baseChartOptions.plugins,
+            title: {
+                ...baseChartOptions.plugins?.title,
+                text: 'PDB Statistics: Growth by Assembly Symmetry',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                    footer: function (tooltipItems: any) {
+                        if (tooltipItems.length > 1) {
+                            const total = tooltipItems.reduce((sum: number, tooltipItem: any) => {
+                                return sum + Number(tooltipItem.raw);
+                            }, 0);
+                            return `Total: ${total}`;
+                        }
+                        return '';
+                    },
+                },
+            },
+        },
+    },
+    'number-of-domains': {
+        ...baseChartOptions,
+        plugins: {
+            ...baseChartOptions.plugins,
+            title: {
+                ...baseChartOptions.plugins?.title,
+                text: 'PDB Statistics: Growth by Number of Domains',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                    footer: function (tooltipItems: any) {
+                        if (tooltipItems.length > 1) {
+                            const total = tooltipItems.reduce((sum: number, tooltipItem: any) => {
+                                return sum + Number(tooltipItem.raw);
+                            }, 0);
+                            return `Total: ${total}`;
+                        }
+                        return '';
+                    },
+                },
             },
         },
     },
@@ -239,7 +333,27 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
             ...baseChartOptions.plugins,
             title: {
                 ...baseChartOptions.plugins?.title,
-                text: 'PDB Data Distribution by Unique Protein Sequences',
+                text: 'PDB Statistics: Growth by Unique Protein Sequences',
+            },
+            tooltip: {
+                ...baseChartOptions.plugins?.tooltip,
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    },
+                    title: function (tooltipItems: any) {
+                        return `${tooltipItems[0].label}`;
+                    },
+                    footer: function (tooltipItems: any) {
+                        if (tooltipItems.length > 1) {
+                            const total = tooltipItems.reduce((sum: number, tooltipItem: any) => {
+                                return sum + Number(tooltipItem.raw);
+                            }, 0);
+                            return `Total: ${total}`;
+                        }
+                        return '';
+                    },
+                },
             },
         },
     },
