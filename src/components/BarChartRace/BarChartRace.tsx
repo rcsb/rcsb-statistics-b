@@ -48,7 +48,7 @@ const BarChartRace: React.FC<BarChartRaceProps> = ({ plotname }) => {
     const headingText = plotname === 'experimental-method'
         ? '(ANIMATION) X-ray Leads the way, but other methods are emerging.'
         : plotname === 'molecular-composition'
-        ? '(ANIMATION) The Evolution of Molecular Composition in PDB Entries'
+        ? '(ANIMATION) Molecular Composition in PDB Entries'
         : 'Default Heading for Other Plots';
 
     return (
