@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
+import { RcsbSearchMetadata, RcsbSearchAttributeType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
 import { AggregationType, Interval } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
 import { ChartObjectInterface } from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 import { getFacetsFromSearch } from "@rcsb/rcsb-search-tools/lib/SearchParseTools/SearchFacetTools";
@@ -13,6 +13,7 @@ import { QueryResult } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchR
 import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchClient";
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 import { useSettings } from '../../src/contexts/SettingsContext';
+import { metaInfoUtils } from '../config/meta_sanitize';
 
 
 interface BucketDataType {
@@ -28,16 +29,28 @@ interface BucketDataWithConfig extends BucketDataType {
 }
 
 const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const growthObject = metaInfoUtils.getGrowthObject('growth-released-structures');
+    const existingFacets = growthObject?.facets?.[0];
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for growth-released-structures');
+    }
+
+    const validFacet: AttributeFacetType = {
+        name: existingFacets.name,
+        aggregation_type: existingFacets.aggregation_type as AggregationType.DateHistogram,
+        attribute: existingFacets.attribute as RcsbSearchAttributeType,
+        interval: existingFacets.interval as Interval.Year,
+        min_interval_population: existingFacets.min_interval_population,
+    };
+
+
     const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
-        firstDim: {
-            name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-            aggregation_type: AggregationType.DateHistogram,
-            attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-            interval: Interval.Year,
-            min_interval_population: 1
-        },
+        firstDim: validFacet,
         returnType: ReturnType.Entry
     };
+
+    console.log(overallStructuresQuery);
 
     return fetchChartDataWithProps(colors, overallStructuresQuery, true);
 };

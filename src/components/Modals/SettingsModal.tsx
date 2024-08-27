@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import styled from 'styled-components';
 import { useQueryClient } from '@tanstack/react-query';
+import { SketchPicker } from 'react-color';
 
 const ColorGrid = styled.div`
   display: flex;
@@ -15,6 +16,8 @@ const ColorBox = styled.div<{ color: string }>`
   background-color: ${(props) => props.color};
   margin-right: 1px;
   border-radius: 2px;
+  cursor: pointer;
+  position: relative;
 
   &:last-child {
     margin-right: 0;
@@ -41,21 +44,80 @@ const RadioInput = styled.input`
   margin-right: 10px;
 `;
 
+const Popover = styled.div<{ top: number; left: number }>`
+  position: absolute;
+  z-index: 2;
+  top: ${(props) => props.top}px;
+  left: ${(props) => props.left}px;
+`;
+
+const Cover = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`;
+
 const SettingsModal: React.FC = () => {
   const { showModal, handleCloseModal } = useModal();
-  const { settings, changeColorScheme } = useSettings();
+  const { settings, changeColorScheme, updateCustomColor } = useSettings();
   const queryClient = useQueryClient();
 
   const [selectedScheme, setSelectedScheme] = useState(settings.schemeName);
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [colorPickerIndex, setColorPickerIndex] = useState<number | null>(null);
+  const [currentColor, setCurrentColor] = useState<string>('');
+  const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (selectedScheme !== 'custom') {
+      setDisplayColorPicker(false);
+      setColorPickerIndex(null);
+    }
+  }, [selectedScheme]);
 
   const handleSchemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedScheme(event.target.value);
+    const schemeName = event.target.value;
+    setSelectedScheme(schemeName);
+    changeColorScheme(schemeName);
+    queryClient.invalidateQueries({ queryKey: ['experimentalMethodsData', schemeName] });
   };
 
   const handleSaveChanges = () => {
     changeColorScheme(selectedScheme);
-    queryClient.invalidateQueries({ queryKey: ['experimentalMethodsData', selectedScheme] }); // Correct query invalidation
+    queryClient.invalidateQueries({ queryKey: ['experimentalMethodsData', selectedScheme] });
     handleCloseModal();
+  };
+
+  const handleColorClick = (color: string, index: number, event: React.MouseEvent) => {
+    if (selectedScheme !== 'custom') return;
+
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const modalRect = (event.currentTarget as HTMLElement).closest('.modal-content')?.getBoundingClientRect();
+
+    if (modalRect) {
+      setPickerPosition({
+        top: rect.top - modalRect.top + rect.height,
+        left: rect.left - modalRect.left,
+      });
+    }
+
+    setCurrentColor(color);
+    setColorPickerIndex(index);
+    setDisplayColorPicker(true);
+  };
+
+  const handleColorChange = (color: any) => {
+    setCurrentColor(color.hex);
+    if (colorPickerIndex !== null) {
+      updateCustomColor(colorPickerIndex, color.hex);
+    }
+  };
+
+  const handleClosePicker = () => {
+    setDisplayColorPicker(false);
+    setColorPickerIndex(null);
   };
 
   if (!showModal) return null;
@@ -63,7 +125,11 @@ const SettingsModal: React.FC = () => {
   const renderColorGrid = (colors: string[]) => (
     <ColorGrid>
       {colors.map((color: string, index: number) => (
-        <ColorBox key={index} color={color} />
+        <ColorBox
+          key={index}
+          color={color}
+          onClick={(event) => handleColorClick(color, index, event)}
+        />
       ))}
     </ColorGrid>
   );
@@ -100,6 +166,12 @@ const SettingsModal: React.FC = () => {
             <button type="button" className="btn btn-default" onClick={handleCloseModal}>Close</button>
             <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Save changes</button>
           </div>
+          {displayColorPicker && (
+            <Popover top={pickerPosition.top} left={pickerPosition.left}>
+              <Cover onClick={handleClosePicker} />
+              <SketchPicker color={currentColor} onChange={handleColorChange} />
+            </Popover>
+          )}
         </div>
       </div>
     </div>

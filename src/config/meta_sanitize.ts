@@ -449,7 +449,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     ]
   },
   {
-    key: 'growth-small-molecules',
+    key: 'overall-small-molecules',
     title: 'by Small Molecules Only',
     description: 'Small Molecule-only Structures Released Per Year',
     ref_url: {
