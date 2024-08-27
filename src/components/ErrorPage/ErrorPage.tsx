@@ -1,13 +1,10 @@
-// ErrorPage.tsx
-
 import React, { useEffect, useState } from 'react';
 import {
     Container,
     Icon,
     Header,
     Message,
-    ErrorMessage,
-    RetryButton
+    ErrorMessage
 } from '../../styles/ErrorPageStyles';
 
 const ErrorPage = ({ error }: { error: Error }) => {
@@ -16,7 +13,7 @@ const ErrorPage = ({ error }: { error: Error }) => {
     useEffect(() => {
         setTimeout(() => {
             setFadeIn(true);
-        }, 100); // Delay to start fade-in
+        });
     }, []);
 
     return (

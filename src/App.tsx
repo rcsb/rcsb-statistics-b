@@ -9,6 +9,7 @@ import { SettingsProvider } from '../src/contexts/SettingsContext';
 import { ModalProvider} from '../src/contexts/ModalContext';
 import SettingsModal from './components/Modals/SettingsModal';
 import  ChartSkeleton from './components/BarChart/BarChartSkeleton';
+import ErrorPage  from './components/ErrorPage/ErrorPage';
 
 
 interface AppProps {
@@ -16,9 +17,12 @@ interface AppProps {
 }
 
 const NotFound = () => (
-  <div>
-    Oops, looks like this page mutated! 🧬 Try going back to the Statistics homepage or double-checking the URL.
-  </div>
+  <ErrorPage 
+      error={{ 
+          name: 'NotFoundError',
+          message: 'Oops, looks like this page mutated! 🧬 Try going back to the Statistics homepage or double-checking the URL.'
+      }} 
+  />
 );
 
 const StatisticsAppContent: React.FC = () => {
