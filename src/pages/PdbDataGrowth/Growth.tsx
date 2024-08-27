@@ -70,7 +70,9 @@ const Growth: React.FC = () => {
                     )}
                 </>
             ) : (
-                <div>No data available</div>
+                <FadeInContainer>
+                    <ErrorPage error={new Error("No data available")} />
+                </FadeInContainer>
             )}
         </FadeInContainer>
     );
