@@ -6,7 +6,6 @@ import useGetData from '../../hooks/useGetData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
 import chartOptions from '../../config/chartConfigs';
 import BarChartRace from '../../components/BarChartRace/BarChartRace';
-
 import { FadeInContainer } from '../../styles/GrowthStyles';
 
 const Growth: React.FC = () => {
@@ -67,7 +66,9 @@ const Growth: React.FC = () => {
                         options={selectedChartOptions}
                         isOverallPlot={isOverallPlot}
                     />
-                    {plotname === 'experimental-method' && <BarChartRace />}
+                    {(plotname === 'experimental-method' || plotname === 'molecular-composition') && (
+                        <BarChartRace plotname={plotname} />
+                    )}
                 </>
             ) : (
                 <div>No data available</div>
