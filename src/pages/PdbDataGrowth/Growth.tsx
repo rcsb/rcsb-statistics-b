@@ -7,6 +7,7 @@ import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
 import chartOptions from '../../config/chartConfigs';
 import BarChartRace from '../../components/BarChartRace/BarChartRace';
 import { FadeInContainer } from '../../styles/GrowthStyles';
+import ErrorPage from '../../components/ErrorPage/ErrorPage';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
@@ -26,7 +27,7 @@ const Growth: React.FC = () => {
     if (error) {
         return (
             <FadeInContainer>
-                <div>Error loading data: {error.message}</div>
+                <ErrorPage error={error} />
             </FadeInContainer>
         );
     }
@@ -52,8 +53,6 @@ const Growth: React.FC = () => {
             };
         }),
     } : null;
-
-    console.log('chartData', chartData);
 
     const selectedChartOptions = plotname && chartOptions[plotname];
 

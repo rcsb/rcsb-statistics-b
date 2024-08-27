@@ -418,7 +418,72 @@ export const statsDataMetaInfo: MetaInfo[] = [
   },
 ];
 
+
 export const growthRelatedKeys: MetaInfo[] = [
+  {
+    key: 'growth-released-structures',
+    title: 'Overall',
+    description: 'Overall Growth of Released Structures Per Year',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range'
+          }
+        }
+      ]
+    },
+    facets: [
+      {
+          name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+          aggregation_type: AggregationType.DateHistogram,
+          attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+          interval: Interval.Year,
+          min_interval_population: 1
+      }
+    ]
+  },
+  {
+    key: 'growth-small-molecules',
+    title: 'by Small Molecules Only',
+    description: 'Small Molecule-only Structures Released Per Year',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range'
+          }
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entry_info.selected_polymer_entity_types',
+            operator: 'exact_match',
+            value: 'Small Molecule (only)'
+          }
+        }
+      ]
+    },
+    facets: [
+      {
+        name: 'rcsb_accession_info.initial_release_date',
+        aggregation_type: 'date_histogram',
+        attribute: 'rcsb_accession_info.initial_release_date',
+        interval: 'year'
+      }
+    ]
+  },
   {
     key: 'experimental-method',
     title: 'Growth',
@@ -463,33 +528,6 @@ export const growthRelatedKeys: MetaInfo[] = [
       },
     ],
     return_type: ReturnType.Entry,
-  },
-  {
-    key: 'growth-released-structures',
-    title: 'Overall',
-    description: 'Overall Growth of Released Structures Per Year',
-    ref_url: {
-      type: 'group',
-      logical_operator: 'and',
-      nodes: [
-        {
-          type: 'terminal',
-          service: 'text',
-          parameters: {
-            attribute: 'rcsb_accession_info.initial_release_date',
-            operator: 'range'
-          }
-        }
-      ]
-    },
-    facets: [
-      {
-        name: 'rcsb_accession_info.initial_release_date',
-        aggregation_type: 'date_histogram',
-        attribute: 'rcsb_accession_info.initial_release_date',
-        interval: 'year'
-      }
-    ]
   },
   {
     key: 'growth-xray',
@@ -778,8 +816,10 @@ export const growthRelatedKeys: MetaInfo[] = [
         interval: 'year'
       }
     ]
-  }
+  },
+
 ];
+
 
 export const nrMetaInfo = [
   {
@@ -1048,5 +1088,4 @@ function getRangeFacets(
     },
   ];
 }
-
 

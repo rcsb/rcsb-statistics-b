@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
+import { RcsbSearchMetadata, RcsbSearchAttributeType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
 import { AggregationType, Interval } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
 import { ChartObjectInterface } from "@rcsb/rcsb-charts/lib/RcsbChartComponent/ChartConfigInterface";
 import { getFacetsFromSearch } from "@rcsb/rcsb-search-tools/lib/SearchParseTools/SearchFacetTools";
@@ -13,21 +13,48 @@ import { QueryResult } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchR
 import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchClient";
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 import { useSettings } from '../../src/contexts/SettingsContext';
+import {growthRelatedKeys,metaInfoUtils} from '../config/meta_sanitize'
 
 
 interface BucketDataType {
     label: string | number;
     population: number;
 }
-
-interface BucketDataWithConfig extends BucketDataType {
+ interface BucketDataWithConfig extends BucketDataType {
     objectConfig?: {
         objectId: (string | number)[];
         color: string;
     };
 }
 
+
 const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const facets = metaInfoUtils.getGrowthObject('growth-released-structures')?.facets;
+
+    if (!facets || facets.length === 0) {
+        throw new Error('Facets are missing or invalid for growth-released-structures');
+    }
+
+    // Manually construct the firstDim with required properties
+    const validFacet: AttributeFacetType = {
+        name: facets[0].name,
+        aggregation_type: AggregationType.DateHistogram,  // Use the expected aggregation type
+        attribute: facets[0].attribute as RcsbSearchAttributeType,  // Assert the type explicitly
+        interval: facets[0].interval as Interval || Interval.Year,  // Cast to the correct interval type, with a fallback
+        min_interval_population: facets[0].min_interval_population ?? 1  // Fallback to default value if undefined
+    };
+
+    const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim: validFacet,
+        returnType: ReturnType.Entry
+    };
+
+    return fetchChartDataWithProps(colors, overallStructuresQuery, true);
+};
+
+
+
+const GetOverallStructuresData2 = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -162,29 +189,29 @@ const GetNumberOfUniqueProtienSequenses = async (colors: string[]): Promise<Char
         },
         secondDim: {
             "filter": {
-                "type": "terminal",
-                "service": "text",
-                "parameters": {
-                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
-                  "operator": "exact_match",
-                  "value": "sequence_identity"
-                }
-              },
-              "facets": [
-                {
-                  "name": "Similarity Cutoff",
-                  "aggregation_type": "terms",
-                  "attribute": "rcsb_polymer_entity_group_membership.similarity_cutoff",
-                  "min_interval_population": 1,
-                  "facets": [
-                    {
-                      "name": "Unique Protein Sequences",
-                      "aggregation_type": "cardinality",
-                      "attribute": "rcsb_polymer_entity_group_membership.group_id"
-                    }
-                  ]
-                }
-              ]
+              "type": "terminal",
+              "service": "text",
+              "parameters": {
+                "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                "operator": "exact_match",
+                "value": "sequence_identity"
+              }
+            },
+            "facets": [
+              {
+                "name": "Similarity Cutoff",
+                "aggregation_type": "terms",
+                "attribute": "rcsb_polymer_entity_group_membership.similarity_cutoff",
+                "min_interval_population": 1,
+                "facets": [
+                  {
+                    "name": "Unique Protein Sequences",
+                    "aggregation_type": "cardinality",
+                    "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                  }
+                ]
+              }
+            ]
         },
         returnType: ReturnType.Entry
     };
