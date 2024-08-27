@@ -5,6 +5,9 @@ import { ChartData } from 'chart.js';
 import useGetData from '../../hooks/useGetData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
 import chartOptions from '../../config/chartConfigs';
+import BarChartRace from '../../components/BarChartRace/BarChartRace';
+
+import { FadeInContainer } from '../../styles/GrowthStyles';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
@@ -14,10 +17,20 @@ const Growth: React.FC = () => {
     const { data, isLoading, error } = useGetData(key);
 
     if (isLoading) {
-        return <ChartSkeleton />;
+        return (
+            <FadeInContainer>
+                <ChartSkeleton />
+            </FadeInContainer>
+        );
     }
 
-    if (error) return <div>Error loading data: {error.message}</div>;
+    if (error) {
+        return (
+            <FadeInContainer>
+                <div>Error loading data: {error.message}</div>
+            </FadeInContainer>
+        );
+    }
 
     const chartData: ChartData<'bar'> | null = data && data.length > 0 ? {
         labels: data[0].map((item: any) => item.label),
@@ -41,20 +54,25 @@ const Growth: React.FC = () => {
         }),
     } : null;
 
+    console.log('chartData', chartData);
+
     const selectedChartOptions = plotname && chartOptions[plotname];
 
     return (
-        <div key={plotname}>
+        <FadeInContainer key={plotname}>
             {chartData && selectedChartOptions ? (
-                <BarChart 
-                    data={chartData} 
-                    options={selectedChartOptions}
-                    isOverallPlot={isOverallPlot}
-                />
+                <>
+                    <BarChart 
+                        data={chartData} 
+                        options={selectedChartOptions}
+                        isOverallPlot={isOverallPlot}
+                    />
+                    <BarChartRace />
+                </>
             ) : (
                 <div>No data available</div>
             )}
-        </div>
+        </FadeInContainer>
     );
 };
 
