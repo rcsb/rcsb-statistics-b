@@ -4,14 +4,14 @@ import BarChart from '../../components/BarChart/BarChart';
 import { ChartData } from 'chart.js';
 import useGetData from '../../hooks/useGetData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
-import { experimentalMethodChartOptions } from '../../config/chartConfigs';
+import chartOptions from '../../config/chartConfigs';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
     const key = plotname || 'defaultKey';
     const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
 
-    const { data, isLoading, error } = useGetData(key, 'specificParameter');
+    const { data, isLoading, error } = useGetData(key);
 
     if (isLoading) {
         return <ChartSkeleton />;
@@ -27,8 +27,6 @@ const Growth: React.FC = () => {
                 datasetMap[item.label] = item.population;
             });
 
-
-
             const datasetLabel = isOverallPlot
                 ? (index === 0 ? 'Annual' : 'Cumulative')
                 : dataset[0]?.objectConfig?.objectId?.[1] ?? `Dataset ${index + 1}`;
@@ -43,12 +41,14 @@ const Growth: React.FC = () => {
         }),
     } : null;
 
+    const selectedChartOptions = plotname && chartOptions[plotname];
+
     return (
         <div key={plotname}>
-            {chartData ? (
+            {chartData && selectedChartOptions ? (
                 <BarChart 
                     data={chartData} 
-                    options={experimentalMethodChartOptions} 
+                    options={selectedChartOptions}
                     isOverallPlot={isOverallPlot}
                 />
             ) : (

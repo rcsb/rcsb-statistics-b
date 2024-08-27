@@ -128,17 +128,22 @@ const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInte
             min_interval_population: 0
         },
         secondDim: {
-            name: `FACET/Domain Classification`,
-            aggregation_type: AggregationType.Terms,
-            attribute: "rcsb_polymer_instance_annotation.type",
-            min_interval_population: 1,
-            facets: [
-                {
-                    name: "Unique Domains Count",
-                    aggregation_type: AggregationType.Cardinality,
-                    attribute: "rcsb_polymer_instance_annotation.annotation_id"
+            "filter": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                  "operator": "exact_match",
+                  "value": "matching_uniprot_accession"
                 }
-            ]
+              },
+              "facets": [
+                {
+                  "name": "Unique UniProtKB Entries",
+                  "aggregation_type": "cardinality",
+                  "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                }
+              ]
         },
         returnType: ReturnType.Entry
     };
@@ -162,14 +167,22 @@ const GetNumberOfUniqueProtienSequenses = async (colors: string[]): Promise<Char
                 "parameters": {
                   "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
                   "operator": "exact_match",
-                  "value": "matching_uniprot_accession"
+                  "value": "sequence_identity"
                 }
               },
               "facets": [
                 {
-                  "name": "Unique UniProtKB Entries",
-                  "aggregation_type": "cardinality",
-                  "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                  "name": "Similarity Cutoff",
+                  "aggregation_type": "terms",
+                  "attribute": "rcsb_polymer_entity_group_membership.similarity_cutoff",
+                  "min_interval_population": 1,
+                  "facets": [
+                    {
+                      "name": "Unique Protein Sequences",
+                      "aggregation_type": "cardinality",
+                      "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                    }
+                  ]
                 }
               ]
         },
@@ -248,7 +261,6 @@ const fetchChartDataWithProps = async (
     }
 };
 
-
 const drillFacets = (facets: SearchBucketFacetType[], colors: string[]): ChartObjectInterface[][] => {
     const labelSet: Set<string> = new Set();
     const domList: string[] = [];
@@ -292,32 +304,35 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
     return getFacetName(facet.facets[0]);
 };
 
-const useGetData = (key: string, parameter: any) => {
+const useGetData = (key: string, parameter?: any) => {
     const { settings } = useSettings();
 
+    type QueryFunction = (colors: string[]) => Promise<ChartObjectInterface[][]>;
+
+    const queryFunctions: Record<string, QueryFunction> = {
+        'overall-structures': GetOverallStructuresData,
+        'overall-small-molecules': GetOverallSmallMoleculesData,
+        'experimental-method': GetExperimentalMethodsData,
+        'molecular-composition': GetMolecularCompositionData,
+        'assembly-symmetry': GetAssemblySymmetryData,
+        'number-of-domains': GetNumberOfDomainsData,
+        'unique-protein-sequences': GetNumberOfUniqueProtienSequenses,
+    };
+
     return useQuery({
-        queryKey: [key, parameter, settings.colorScheme],
+        queryKey: parameter ? [key, parameter, settings.colorScheme] : [key, settings.colorScheme],
         queryFn: () => {
-            if (key === 'experimental-method') {
-                return GetExperimentalMethodsData(settings.colorScheme);
-            } else if (key === 'molecular-composition') {
-                return GetMolecularCompositionData(settings.colorScheme);
-            } else if (key === 'assembly-symmetry') {
-                return GetAssemblySymmetryData(settings.colorScheme);
-            } else if (key === 'number-of-domains') {
-                return GetNumberOfDomainsData(settings.colorScheme);
-            } else if (key === 'overall-structures') {
-                return GetOverallStructuresData(settings.colorScheme);
-            } else if (key === 'overall-small-molecules') {
-                return GetOverallSmallMoleculesData(settings.colorScheme);
-            } else if (key === 'unique-protein-sequences') {
-                return GetNumberOfUniqueProtienSequenses(settings.colorScheme);
+            const fetchData = queryFunctions[key];
+
+            if (!fetchData) {
+                throw new Error(`Unknown query key: ${key}`);
             }
 
-            throw new Error(`Unknown query key: ${key}`);
+            return fetchData(settings.colorScheme);
         },
-        enabled: !!key && !!parameter,
+        enabled: !!key,
     });
 };
+
 
 export default useGetData;
