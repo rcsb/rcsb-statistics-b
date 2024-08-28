@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem
-} from './NavBarStyles';
+} from '../../styles/NavBarStyles';
 import paths from '../../routes/paths';
 import { FaCog } from 'react-icons/fa';
 import { useModal } from '../../contexts/ModalContext';

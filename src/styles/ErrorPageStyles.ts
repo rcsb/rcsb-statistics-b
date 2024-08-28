@@ -1,5 +1,3 @@
-// ErrorPage.styles.ts
-
 import styled from 'styled-components';
 import { MdError } from 'react-icons/md';
 
@@ -37,7 +35,7 @@ export const Message = styled.p`
 `;
 
 export const ErrorMessage = styled.p`
-    color: #4a4a4a; // Darker color for better visibility
+    color: #4a4a4a; 
     font-size: 18px;
     font-style: italic;
     margin-bottom: 20px;
