@@ -1,13 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BarChart from '../../components/BarChart/BarChart';
-import { ChartData } from 'chart.js';
-import useGetData from '../../hooks/useGetData';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
-import chartOptions from '../../config/chartConfigs';
 import BarChartRace from '../../components/BarChartRace/BarChartRace';
 import { FadeInContainer } from '../../styles/GrowthStyles';
 import ErrorPage from '../../components/ErrorPage/ErrorPage';
+import useGetData from '../../hooks/useGetData';
+import chartOptions from '../../config/chartConfigs';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
@@ -32,7 +31,7 @@ const Growth: React.FC = () => {
         );
     }
 
-    const chartData: ChartData<'bar'> | null = data && data.length > 0 ? {
+    const chartData = data && data.length > 0 ? {
         labels: data[0].map((item: any) => item.label),
         datasets: data.map((dataset: any[], index: number) => {
             const datasetMap: Record<string, number> = {};
@@ -65,7 +64,7 @@ const Growth: React.FC = () => {
                         options={selectedChartOptions}
                         isOverallPlot={isOverallPlot}
                     />
-                    {(plotname === 'experimental-method' ) && (
+                    {plotname === 'experimental-method' && (
                         <BarChartRace plotname={plotname} />
                     )}
                 </>

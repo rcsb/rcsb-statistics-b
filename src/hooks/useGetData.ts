@@ -311,6 +311,7 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
 
 const useGetData = (key: string, parameter?: any) => {
     const { settings } = useSettings();
+    const colorSchemeKey = settings.colorScheme.join(''); // Create a unique key based on the color scheme
 
     type QueryFunction = (colors: string[]) => Promise<ChartObjectInterface[][]>;
 
@@ -325,7 +326,7 @@ const useGetData = (key: string, parameter?: any) => {
     };
 
     return useQuery({
-        queryKey: parameter ? [key, parameter, settings.colorScheme] : [key, settings.colorScheme],
+        queryKey: [key, parameter, colorSchemeKey], // Use colorSchemeKey to force re-fetch when color scheme changes
         queryFn: () => {
             const fetchData = queryFunctions[key];
 
