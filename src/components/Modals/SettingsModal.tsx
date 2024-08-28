@@ -32,7 +32,7 @@ const SettingsModal: React.FC = () => {
     const schemeName = event.target.value;
     if (schemeName !== selectedScheme) {
       setSelectedScheme(schemeName);
-      changeColorScheme(schemeName);
+      changeColorScheme(schemeName); // Lock the selected scheme into the context immediately
       queryClient.invalidateQueries({ queryKey: ['experimentalMethodsData'] });
     }
   };
@@ -41,7 +41,7 @@ const SettingsModal: React.FC = () => {
     if (selectedScheme !== 'custom') return;
 
     const rect = (event.target as HTMLElement).getBoundingClientRect();
-    const modalRect = (event.currentTarget as HTMLElement).closest('.modal-content')?.getBoundingClientRect();
+    const modalRect = (event.currentTarget as HTMLElement).closest('.modal-dialog')?.getBoundingClientRect();
 
     if (modalRect) {
       setPickerPosition({
@@ -108,6 +108,9 @@ const SettingsModal: React.FC = () => {
                 </ColorSchemeContainer>
               ))}
             </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-default" onClick={handleCloseModal}>Close</button>
           </div>
           {displayColorPicker && (
             <Popover top={pickerPosition.top} left={pickerPosition.left}>
