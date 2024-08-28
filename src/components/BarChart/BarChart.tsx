@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Bar, getElementAtEvent } from 'react-chartjs-2'; // Import getElementAtEvent
+import { Bar, getElementAtEvent } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   ChartData,
@@ -15,7 +15,7 @@ import {
 import zoomPlugin from 'chartjs-plugin-zoom';
 import styled from 'styled-components';
 import { Container, Row, Col, Form } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom'; // Import necessary hooks for URL management
+import { useLocation, useNavigate } from 'react-router-dom'; 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
 
@@ -86,7 +86,6 @@ const FiltersShownText = styled.div`
   margin-bottom: 5px;
 `;
 
-
 const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   const cumulativeDatasets = data.datasets.map((dataset) => {
     const cumulativeDataArray: number[] = [];
@@ -130,11 +129,10 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     return view === 'Cumulative' ? calculateCumulativeData(data) : data;
   });
 
-
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
-
+    // Sync URL parameters with initial state
     if (!searchParams.has('view')) {
       searchParams.set('view', selectedView);
     }
@@ -146,7 +144,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     });
 
     navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
-  }, []); 
+  }, [visibility, selectedView, location.pathname, navigate]);
 
   useEffect(() => {
     if (selectedView === 'Cumulative') {
@@ -167,7 +165,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
         })),
       });
     }
-  }, [visibility, selectedView]);
+  }, [visibility, selectedView, data]);
 
   const updateChart = (newData: ChartData<'bar'>) => {
     if (chartRef.current) {
@@ -194,16 +192,20 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
         item.label === label ? { ...item, visible: !item.visible } : item
       );
 
-      updateChart({
-        ...currentData,
-        datasets: currentData.datasets.map((dataset) => ({
-          ...dataset,
-          hidden: !newVisibility.find((item) => item.label === dataset.label)?.visible,
-        })),
-      });
-
+      // Update the URL parameters to reflect new visibility state
       const newState = !prevVisibility.find((item) => item.label === label)?.visible;
       updateUrl(label, newState);
+
+      // Update the chart data with the new visibility state
+      const updatedDatasets = currentData.datasets.map((dataset) => ({
+        ...dataset,
+        hidden: !newVisibility.find((item) => item.label === dataset.label)?.visible,
+      }));
+
+      setCurrentData({
+        ...currentData,
+        datasets: updatedDatasets,
+      });
 
       return newVisibility;
     });
@@ -217,7 +219,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
       const cumulativeData = calculateCumulativeData(data);
       setCurrentData({
         labels: data.labels,
-        datasets: cumulativeData.datasets.map((dataset, index) => ({
+        datasets: cumulativeData.datasets.map((dataset) => ({
           ...dataset,
           hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
         })),
