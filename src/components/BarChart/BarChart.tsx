@@ -15,6 +15,7 @@ import {
 import zoomPlugin from 'chartjs-plugin-zoom';
 import styled from 'styled-components';
 import { Container, Row, Col, Form } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import necessary hooks for URL management
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
 
@@ -85,27 +86,88 @@ const FiltersShownText = styled.div`
   margin-bottom: 5px;
 `;
 
+
+const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
+  const cumulativeDatasets = data.datasets.map((dataset) => {
+    const cumulativeDataArray: number[] = [];
+    let cumulativeSum = 0;
+
+    dataset.data.forEach((value) => {
+      cumulativeSum += value as number;
+      cumulativeDataArray.push(cumulativeSum);
+    });
+
+    return {
+      ...dataset,
+      data: cumulativeDataArray,
+    };
+  });
+
+  return { ...data, datasets: cumulativeDatasets };
+};
+
 const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
-  const [visibility, setVisibility] = useState<DatasetVisibility[]>(
-    data.datasets.map((dataset) => ({ label: dataset.label || '', visible: true }))
-  );
-  const [selectedView, setSelectedView] = useState<'Annual' | 'Cumulative'>('Annual');
-  const [currentData, setCurrentData] = useState<ChartData<'bar'>>(data);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Initialize visibility state based on URL parameters
+  const initialVisibility: DatasetVisibility[] = data.datasets.map((dataset) => {
+    const searchParams = new URLSearchParams(location.search);
+    const label = dataset.label || '';
+    const visible = searchParams.get(label) !== 'false'; // Default to true if not explicitly set to 'false'
+    return { label, visible };
+  });
+
+  const [visibility, setVisibility] = useState<DatasetVisibility[]>(initialVisibility);
+  const [selectedView, setSelectedView] = useState<'Annual' | 'Cumulative'>(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual'; 
+  });
+  const [currentData, setCurrentData] = useState<ChartData<'bar'>>(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const view = (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual';
+    return view === 'Cumulative' ? calculateCumulativeData(data) : data;
+  });
+
 
   useEffect(() => {
-    const syncVisibilityWithChart = () => {
-      if (chartRef.current) {
-        const newVisibility = chartRef.current.data.datasets.map((dataset) => ({
-          label: dataset.label || '',
-          visible: !dataset.hidden,
-        }));
-        setVisibility(newVisibility);
-      }
-    };
+    const searchParams = new URLSearchParams(location.search);
 
-    syncVisibilityWithChart();
-  }, [currentData]);
+
+    if (!searchParams.has('view')) {
+      searchParams.set('view', selectedView);
+    }
+
+    visibility.forEach((item) => {
+      if (!searchParams.has(item.label)) {
+        searchParams.set(item.label, String(item.visible));
+      }
+    });
+
+    navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
+  }, []); 
+
+  useEffect(() => {
+    if (selectedView === 'Cumulative') {
+      const cumulativeData = calculateCumulativeData(data);
+      setCurrentData({
+        labels: data.labels,
+        datasets: cumulativeData.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      });
+    } else {
+      setCurrentData({
+        labels: data.labels,
+        datasets: data.datasets.map((dataset) => ({
+          ...dataset,
+          hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+        })),
+      });
+    }
+  }, [visibility, selectedView]);
 
   const updateChart = (newData: ChartData<'bar'>) => {
     if (chartRef.current) {
@@ -118,6 +180,12 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
       });
       chartRef.current.update();
     }
+  };
+
+  const updateUrl = (key: string, value: string | boolean) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set(key, String(value));
+    navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
   };
 
   const toggleDatasetVisibility = (label: string) => {
@@ -134,83 +202,59 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
         })),
       });
 
+      const newState = !prevVisibility.find((item) => item.label === label)?.visible;
+      updateUrl(label, newState);
+
       return newVisibility;
     });
   };
 
   const handleViewChange = (view: 'Annual' | 'Cumulative') => {
     setSelectedView(view);
+    updateUrl('view', view); 
+
     if (view === 'Cumulative') {
-      const cumulativeData = calculateCumulativeData(data.datasets);
-      const updatedData: ChartData<'bar'> = {
+      const cumulativeData = calculateCumulativeData(data);
+      setCurrentData({
         labels: data.labels,
-        datasets: cumulativeData.map((dataset, index) => ({
-          label: dataset.label,
-          data: dataset.data,
-          backgroundColor: dataset.backgroundColor,
-          borderColor: dataset.borderColor,
-          borderWidth: 1,
+        datasets: cumulativeData.datasets.map((dataset, index) => ({
+          ...dataset,
           hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
         })),
-      };
-      setCurrentData(updatedData);
-      updateChart(updatedData);
+      });
     } else {
-      const updatedData: ChartData<'bar'> = {
-        ...data,
+      setCurrentData({
+        labels: data.labels,
         datasets: data.datasets.map((dataset) => ({
           ...dataset,
           hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
         })),
-      };
-      setCurrentData(updatedData);
-      updateChart(updatedData);
-    }
-  };
-
-  const calculateCumulativeData = (datasets: ChartDataset<'bar'>[]): ChartDataset<'bar'>[] => {
-    return datasets.map(dataset => {
-      const cumulativeDataArray: number[] = [];
-      let cumulativeSum = 0;
-
-      dataset.data.forEach((value) => {
-        cumulativeSum += value as number;
-        cumulativeDataArray.push(cumulativeSum);
       });
-
-      return {
-        ...dataset,
-        data: cumulativeDataArray,
-      };
-    });
+    }
   };
 
   const handleBarClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (chartRef.current) {
-        const elements = getElementAtEvent(chartRef.current, event);
-        if (elements.length > 0) {
-            const { datasetIndex, index } = elements[0];
-            
-            const dataset = chartRef.current.data.datasets[datasetIndex] as ChartDataset<'bar'> & { objectConfig?: { [key: number]: { url: string } } };
-            
-            if (dataset && dataset.objectConfig && dataset.objectConfig[index]) {
-                const barUrl = dataset.objectConfig[index].url;
-
-                if (barUrl) {
-                    window.location.href = barUrl; 
-                }
-            }
+      const elements = getElementAtEvent(chartRef.current, event);
+      if (elements.length > 0) {
+        const { datasetIndex, index } = elements[0];
+        const dataset = chartRef.current.data.datasets[datasetIndex] as ChartDataset<'bar'> & { objectConfig?: { [key: number]: { url: string } } };
+        
+        if (dataset && dataset.objectConfig && dataset.objectConfig[index]) {
+          const barUrl = dataset.objectConfig[index].url;
+          if (barUrl) {
+            window.location.href = barUrl; 
+          }
         }
+      }
     }
-};
+  };
 
-  
   return (
     <Container>
       <Row>
         <Col md={10}>
           <StyledChartContainer>
-            {/* Pass the handleBarClick to the Bar component */}
             <Bar ref={chartRef} data={currentData} options={options} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
@@ -218,18 +262,18 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
           <ControlSection>
             <DataOptionsHeader>Data Options</DataOptionsHeader>
             <FilterSection>
-            <FiltersShownText>Data Shown</FiltersShownText>
-            {visibility.map((item) => (
-              <CheckboxContainer key={item.label}>
-                <StyledCheckbox
-                  type="checkbox"
-                  id={item.label}
-                  checked={item.visible}
-                  onChange={() => toggleDatasetVisibility(item.label)}
-                />
-                <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
-              </CheckboxContainer>
-            ))}
+              <FiltersShownText>Data Shown</FiltersShownText>
+              {visibility.map((item) => (
+                <CheckboxContainer key={item.label}>
+                  <StyledCheckbox
+                    type="checkbox"
+                    id={item.label}
+                    checked={item.visible}
+                    onChange={() => toggleDatasetVisibility(item.label)}
+                  />
+                  <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
+                </CheckboxContainer>
+              ))}
             </FilterSection>
             {!isOverallPlot && (
               <ToggleRadioContainer>
