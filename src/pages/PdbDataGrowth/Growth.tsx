@@ -49,9 +49,11 @@ const Growth: React.FC = () => {
                 backgroundColor: dataset[0]?.objectConfig?.color || 'rgba(0, 0, 0, 0.1)',
                 borderColor: dataset[0]?.objectConfig?.color || 'rgba(0, 0, 0, 0.1)',
                 borderWidth: 1,
+                objectConfig: dataset.map(item => item.objectConfig) 
             };
         }),
     } : null;
+
 
     const selectedChartOptions = plotname && chartOptions[plotname];
 

@@ -127,7 +127,6 @@ export const statsDataMetaInfo: MetaInfo[] = [
       },
     ],
   },
-  
   {
     key: 'distribution-expression-organism-gene',
     title: 'by Expression System Organism',
@@ -529,6 +528,197 @@ export const growthRelatedKeys: MetaInfo[] = [
     ],
     return_type: ReturnType.Entry,
   },
+  {
+    key: 'molecular-composition',
+    title: 'by Molecular Composition',
+    description: 'PDB Data Growth by Molecular Composition',
+    header_label: 'Molecular Composition',
+    stats_notes: 'Growth of PDB structures by molecular composition, such as protein, nucleic acid, and small molecules.',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entry_info.selected_polymer_entity_types',
+            operator: 'terms',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: AggregationType.DateHistogram,
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 0,
+        facets: [
+          {
+            name: `FACET/${RcsbSearchMetadata.Exptl.Method.path}`,
+            aggregation_type: AggregationType.Terms,
+            attribute: "rcsb_entry_info.selected_polymer_entity_types",
+          },
+        ],
+      },
+    ],
+    return_type: ReturnType.Entry,
+  },
+  {
+    key: 'assembly-symmetry',
+    title: 'by Assembly Symmetry',
+    description: 'PDB Data Growth by Assembly Symmetry',
+    header_label: 'Assembly Symmetry',
+    stats_notes: 'Growth of PDB structures by global assembly symmetry types.',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_struct_symmetry.type',
+            operator: 'terms',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: AggregationType.DateHistogram,
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 0,
+        facets: [
+          {
+            name: `FACET/${RcsbSearchMetadata.RcsbStructSymmetry.Kind.enum['Global Symmetry']}`,
+            aggregation_type: AggregationType.Terms,
+            attribute: "rcsb_struct_symmetry.type",
+          },
+        ],
+      },
+    ],
+    return_type: ReturnType.Entry,
+  },
+  {
+    key: 'number-of-domains',
+    title: 'by Number of Domains',
+    description: 'PDB Data Growth by Number of Unique Domains',
+    header_label: 'Number of Domains',
+    stats_notes: 'Growth of PDB structures by the number of unique domains, calculated using UniProtKB accession matching.',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_polymer_entity_group_membership.aggregation_method',
+            operator: 'exact_match',
+            value: 'matching_uniprot_accession',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: AggregationType.DateHistogram,
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 0,
+        facets: [
+          {
+            name: 'Unique UniProtKB Entries',
+            aggregation_type: AggregationType.Terms,  // Changed from 'cardinality' to 'terms'
+            attribute: 'rcsb_polymer_entity_group_membership.group_id',
+          },
+        ],
+      },
+    ],
+    return_type: ReturnType.Entry,
+  },
+  {
+    key: 'unique-protein-sequences',
+    title: 'by Unique Protein Sequences',
+    description: 'PDB Data Growth by Unique Protein Sequences',
+    header_label: 'Unique Protein Sequences',
+    stats_notes: 'Growth of PDB structures by the number of unique protein sequences, determined by UniProtKB accession matching.',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_accession_info.initial_release_date',
+            operator: 'range',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_polymer_entity_group_membership.aggregation_method',
+            operator: 'exact_match',
+            value: 'matching_uniprot_accession',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: AggregationType.DateHistogram,
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 0,
+        facets: [
+          {
+            name: 'Unique UniProtKB Entries',
+            aggregation_type: AggregationType.Terms,  
+            attribute: 'rcsb_polymer_entity_group_membership.group_id',
+          },
+        ],
+      },
+    ],
+    return_type: ReturnType.Entry,
+  },
+  
   {
     key: 'growth-xray',
     title: 'by X-ray',
@@ -976,7 +1166,6 @@ export const exptlDataCountsInfo = [
   }
 ];
 
-// Refactor the utility methods to use modern ES6+ syntax and TypeScript
 
 export const metaInfoUtils = {
   getHeaderText: (plotName: string): string => {
@@ -1087,5 +1276,43 @@ function getRangeFacets(
       })),
     },
   ];
+}
+
+export function createSearchUrlFromObj(obj: any, yearVal: string | number, returnType: string): string {
+  if (!obj) {
+      return '';
+  }
+
+  const valueObj = {
+      from: `${yearVal}-01-01T00:00:00Z`,
+      to: `${yearVal}-12-31T23:59:59Z`,
+      include_lower: true,
+      include_upper: true
+  };
+
+  if (obj.parameters) {
+      obj.parameters.value = valueObj;
+  } else if (obj.nodes && obj.nodes[0]?.parameters) {
+      obj.nodes[0].parameters.value = valueObj;
+  } else {
+      throw new Error('Invalid object structure for query');
+  }
+
+  const requestInfo = {
+      src: 'ui',
+      query_id: 'growth_stats'
+  };
+
+  const searchObj: any = {
+      query: obj,
+      request_info: requestInfo,
+      return_type: returnType
+  };
+
+  const searchJson = JSON.stringify(searchObj);
+  const searchEncoded = encodeURIComponent(searchJson);
+  const searchUrl = `/search?request=${searchEncoded}`;
+
+  return searchUrl;
 }
 

@@ -66,3 +66,24 @@ export interface RangeFacet extends BaseFacet {
 export type Facet = TermFacet | RangeFacet | BaseFacet;
 
 
+export interface TerminalNode<T = any> {
+  type: "terminal";
+  service: string; // Could be more specific if needed
+  parameters: {
+      attribute: string;
+      operator: string;
+      value?: T;
+  };
+}
+
+export interface GroupNode<T = any> {
+  type: "group";
+  logical_operator: "and" | "or";
+  nodes: Array<TerminalNode<T> | GroupNode<T>>;
+}
+
+
+export interface GrowthObject {
+  facets?: Facet[];
+  ref_url?: RefUrl;
+}

@@ -13,24 +13,46 @@ import { QueryResult } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchR
 import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchClient";
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 import { useSettings } from '../../src/contexts/SettingsContext';
-import { metaInfoUtils } from '../config/meta_sanitize';
-
+import { metaInfoUtils, createSearchUrlFromObj } from '../config/meta_sanitize';
+import { MetaInfo, Facet as MetaInfoFacet, RefUrl } from '../../src/interfaces/MetaInfoTypes';
 
 interface BucketDataType {
     label: string | number;
     population: number;
 }
-
 interface BucketDataWithConfig extends BucketDataType {
     objectConfig?: {
         objectId: (string | number)[];
         color: string;
+        label?: string;
+        url?: string; // Add 'url' as an optional property
     };
 }
 
-const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
-    const growthObject = metaInfoUtils.getGrowthObject('growth-released-structures');
+interface ExtendedChartObjectInterface extends ChartObjectInterface {
+    objectConfig?: {
+        objectId?: (string | number)[];
+        color?: string;
+        label?: string;
+        url?: string; // Allow 'url' as an optional property
+    };
+}
+
+interface GrowthObjectDetails {
+    existingFacets?: MetaInfoFacet;
+    ref_url?: RefUrl; 
+}
+
+const getGrowthObjectDetails = (growthObjectType: string): GrowthObjectDetails => {
+    const growthObject: MetaInfo | undefined = metaInfoUtils.getGrowthObject(growthObjectType);
     const existingFacets = growthObject?.facets?.[0];
+    const ref_url = growthObject?.ref_url;
+
+    return { existingFacets, ref_url };
+};
+
+const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('growth-released-structures');
 
     if (!existingFacets) {
         throw new Error('Facets are missing or invalid for growth-released-structures');
@@ -44,18 +66,21 @@ const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectIn
         min_interval_population: existingFacets.min_interval_population,
     };
 
-
     const overallStructuresQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: validFacet,
         returnType: ReturnType.Entry
     };
 
-    console.log(overallStructuresQuery);
-
-    return fetchChartDataWithProps(colors, overallStructuresQuery, true);
+    return fetchChartDataWithProps(colors, overallStructuresQuery, true, ref_url);
 };
 
 const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('overall-small-molecules');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for overall-small-molecules');
+    }
+
     const overallSmallMoleculesQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -67,10 +92,16 @@ const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObje
         returnType: ReturnType.MolDefinition
     };
 
-    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, true);
+    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, true, ref_url);
 };
 
 const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('experimental-method');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for experimental-method');
+    }
+
     const experimentalMethodsQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -88,10 +119,16 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, experimentalMethodsQuery);
+    return fetchChartDataWithProps(colors, experimentalMethodsQuery, false, ref_url);
 };
 
 const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('molecular-composition');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for molecular-composition');
+    }
+
     const molecularCompositionQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -108,10 +145,16 @@ const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjec
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, molecularCompositionQuery);
+    return fetchChartDataWithProps(colors, molecularCompositionQuery, false, ref_url);
 };
 
 const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('assembly-symmetry');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for assembly-symmetry');
+    }
+
     const assemblySymmetryQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -128,10 +171,16 @@ const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInt
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, assemblySymmetryQuery);
+    return fetchChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url);
 };
 
 const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('number-of-domains');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for number-of-domains');
+    }
+
     const numberOfDomainsQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -145,26 +194,32 @@ const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInte
                 "type": "terminal",
                 "service": "text",
                 "parameters": {
-                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
-                  "operator": "exact_match",
-                  "value": "matching_uniprot_accession"
+                    "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                    "operator": "exact_match",
+                    "value": "matching_uniprot_accession"
                 }
-              },
-              "facets": [
+            },
+            "facets": [
                 {
-                  "name": "Unique UniProtKB Entries",
-                  "aggregation_type": "cardinality",
-                  "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                    "name": "Unique UniProtKB Entries",
+                    "aggregation_type": "cardinality",
+                    "attribute": "rcsb_polymer_entity_group_membership.group_id"
                 }
-              ]
+            ]
         },
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, numberOfDomainsQuery);
+    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url );
 };
 
-const GetNumberOfUniqueProtienSequenses = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetNumberOfUniqueProtienSequences = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getGrowthObjectDetails('unique-protein-sequences');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for unique-protein-sequences');
+    }
+
     const numberOfDomainsQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim: {
             name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
@@ -178,30 +233,31 @@ const GetNumberOfUniqueProtienSequenses = async (colors: string[]): Promise<Char
                 "type": "terminal",
                 "service": "text",
                 "parameters": {
-                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
-                  "operator": "exact_match",
-                  "value": "matching_uniprot_accession"
+                    "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                    "operator": "exact_match",
+                    "value": "matching_uniprot_accession"
                 }
-              },
-              "facets": [
+            },
+            "facets": [
                 {
-                  "name": "Unique UniProtKB Entries",
-                  "aggregation_type": "cardinality",
-                  "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                    "name": "Unique UniProtKB Entries",
+                    "aggregation_type": "cardinality",
+                    "attribute": "rcsb_polymer_entity_group_membership.group_id"
                 }
-              ]
+            ]
         },
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, numberOfDomainsQuery);
+    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url);
 };
 
 const fetchChartDataWithProps = async (
     colors: string[],
     props: Omit<FacetPlotInterface, "chartType">,
-    isCumulative: boolean = false
-): Promise<ChartObjectInterface[][]> => {
+    isCumulative: boolean = false,
+    ref_url: any 
+): Promise<ExtendedChartObjectInterface[][]> => {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
         attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
         value: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.enum.experimental,
@@ -230,43 +286,53 @@ const fetchChartDataWithProps = async (
     if (isCumulative && data.length > 0) {
         let cumulativeSum = 0;
 
-        const originalDataWithColor = data.map(item => ({
-            ...item,
-            objectConfig: {
-                ...item.objectConfig,
-                color: colors[0 % colors.length],
-                label: 'Annual',
-            }
-        }));
+        const originalDataWithColor = data.map(item => {
+            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+            return {
+                ...item,
+                objectConfig: {
+                    ...item.objectConfig,
+                    color: colors[0 % colors.length],
+                    label: 'Annual',
+                    url: searchUrl
+                }
+            };
+        });
 
         const cumulativeData = data.map(item => {
             cumulativeSum += item.population;
+            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
             return {
                 ...item,
                 population: cumulativeSum,
                 objectConfig: {
                     objectId: [item.label, cumulativeSum],
                     color: colors[1 % colors.length],
-                    label: 'Cumulative',  
+                    label: 'Cumulative',
+                    url: searchUrl
                 }
             };
         });
 
         return [originalDataWithColor, cumulativeData];
     } else if (props.secondDim) {
-        return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors);
+        return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
     } else {
-        return [data.map(d => ({
-            ...d,
-            objectConfig: {
-                objectId: [d.label, d.population],
-                color: colors[0 % colors.length],
-            }
-        }))];
+        return [data.map(d => {
+            const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+            return {
+                ...d,
+                objectConfig: {
+                    objectId: [d.label, d.population],
+                    color: colors[0 % colors.length],
+                    url: searchUrl 
+                }
+            };
+        })];
     }
 };
 
-const drillFacets = (facets: SearchBucketFacetType[], colors: string[]): ChartObjectInterface[][] => {
+const drillFacets = (facets: SearchBucketFacetType[], colors: string[], ref_url: any): ExtendedChartObjectInterface[][] => {
     const labelSet: Set<string> = new Set();
     const domList: string[] = [];
     const valueMap: Map<string, Map<string, number>> = new Map();
@@ -282,17 +348,21 @@ const drillFacets = (facets: SearchBucketFacetType[], colors: string[]): ChartOb
     });
 
     const labelList: string[] = Array.from(labelSet);
-    const out: ChartObjectInterface[][] = [];
+    const out: ExtendedChartObjectInterface[][] = [];
     labelList.forEach((label, n) => {
-        const row: ChartObjectInterface[] = [];
+        const row: ExtendedChartObjectInterface[] = [];
         domList.forEach(dom => {
-            if (valueMap.get(dom)?.get(label)) {
+            if (valueMap.get(dom)?.get(label) !== undefined) {
+                const searchUrl = createSearchUrlFromObj(ref_url, label, 'Entry'); // Generate the URL using ref_url
+                
+                // Ensure objectId array contains only string | number values
                 row.push({
                     label: dom,
                     population: valueMap.get(dom)?.get(label) ?? 0,
                     objectConfig: {
-                        objectId: [dom, label, valueMap.get(dom)?.get(label)],
+                        objectId: [dom, label, valueMap.get(dom)?.get(label) ?? 0], // Ensure default to 0
                         color: colors[n % colors.length],
+                        url: searchUrl, // Attach the generated URL
                     }
                 });
             }
@@ -322,7 +392,7 @@ const useGetData = (key: string, parameter?: any) => {
         'molecular-composition': GetMolecularCompositionData,
         'assembly-symmetry': GetAssemblySymmetryData,
         'number-of-domains': GetNumberOfDomainsData,
-        'unique-protein-sequences': GetNumberOfUniqueProtienSequenses,
+        'unique-protein-sequences': GetNumberOfUniqueProtienSequences,
     };
 
     return useQuery({
@@ -339,6 +409,5 @@ const useGetData = (key: string, parameter?: any) => {
         enabled: !!key,
     });
 };
-
 
 export default useGetData;

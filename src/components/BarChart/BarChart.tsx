@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, getElementAtEvent } from 'react-chartjs-2'; // Import getElementAtEvent
 import {
   Chart as ChartJS,
   ChartData,
@@ -185,12 +185,33 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     });
   };
 
+  const handleBarClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (chartRef.current) {
+        const elements = getElementAtEvent(chartRef.current, event);
+        if (elements.length > 0) {
+            const { datasetIndex, index } = elements[0];
+            
+            const dataset = chartRef.current.data.datasets[datasetIndex] as ChartDataset<'bar'> & { objectConfig?: { [key: number]: { url: string } } };
+            
+            if (dataset && dataset.objectConfig && dataset.objectConfig[index]) {
+                const barUrl = dataset.objectConfig[index].url;
+
+                if (barUrl) {
+                    window.location.href = barUrl; 
+                }
+            }
+        }
+    }
+};
+
+  
   return (
     <Container>
       <Row>
         <Col md={10}>
           <StyledChartContainer>
-            <Bar ref={chartRef} data={currentData} options={options} />
+            {/* Pass the handleBarClick to the Bar component */}
+            <Bar ref={chartRef} data={currentData} options={options} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
         <Col md={2}>
