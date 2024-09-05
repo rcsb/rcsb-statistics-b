@@ -30,7 +30,7 @@ export const ColorSchemeContainer = styled.label`
 
 export const SchemeName = styled.span`
   margin-left: 5px;
-  min-width: 60px;
+  min-width: 80px;
   text-transform: capitalize;
   margin-right: 10px;
 `;
