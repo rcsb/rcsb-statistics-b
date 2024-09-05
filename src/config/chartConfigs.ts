@@ -262,6 +262,62 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
                 },
             },
         },
+        scales: {
+            x: {
+                type: 'category',
+                display: true,
+                stacked: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 45,
+                    minRotation: 0,
+                    font: {
+                        size: 12,
+                    },
+                    color: '#333',
+                },
+                title: {
+                    display: true,
+                    text: 'Year',
+                    font: {
+                        size: 14,
+                        weight: 'normal',
+                    },
+                    color: '#333',
+                },
+            },
+            y: {
+                type: 'linear',
+                display: true,
+                stacked: true,
+                beginAtZero: true,
+                grid: {
+                    display: true,
+                    color: '#e4e4e4',
+                    lineWidth: 1,
+                },
+                ticks: {
+                    stepSize: 5000,
+                    font: {
+                        size: 12,
+                    },
+                    color: '#333',
+                    callback: (value: number | string) => `${value}`,
+                },
+                title: {
+                    display: true,
+                    text: 'Number of Entries',
+                    font: {
+                        size: 14,
+                        weight: 'normal',
+                    },
+                    color: '#333',
+                },
+            },
+        },
     },
     'experimental-method': {
         ...baseChartOptions,
@@ -289,6 +345,62 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
                         }
                         return '';
                     },
+                },
+            },
+        },
+        scales: {
+            x: {
+                type: 'category',
+                display: true,
+                stacked: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 45,
+                    minRotation: 0,
+                    font: {
+                        size: 12,
+                    },
+                    color: '#333',
+                },
+                title: {
+                    display: true,
+                    text: 'Year',
+                    font: {
+                        size: 14,
+                        weight: 'normal',
+                    },
+                    color: '#333',
+                },
+            },
+            y: {
+                type: 'linear',
+                display: true,
+                stacked: true,
+                beginAtZero: true,
+                grid: {
+                    display: true,
+                    color: '#e4e4e4',
+                    lineWidth: 1,
+                },
+                ticks: {
+                    stepSize: 1000,
+                    font: {
+                        size: 12,
+                    },
+                    color: '#333',
+                    callback: (value: number | string) => `${value}`,
+                },
+                title: {
+                    display: true,
+                    text: 'Number of Entries',
+                    font: {
+                        size: 14,
+                        weight: 'normal',
+                    },
+                    color: '#333',
                 },
             },
         },
