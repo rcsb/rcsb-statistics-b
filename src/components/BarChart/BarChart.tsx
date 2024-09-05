@@ -114,7 +114,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     const searchParams = new URLSearchParams(location.search);
     return data.datasets.map((dataset) => {
       const label = dataset.label || '';
-      const visible = searchParams.get(label) !== 'false'; // Default to true if not explicitly set to 'false'
+      const visible = searchParams.get(label) !== 'false';
       return { label, visible };
     });
   });
@@ -131,7 +131,6 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
   });
 
   useEffect(() => {
-    // Sync URL parameters with state changes
     const searchParams = new URLSearchParams(location.search);
 
     visibility.forEach((item) => {
@@ -191,6 +190,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
   const handleBarClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (chartRef.current) {
       const elements = getElementAtEvent(chartRef.current, event);
+
       if (elements.length > 0) {
         const { datasetIndex, index } = elements[0];
         const dataset = chartRef.current.data.datasets[datasetIndex] as ChartDataset<'bar'> & {
@@ -207,12 +207,34 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     }
   };
 
+  // Custom legend click handler to synchronize with checkbox state
+  const handleLegendClick = (chart: any, legendItem: any) => {
+    const index = legendItem.datasetIndex;
+    const label = chart.data.datasets[index].label;
+
+    if (label) {
+      toggleDatasetVisibility(label);
+    }
+  };
+
+  // Merge the options with custom legend click handler
+  const updatedOptions = {
+    ...options,
+    plugins: {
+      ...options.plugins,
+      legend: {
+        ...options.plugins?.legend,
+        onClick: (event: any, legendItem: any, legend: any) => handleLegendClick(legend.chart, legendItem),
+      },
+    },
+  };
+
   return (
     <Container>
       <Row>
         <Col md={10}>
           <StyledChartContainer>
-            <Bar ref={chartRef} data={currentData} options={options} onClick={handleBarClick} />
+            <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
         <Col md={2}>
