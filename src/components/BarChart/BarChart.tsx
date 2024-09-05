@@ -198,6 +198,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
         };
 
         if (dataset && dataset.objectConfig && dataset.objectConfig[index]) {
+          console.log('dataset.objectConfig[index]: ', dataset.objectConfig[index]);
           const barUrl = dataset.objectConfig[index].url;
           if (barUrl) {
             window.location.href = barUrl;
@@ -207,7 +208,6 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     }
   };
 
-  // Custom legend click handler to synchronize with checkbox state
   const handleLegendClick = (chart: any, legendItem: any) => {
     const index = legendItem.datasetIndex;
     const label = chart.data.datasets[index].label;
@@ -217,7 +217,6 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     }
   };
 
-  // Merge the options with custom legend click handler
   const updatedOptions = {
     ...options,
     plugins: {
