@@ -24,7 +24,7 @@ const isActivePath = (locationPathname: string, basePath: string): boolean => {
 const NavBar: React.FC = () => {
   const location = useLocation();
   const isDataGrowthActive = isActivePath(location.pathname, '/growth'); 
-  const isDataDistributionActive = isActivePath(location.pathname, paths.PDB_DATA_DISTRIBUTION);
+  const isDataDistributionActive = isActivePath(location.pathname, '/distribution');
 
   const { handleOpenModal } = useModal();
 
@@ -56,7 +56,7 @@ const NavBar: React.FC = () => {
                 <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
               </NavItem>
               <NavDropdown className={`nav-item dropdown ${isDataGrowthActive ? 'active' : ''}`}>
-                <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname.startsWith('/growth2') ? 'active' : ''}`} as="a">
+                <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname.startsWith('/growth') ? 'active' : ''}`} as="a">
                   Data Growth 
                   <span className="triangle" />
                 </DropdownToggle>
@@ -70,38 +70,72 @@ const NavBar: React.FC = () => {
                   <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH('experimental-method')}>
                     By Experimental Method
                   </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH('molecular-composition')}>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH('molecular-composition')}>
                     By Molecular Composition
                   </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH('assembly-symmetry')}>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH('assembly-symmetry')}>
                     By Assembly Symmetry
                   </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH('number-of-domains')}>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH('number-of-domains')}>
                     By Number of Domains
                   </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_GROWTH('unique-protein-sequences')}>
+                  <DropdownItem as={Link} to={paths.PDB_DATA_GROWTH('unique-protein-sequences')}>
                     By Unique Protein Sequences
                   </DropdownItem>
                 </DropdownMenu>
               </NavDropdown>
               <NavDropdown className={`nav-item dropdown ${isDataDistributionActive ? 'active' : ''}`}>
-                <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname === paths.PDB_DATA_DISTRIBUTION ? 'active' : ''}`} as="a">
+                <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname.startsWith('/distribution')  ? 'active' : ''}`} as="a">
                   Data Distribution
                    <span className="triangle" />
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu">
-                  <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
-                    By Method and Molecular Type
-                  </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
-                    By Source Organism
-                  </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
-                    By Expression System
-                  </DropdownItem>
-                  <DropdownItem className="disabled" as={Link} to={paths.PDB_DATA_DISTRIBUTION}>
-                    By Residue Count
-                  </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('resolution')}>
+                  By Resolution
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('r-free')}>
+                  By R-free
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('molecular-weight-structure')}>
+                  By Molecular Weight (Structure)
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('atom-count')}>
+                  By Atom Count
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('residue-count')}>
+                  By Residue Count
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('macromolecular-composition')}>
+                  By Macromolecular Composition
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('source-organism-natural')}>
+                  By Source Organism
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('taxonomy')}>
+                  By Taxonomy
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('software')}>
+                  By Processing Software
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('space-group')}>
+                  By Space Groups
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('journal')}>
+                  By Publication Journal
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('structural-genomics-centers')}>
+                  By Structural Genomics Centers
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('enzyme-classification-name')}>
+                  By Enzyme Classification
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('assembly-symmetry')}>
+                  By Assembly Symmetry
+                </DropdownItem>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('scop-classification')}>
+                  By SCOP Classification
+                </DropdownItem>
+
                 </DropdownMenu>
               </NavDropdown>
               <NavItem className={`nav-item ${location.pathname === paths.OTHER_STATISTICS ? 'active' : ''}`}>

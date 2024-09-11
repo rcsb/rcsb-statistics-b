@@ -16,7 +16,6 @@ const ShimmerEffect = css`
   border-radius: 4px;
 `;
 
-// Base skeleton box with common styles
 const SkeletonBox = styled.div<{ height?: string; width?: string }>`
   ${(props) => props.height && `height: ${props.height};`}
   ${(props) => props.width && `width: ${props.width};`}
@@ -31,8 +30,6 @@ export const SkeletonContainer = styled.div`
   border-radius: 8px;
   height: 500px;
 `;
-
-// Specific skeleton elements
 export const SkeletonTitle = styled(SkeletonBox).attrs({
   height: '30px',
   width: '50%',

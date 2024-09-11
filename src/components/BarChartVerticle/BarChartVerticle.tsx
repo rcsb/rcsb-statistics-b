@@ -22,7 +22,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
-  isOverallPlot: boolean;
 }
 
 interface DatasetVisibility {
@@ -105,7 +104,7 @@ const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   return { ...data, datasets: cumulativeDatasets };
 };
 
-const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) => {
+const BarChart: React.FC<BasicChartProps> = ({ data, options }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -263,29 +262,6 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
                 </CheckboxContainer>
               ))}
             </FilterSection>
-            {!isOverallPlot && (
-              <ToggleRadioContainer>
-                <FiltersShownText>Data Set</FiltersShownText>
-                <Form.Check
-                  type="radio"
-                  id="view-annual"
-                  label="Annual"
-                  name="view-switch"
-                  value="Annual"
-                  checked={selectedView === 'Annual'}
-                  onChange={() => handleViewChange('Annual')}
-                />
-                <Form.Check
-                  type="radio"
-                  id="view-cumulative"
-                  label="Cumulative"
-                  name="view-switch"
-                  value="Cumulative"
-                  checked={selectedView === 'Cumulative'}
-                  onChange={() => handleViewChange('Cumulative')}
-                />
-              </ToggleRadioContainer>
-            )}
           </ControlSection>
         </Col>
       </Row>

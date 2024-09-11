@@ -75,13 +75,15 @@ export const NavbarTogglerIcon = styled.span`
 
 export const NavItem = styled.li`
   &.active > ${NavLink} {
-    font-weight: bold !important; /* Enforce bold for active NavLink */
+    font-weight: bold !important;
   }
 
   a {
     height: 30px;
     padding: 5px 15px !important;
   }
+
+  
   
   button {
     margin-top: 5px;
