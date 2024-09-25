@@ -3,15 +3,17 @@ import { useParams } from 'react-router-dom';
 import BarChart from '../../components/BarChart/BarChart';
 import ChartSkeleton from '../../components/BarChart/BarChartSkeleton';
 import BarChartRace from '../../components/BarChartRace/BarChartRace';
-import { FadeInContainer } from '../../styles/GrowthStyles';
+import { FadeInContainer, SearchApiContainer, StyledButton } from '../../styles/ChartStyles';
 import ErrorPage from '../../components/ErrorPage/ErrorPage';
 import useGetData from '../../hooks/useGetData';
 import chartOptions from '../../config/chartConfigs';
+import { FaCog } from 'react-icons/fa';
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
     const key = plotname || 'defaultKey';
     const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
+    const displaySize = "Large";
 
     const { data, isLoading, error } = useGetData(key);
 
@@ -61,10 +63,17 @@ const Growth: React.FC = () => {
         <FadeInContainer key={plotname}>
             {chartData && selectedChartOptions ? (
                 <>
+                    <SearchApiContainer>
+                        <StyledButton>
+                            <FaCog />  Search API
+                        </StyledButton>
+                    </SearchApiContainer>
                     <BarChart 
                         data={chartData} 
                         options={selectedChartOptions}
                         isOverallPlot={isOverallPlot}
+                        displaySize={displaySize}
+                        isDistPlot={false}
                     />
                     {plotname === 'experimental-method' && (
                         <BarChartRace plotname={plotname} />

@@ -30,6 +30,7 @@ export const SkeletonContainer = styled.div`
   border-radius: 8px;
   height: 500px;
 `;
+
 export const SkeletonTitle = styled(SkeletonBox).attrs({
   height: '30px',
   width: '50%',
@@ -37,20 +38,23 @@ export const SkeletonTitle = styled(SkeletonBox).attrs({
   margin-bottom: 20px;
 `;
 
-export const SkeletonChart = styled.div`
+export const SkeletonChart = styled.div<{ horizontal?: boolean }>`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  ${(props) =>
+    props.horizontal
+      ? `flex-direction: column; justify-content: space-between;`
+      : `justify-content: space-between; align-items: flex-end;`}
   width: 100%;
-  height: 400px; 
+  height: 400px;
   margin-top: 20px;
   border-radius: 8px;
 `;
 
-export const SkeletonBar = styled(SkeletonBox).attrs<{ height: string }>({
+export const SkeletonBar = styled(SkeletonBox).attrs<{ height?: string; width?: string }>({
   width: '3%',
 })`
-  height: ${(props) => props.height};
+  ${(props) =>
+    props.height ? `height: ${props.height};` : props.width && `width: ${props.width};`}
 `;
 
 export const SkeletonXAxis = styled(SkeletonBox).attrs({

@@ -79,6 +79,198 @@ export const statsDataMetaInfo: MetaInfo[] = [
     ],
   },  
   {
+    key: 'taxonomy',
+    title: 'by Taxonomy',
+    description: 'PDB Data Distribution by Taxonomy',
+    header_label: 'Taxonomy',
+    stats_notes: 'Taxonomy',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+            operator: 'exact_match',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        aggregation_type: 'terms',
+        attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        filter: {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+        min_interval_population: 1,
+      },
+    ],
+  },
+  {
+    key: 'enzyme-classification-name',
+    title: 'by Taxonomy',
+    description: 'PDB Data Distribution by Enzyme Classification',
+    header_label: 'Enzyme Classification',
+    stats_notes: 'Enzyme Classification',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+            operator: 'exact_match',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        aggregation_type: 'terms',
+        attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        filter: {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+        min_interval_population: 1,
+      },
+    ],
+  },
+  {
+    key: 'assembly-symmetry-dist',
+    title: 'by Assembly Symmetry',
+    description: 'PDB Data Distribution by Assembly Symmetry',
+    header_label: 'Assembly Symmetry',
+    stats_notes: 'Assembly Symmetry',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+            operator: 'exact_match',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        aggregation_type: 'terms',
+        attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        filter: {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+        min_interval_population: 1,
+      },
+    ],
+  },
+  {
+    key: 'scop-classification',
+    title: 'by SCOP Classification',
+    description: 'PDB Data Distribution by SCOP Classification',
+    header_label: 'SCOP Classification',
+    stats_notes: 'SCOP Classification',
+    header_label_sort: 'alphabetical',
+    ref_url: {
+      type: 'group',
+      logical_operator: 'and',
+      nodes: [
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+            operator: 'exact_match',
+          },
+        },
+        {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+      ],
+    },
+    facets: [
+      {
+        name: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        aggregation_type: 'terms',
+        attribute: 'rcsb_entity_source_organism.ncbi_scientific_name',
+        filter: {
+          type: 'terminal',
+          service: 'text',
+          parameters: {
+            attribute: 'rcsb_entity_source_organism.source_type',
+            operator: 'exact_match',
+            value: 'natural',
+          },
+        },
+        min_interval_population: 1,
+      },
+    ],
+  },   
+  {
     key: 'distribution-modified-organism-gene',
     title: 'by Engineered Source Organism',
     description: 'PDB Data Distribution by Engineered Source Organism',
@@ -718,7 +910,6 @@ export const growthRelatedKeys: MetaInfo[] = [
     ],
     return_type: ReturnType.Entry,
   },
-  
   {
     key: 'growth-xray',
     title: 'by X-ray',
@@ -1166,7 +1357,6 @@ export const exptlDataCountsInfo = [
   }
 ];
 
-
 export const metaInfoUtils = {
   getHeaderText: (plotName: string): string => {
     return findObjectInArrayByKey('key', plotName, statsDataMetaInfo)?.[0]?.header_label ?? '';
@@ -1214,7 +1404,6 @@ function sanitizeData(plotName: string, plotData: any): any {
   // Sanitization logic here...
   return {}; // Return sanitized data
 }
-
 
 function checkUndefined(data: any): string | number {
   return data !== undefined ? data : '--';
@@ -1312,7 +1501,7 @@ export function createSearchUrlFromObj(obj: any, yearVal: string | number, retur
   const searchJson = JSON.stringify(searchObj);
   const searchEncoded = encodeURIComponent(searchJson);
   const searchUrl = `/search?request=${searchEncoded}`;
-  console.log(`URL http://localhost:8080${searchUrl}`);
+  // console.log(`URL http://localhost:8080${searchUrl}`);
 
   return searchUrl;
 }

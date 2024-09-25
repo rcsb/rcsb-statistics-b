@@ -1,15 +1,45 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import BarChartVerticle from '../../components/BarChartVerticle/BarChartVerticle';
-import ChartSkeletonBarVerticle from '../../components/BarChartVerticle/BarChartVerticleSkeleton';
-import { FadeInContainer } from '../../styles/DistributionStyles';
+import BarChart from '../../components/BarChart/BarChart';
+import ChartSkeletonBarVerticle from '../../components/BarChartHorizontal/BarChartHorizontalSkeleton';
+import { FadeInContainer } from '../../styles/ChartStyles';
 import ErrorPage from '../../components/ErrorPage/ErrorPage';
 import useGetData from '../../hooks/useGetData';
 import chartOptions from '../../config/chartConfigs';
 
 const Distribution: React.FC = () => {
-    const { plotname } = useParams<{ plotname: string }>();
+    const plotname = useParams<{ plotname: string }>().plotname || '';
     const key = plotname || 'defaultKey';
+
+    const smallDisplayPlots = [
+        'distribution-space-group',
+        'distribution-resolution',
+        'distribution-r-free',
+        'distribution-molecular-weight-structure',
+        'distribution-atom-count',
+        'distribution-residue-count'
+    ];
+
+    const displaySize = smallDisplayPlots.includes(plotname) ? "Small" : "Large";
+
+    const distPlots = [
+        'distribution-space-group',
+        'distribution-resolution',
+        'distribution-r-free',
+        'distribution-molecular-weight-structure',
+        'distribution-atom-count',
+        'distribution-residue-count',
+        'distribution-source-organism-natural',
+        'distribution-software',
+        'distribution-journal',
+        'distribution-structural-genomics-centers',
+        'assembly-symmetry-dist',
+        'taxonomy',
+        'enzyme-classification-name',
+        'scop-classification'
+    ];
+
+    const isDistPlot = distPlots.includes(plotname);
 
     const { data, isLoading, error } = useGetData(key);
 
@@ -57,14 +87,17 @@ const Distribution: React.FC = () => {
         <FadeInContainer key={plotname}>
             {chartData && selectedChartOptions ? (
                 <>
-                    <BarChartVerticle 
+                    <BarChart 
                         data={chartData} 
                         options={selectedChartOptions}
+                        isOverallPlot={false}
+                        displaySize={displaySize}
+                        isDistPlot={isDistPlot}
                     />
                 </>
             ) : (
                 <FadeInContainer>
-                    <ErrorPage error={new Error("No data available")} />
+                    <ErrorPage error={new Error("No data available.")} />
                 </FadeInContainer>
             )}
         </FadeInContainer>

@@ -90,46 +90,43 @@ const NavBar: React.FC = () => {
                    <span className="triangle" />
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu">
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('resolution')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-resolution')}>
                   By Resolution
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('r-free')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-r-free')}>
                   By R-free
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('molecular-weight-structure')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-molecular-weight-structure')}>
                   By Molecular Weight (Structure)
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('atom-count')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-atom-count')}>
                   By Atom Count
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('residue-count')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-residue-count')}>
                   By Residue Count
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('macromolecular-composition')}>
-                  By Macromolecular Composition
-                </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('source-organism-natural')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-source-organism-natural')}>
                   By Source Organism
                 </DropdownItem>
                 <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('taxonomy')}>
                   By Taxonomy
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('software')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-software')}>
                   By Processing Software
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('space-group')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-space-group')}>
                   By Space Groups
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('journal')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-journal')}>
                   By Publication Journal
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('structural-genomics-centers')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('distribution-structural-genomics-centers')}>
                   By Structural Genomics Centers
                 </DropdownItem>
                 <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('enzyme-classification-name')}>
                   By Enzyme Classification
                 </DropdownItem>
-                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('assembly-symmetry')}>
+                <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('assembly-symmetry-dist')}>
                   By Assembly Symmetry
                 </DropdownItem>
                 <DropdownItem as={Link} to={paths.PDB_DATA_DISTRIBUTION('scop-classification')}>

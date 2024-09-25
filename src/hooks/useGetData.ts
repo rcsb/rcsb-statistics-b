@@ -25,31 +25,62 @@ interface BucketDataWithConfig extends BucketDataType {
         objectId: (string | number)[];
         color: string;
         label?: string;
-        url?: string; // Add 'url' as an optional property
+        url?: string;
     };
 }
-
 interface ExtendedChartObjectInterface extends ChartObjectInterface {
     objectConfig?: {
         objectId?: (string | number)[];
         color?: string;
         label?: string;
-        url?: string; // Allow 'url' as an optional property
+        url?: string;
     };
 }
-
-interface GrowthObjectDetails {
+interface ChartObjectDetails {
     existingFacets?: MetaInfoFacet;
     ref_url?: RefUrl; 
 }
 
-const getGrowthObjectDetails = (growthObjectType: string): GrowthObjectDetails => {
-    const growthObject: MetaInfo | undefined = metaInfoUtils.getGrowthObject(growthObjectType);
+const getGrowthObjectDetails = (chartObjectType: string): ChartObjectDetails => {
+    const growthObject: MetaInfo | undefined = metaInfoUtils.getGrowthObject(chartObjectType);
     const existingFacets = growthObject?.facets?.[0];
     const ref_url = growthObject?.ref_url;
 
     return { existingFacets, ref_url };
 };
+const getDistributionObjectDetails = (chartObjectType: string): ChartObjectDetails => {
+    const distributionObject: MetaInfo | undefined = metaInfoUtils.getDistributionObject(chartObjectType);
+    const existingFacets = distributionObject?.facets?.[0];
+    const ref_url = distributionObject?.ref_url;
+
+    return { existingFacets, ref_url };
+};
+
+function fetchData(searchRequest: any): Promise<any> {
+    const url = 'https://search.rcsb.org/rcsbsearch/v2/query';
+
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(searchRequest)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
+/// GROWTH DATA /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('growth-released-structures');
@@ -73,7 +104,6 @@ const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectIn
 
     return fetchChartDataWithProps(colors, overallStructuresQuery, true, ref_url);
 };
-
 const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('overall-small-molecules');
 
@@ -94,7 +124,6 @@ const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObje
 
     return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, true, ref_url);
 };
-
 const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('experimental-method');
 
@@ -121,7 +150,6 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
 
     return fetchChartDataWithProps(colors, experimentalMethodsQuery, false, ref_url);
 };
-
 const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('molecular-composition');
 
@@ -147,7 +175,6 @@ const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjec
 
     return fetchChartDataWithProps(colors, molecularCompositionQuery, false, ref_url);
 };
-
 const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('assembly-symmetry');
 
@@ -173,7 +200,6 @@ const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInt
 
     return fetchChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url);
 };
-
 const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('number-of-domains');
 
@@ -212,7 +238,6 @@ const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInte
 
     return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url );
 };
-
 const GetNumberOfUniqueProtienSequences = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('unique-protein-sequences');
 
@@ -252,6 +277,448 @@ const GetNumberOfUniqueProtienSequences = async (colors: string[]): Promise<Char
     return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url);
 };
 
+
+/// DISTRIBUTION DATA /////////////////////////////////////////////////////////////////////////////////////////////////////////
+const GetResolutionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-resolution');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-resolution');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const resolutionQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Resolution Combined",
+            "aggregation_type": "range",
+            "attribute": "rcsb_entry_info.resolution_combined",
+            "ranges": [
+              {
+                "to": 1
+              },
+              {
+                "from": 2,
+                "to": 2.2
+              },
+              {
+                "from": 2.2,
+                "to": 2.4
+              },
+              {
+                "from": 4.6
+              }
+            ]
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, resolutionQuery, false, ref_url);
+};
+const GetRFreeData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-r-free');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-r-free');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const rFreeQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "R-free",
+            "aggregation_type": "range",
+            "attribute": "refine.ls_R_factor_R_free",
+            "ranges": [
+              {
+                "to": 0.14
+              },
+              {
+                "from": 0.14,
+                "to": 0.15
+              },
+              {
+                "from": 0.15,
+                "to": 0.16
+              },
+              {
+                "from": 0.32
+              }
+            ]
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, rFreeQuery, false, ref_url);
+};
+const GetMolecularWeightStructureData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-molecular-weight-structure');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-molecular-weight-structure');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const molecularWeightStructureQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Molecular Weight",
+            "aggregation_type": "range",
+            "attribute": "rcsb_entry_info.molecular_weight",
+            "ranges": [
+              {
+                "to": 20
+              },
+              {
+                "from": 20,
+                "to": 40
+              },
+              {
+                "from": 40,
+                "to": 60
+              },
+              {
+                "from": 380
+              }
+            ]
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, molecularWeightStructureQuery, false, ref_url);
+};
+const GetAtomCountData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-atom-count');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or distribution-atom-count');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const atomCountQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Atom Count",
+            "aggregation_type": "range",
+            "attribute": "rcsb_entry_info.deposited_atom_count",
+            "ranges": [
+              {
+                "to": 1000
+              },
+              {
+                "from": 1000,
+                "to": 2000
+              },
+              {
+                "from": 2000,
+                "to": 3000
+              },
+              {
+                "from": 19000
+              }
+            ]
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, atomCountQuery, false, ref_url);
+};
+const GetResidueCountData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-residue-count');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-residue-count');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const residueCountQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Residue Count",
+            "aggregation_type": "range",
+            "attribute": "rcsb_entry_info.deposited_polymer_monomer_count",
+            "ranges": [
+              {
+                "to": 100
+              },
+              {
+                "from": 100,
+                "to": 200
+              },
+              {
+                "from": 200,
+                "to": 300
+              },
+              {
+                "from": 1900
+              }
+            ]
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, residueCountQuery, false, ref_url);
+};
+const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-source-organism-natural');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for source-organism-natural');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const naturalSourceOrganismQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Source Type",
+            "aggregation_type": "terms",
+            "attribute": "rcsb_entity_source_organism.source_type",
+            "min_interval_population": 1,
+            "facets": [
+              {
+                "name": "Source Organism",
+                "aggregation_type": "terms",
+                "attribute": "rcsb_entity_source_organism.ncbi_scientific_name",
+                "min_interval_population": 1,
+                "max_num_intervals": 20
+              }
+            ]
+          },
+        returnType: ReturnType.PolymerEntity
+    };
+
+    return fetchDistributionChartDataWithProps(colors, naturalSourceOrganismQuery, false, ref_url);
+};
+const GetTaxonomyData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('taxonomy');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for taxonomy');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const taxonomyQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Taxonomy",
+            "aggregation_type": "terms",
+            "attribute": "rcsb_entity_source_organism.ncbi_parent_scientific_name",
+            "min_interval_population": 1,
+            "max_num_intervals": 20
+          },
+        returnType: ReturnType.PolymerEntity
+    };
+
+    return fetchDistributionChartDataWithProps(colors, taxonomyQuery, false, ref_url);
+};
+const GetSoftwareData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-software');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-software');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const softwareQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Processing Software",
+            "aggregation_type": "terms",
+            "attribute": "rcsb_entry_info.software_programs_combined",
+            "min_interval_population": 1,
+            "max_num_intervals": 20
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, softwareQuery, false, ref_url);
+};
+const GetSpaceGroupData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-space-group');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-space-group');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const spaceGroupQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Space Groups",
+            "aggregation_type": "terms",
+            "attribute": "symmetry.space_group_name_H_M",
+            "min_interval_population": 1,
+            "max_num_intervals": 20
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, spaceGroupQuery, false, ref_url);
+};
+const GetJournalData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-journal');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-journal');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const journalQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Publication Journal",
+            "aggregation_type": "terms",
+            "attribute": "rcsb_primary_citation.rcsb_journal_abbrev",
+            "min_interval_population": 1,
+            "max_num_intervals": 20
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, journalQuery, false, ref_url);
+};
+const GetStructuralGenomicCentersData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-structural-genomics-centers');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for distribution-structural-genomics-centers');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const GetStructuralGenomicsCentersQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "name": "Structural Genomics Centers",
+            "aggregation_type": "terms",
+            "attribute": "pdbx_SG_project.full_name_of_center",
+            "min_interval_population": 1,
+            "max_num_intervals": 20
+          },
+        returnType: ReturnType.Entry
+    };
+
+    return fetchDistributionChartDataWithProps(colors, GetStructuralGenomicsCentersQuery, false, ref_url);
+};
+const GetEnzymeClassificationNameData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('enzyme-classification-name');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for enzyme-classification-name');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const enzymeClassificationNameQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "filter": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                  "attribute": "rcsb_polymer_entity.rcsb_ec_lineage.depth",
+                  "operator": "equals",
+                  "value": 1
+                }
+              },
+              "facets": [
+                {
+                  "name": "Enzyme Classification",
+                  "aggregation_type": "terms",
+                  "attribute": "rcsb_polymer_entity.rcsb_ec_lineage.name",
+                  "min_interval_population": 1,
+                  "max_num_intervals": 20
+                }
+              ]
+          },
+        returnType: ReturnType.PolymerEntity
+    };
+
+    return fetchDistributionChartDataWithProps(colors, enzymeClassificationNameQuery, false, ref_url);
+};
+const GetAssemblySymmetryDistData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('assembly-symmetry-dist');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for assembly-symmetry-dist');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const assemblySymmetryQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "filter": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                  "attribute": "rcsb_struct_symmetry.kind",
+                  "operator": "exact_match",
+                  "value": "Global Symmetry"
+                }
+              },
+              "facets": [
+                {
+                  "name": "Global Symmetry",
+                  "aggregation_type": "terms",
+                  "attribute": "rcsb_struct_symmetry.type",
+                  "min_interval_population": 1
+                }
+              ]
+          },
+        returnType: ReturnType.Assembly
+    };
+
+    return fetchDistributionChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url);
+};
+const GetScopClassificationData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+    const { existingFacets, ref_url } = getDistributionObjectDetails('scop-classification');
+
+    if (!existingFacets) {
+        throw new Error('Facets are missing or invalid for scop-classification');
+    }
+
+    console.log('Existing Facets:', existingFacets);
+
+    const GetScopClassificationQuery: Omit<FacetPlotInterface, "chartType"> = {
+        firstDim:       {
+            "filter": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                  "attribute": "rcsb_polymer_instance_annotation.type",
+                  "operator": "exact_match",
+                  "value": "SCOP"
+                }
+              },
+              "facets": [
+                {
+                  "filter": {
+                    "type": "terminal",
+                    "service": "text",
+                    "parameters": {
+                      "attribute": "rcsb_polymer_instance_annotation.annotation_lineage.depth",
+                      "operator": "equals",
+                      "value": 1
+                    }
+                  },
+                  "facets": [
+                    {
+                      "name": "SCOP Classification",
+                      "aggregation_type": "terms",
+                      "attribute": "rcsb_polymer_instance_annotation.annotation_lineage.name",
+                      "min_interval_population": 1,
+                      "max_num_intervals": 20
+                    }
+                  ]
+                }
+              ]
+          },
+        returnType: ReturnType.PolymerEntity
+    };
+
+    return fetchDistributionChartDataWithProps(colors, GetScopClassificationQuery, false, ref_url);
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const fetchChartDataWithProps = async (
     colors: string[],
     props: Omit<FacetPlotInterface, "chartType">,
@@ -278,58 +745,122 @@ const fetchChartDataWithProps = async (
         }
     );
 
-    const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
-    if (!queryResults) return [[]];
-    const buckets = getFacetsFromSearch(queryResults);
-    const data = buckets[0].data as BucketDataWithConfig[];
+    return fetchData(searchRequest)
+    .then(queryResults => {
 
-    if (isCumulative && data.length > 0) {
-        let cumulativeSum = 0;
+        if (!queryResults) return [[]];
+        const buckets = getFacetsFromSearch(queryResults);
+        const data = buckets[0].data as BucketDataWithConfig[];
 
-        const originalDataWithColor = data.map(item => {
-            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-            return {
-                ...item,
-                objectConfig: {
-                    ...item.objectConfig,
-                    color: colors[0 % colors.length],
-                    label: 'Annual',
-                    url: searchUrl
-                }
-            };
-        });
+        if (isCumulative && data.length > 0) {
+            let cumulativeSum = 0;
 
-        const cumulativeData = data.map(item => {
-            cumulativeSum += item.population;
-            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-            return {
-                ...item,
-                population: cumulativeSum,
-                objectConfig: {
-                    objectId: [item.label, cumulativeSum],
-                    color: colors[1 % colors.length],
-                    label: 'Cumulative',
-                    url: searchUrl
-                }
-            };
-        });
+            const originalDataWithColor = data.map(item => {
+                const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+                return {
+                    ...item,
+                    objectConfig: {
+                        ...item.objectConfig,
+                        color: colors[0 % colors.length],
+                        label: 'Annual',
+                        url: searchUrl
+                    }
+                };
+            });
 
-        return [originalDataWithColor, cumulativeData];
-    } else if (props.secondDim) {
-        return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
-    } else {
-        return [data.map(d => {
-            const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
-            return {
-                ...d,
-                objectConfig: {
-                    objectId: [d.label, d.population],
-                    color: colors[0 % colors.length],
-                    url: searchUrl 
-                }
-            };
-        })];
+            const cumulativeData = data.map(item => {
+                cumulativeSum += item.population;
+                const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+                return {
+                    ...item,
+                    population: cumulativeSum,
+                    objectConfig: {
+                        objectId: [item.label, cumulativeSum],
+                        color: colors[1 % colors.length],
+                        label: 'Cumulative',
+                        url: searchUrl
+                    }
+                };
+            });
+
+            return [originalDataWithColor, cumulativeData];
+        } else if (props.secondDim) {
+            return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
+        } else {
+            return [data.map(d => {
+                const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+                return {
+                    ...d,
+                    objectConfig: {
+                        objectId: [d.label, d.population],
+                        color: colors[0 % colors.length],
+                        url: searchUrl 
+                    }
+                };
+            })];
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+};
+
+const fetchDistributionChartDataWithProps = async (
+    colors: string[],
+    props: Omit<FacetPlotInterface, "chartType">,
+    isCumulative: boolean = false,
+    ref_url: any 
+): Promise<ExtendedChartObjectInterface[][]> => {
+    const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
+        attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
+        value: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.enum.experimental,
+        operator: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.operator.ExactMatch,
+        service: Service.Text
+    });
+
+    const facet: AttributeFacetType | FilterFacetType = cloneDeep(props.firstDim);
+    if (props.secondDim) {
+        buildMultiFacet(props.secondDim, facet);
     }
+
+    const searchRequest: SearchRequestType = buildRequestFromSearchQuery(
+        searchQuery,
+        props.returnType,
+        {
+            facets: [facet]
+        }
+    );
+
+    return fetchData(searchRequest)
+    .then(queryResults => {
+
+        if (!queryResults) return [[]];
+        const buckets = getFacetsFromSearch(queryResults);
+        const data = buckets[0].data as BucketDataWithConfig[];
+    
+        if (props.secondDim) {
+            return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
+        } else {
+            return [data.map(d => {
+                const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+                return {
+                    ...d,
+                    objectConfig: {
+                        objectId: [d.label, d.population],
+                        color: colors[0 % colors.length],
+                        url: searchUrl 
+                    }
+                };
+            })];
+        }
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        throw error;
+    });
 };
 
 const drillFacets = (facets: SearchBucketFacetType[], colors: string[], ref_url: any): ExtendedChartObjectInterface[][] => {
@@ -381,22 +912,36 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
 
 const useGetData = (key: string, parameter?: any) => {
     const { settings } = useSettings();
-    const colorSchemeKey = settings.colorScheme.join(''); // Create a unique key based on the color scheme
+    const colorSchemeKey = settings.colorScheme.join('');
 
     type QueryFunction = (colors: string[]) => Promise<ChartObjectInterface[][]>;
 
-    const queryFunctions: Record<string, QueryFunction> = {
-        'overall-structures': GetOverallStructuresData,
-        'overall-small-molecules': GetOverallSmallMoleculesData,
-        'experimental-method': GetExperimentalMethodsData,
-        'molecular-composition': GetMolecularCompositionData,
-        'assembly-symmetry': GetAssemblySymmetryData,
-        'number-of-domains': GetNumberOfDomainsData,
-        'unique-protein-sequences': GetNumberOfUniqueProtienSequences,
-    };
+const queryFunctions: Record<string, QueryFunction> = {
+    'overall-structures': GetOverallStructuresData,
+    'overall-small-molecules': GetOverallSmallMoleculesData,
+    'experimental-method': GetExperimentalMethodsData,
+    'molecular-composition': GetMolecularCompositionData,
+    'assembly-symmetry': GetAssemblySymmetryData,
+    'number-of-domains': GetNumberOfDomainsData,
+    'unique-protein-sequences': GetNumberOfUniqueProtienSequences,
+    'distribution-resolution': GetResolutionData,
+    'distribution-r-free': GetRFreeData,
+    'distribution-molecular-weight-structure': GetMolecularWeightStructureData,
+    'distribution-atom-count': GetAtomCountData,
+    'distribution-residue-count': GetResidueCountData,
+    'distribution-source-organism-natural':  GetNaturalSourceOrganism,
+    'taxonomy': GetTaxonomyData,
+    'distribution-software': GetSoftwareData,
+    'distribution-space-group': GetSpaceGroupData,
+    'distribution-journal': GetJournalData,
+    'distribution-structural-genomics-centers': GetStructuralGenomicCentersData,
+    'enzyme-classification-name': GetEnzymeClassificationNameData,
+    'assembly-symmetry-dist': GetAssemblySymmetryDistData,
+    'scop-classification': GetScopClassificationData
+};
 
     return useQuery({
-        queryKey: [key, parameter, colorSchemeKey], // Use colorSchemeKey to force re-fetch when color scheme changes
+        queryKey: [key, parameter, colorSchemeKey], 
         queryFn: () => {
             const fetchData = queryFunctions[key];
 

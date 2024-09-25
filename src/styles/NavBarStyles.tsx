@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 export const Navbar = styled.nav`
   min-height: 30px;
+  margin-bottom: 10px !important;
 
   @media (max-width: 768px) {
     .collapse {
@@ -118,7 +119,6 @@ export const NavDropdown = styled(NavItem)`
     margin-left: 8px;
     transition: transform 0.3s ease;
   }
-  
   
 
   &:hover .triangle {

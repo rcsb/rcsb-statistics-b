@@ -18,11 +18,16 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
+interface StyledChartContainerProps {
+  displaySize: "Large" | "Small";
+}
 
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
   isOverallPlot: boolean;
+  displaySize: "Large" | "Small";
+  isDistPlot: boolean;
 }
 
 interface DatasetVisibility {
@@ -58,8 +63,9 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 15px;
 `;
 
-const StyledChartContainer = styled.div`
-  height: 550px;
+const StyledChartContainer = styled.div<StyledChartContainerProps>`
+  height: ${({ displaySize }) => (displaySize === 'Large' ? '550px' : '400px')};
+  width: ${({ displaySize }) => (displaySize === 'Small' ? '500px' : 'auto')};
 `;
 
 const ToggleRadioContainer = styled.div`
@@ -105,7 +111,7 @@ const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   return { ...data, datasets: cumulativeDatasets };
 };
 
-const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) => {
+const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, displaySize, isDistPlot }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -129,6 +135,11 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     const view = (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual';
     return view === 'Cumulative' ? calculateCumulativeData(data) : data;
   });
+
+  useEffect(() => {
+    console.log('displaySize:', displaySize);
+    console.log('isDistPlot:', isDistPlot);
+  }, [displaySize, isDistPlot]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -242,50 +253,61 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot }) =
     <Container>
       <Row>
         <Col md={10}>
-          <StyledChartContainer>
+        <StyledChartContainer displaySize={displaySize}>
             <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
         <Col md={2}>
           <ControlSection>
             <DataOptionsHeader>Data Options</DataOptionsHeader>
-            <FilterSection>
-              <FiltersShownText>Data Shown</FiltersShownText>
-              {visibility.map((item) => (
-                <CheckboxContainer key={item.label}>
-                  <StyledCheckbox
-                    type="checkbox"
-                    id={item.label}
-                    checked={item.visible}
-                    onChange={() => toggleDatasetVisibility(item.label)}
+            
+            {!isDistPlot ? (
+              <>
+                <FilterSection>
+                  <FiltersShownText>Data Shown</FiltersShownText>
+                  {visibility.map((item) => (
+                    <CheckboxContainer key={item.label}>
+                      <StyledCheckbox
+                        type="checkbox"
+                        id={item.label}
+                        checked={item.visible}
+                        onChange={() => toggleDatasetVisibility(item.label)}
+                      />
+                      <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
+                    </CheckboxContainer>
+                  ))}
+                </FilterSection>
+                <ToggleRadioContainer>
+                  <FiltersShownText>Data Set</FiltersShownText>
+                  <Form.Check
+                    type="radio"
+                    id="view-annual"
+                    label="Annual"
+                    name="view-switch"
+                    value="Annual"
+                    checked={selectedView === 'Annual'}
+                    onChange={() => handleViewChange('Annual')}
                   />
-                  <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
-                </CheckboxContainer>
-              ))}
-            </FilterSection>
-            {!isOverallPlot && (
-              <ToggleRadioContainer>
-                <FiltersShownText>Data Set</FiltersShownText>
-                <Form.Check
-                  type="radio"
-                  id="view-annual"
-                  label="Annual"
-                  name="view-switch"
-                  value="Annual"
-                  checked={selectedView === 'Annual'}
-                  onChange={() => handleViewChange('Annual')}
-                />
-                <Form.Check
-                  type="radio"
-                  id="view-cumulative"
-                  label="Cumulative"
-                  name="view-switch"
-                  value="Cumulative"
-                  checked={selectedView === 'Cumulative'}
-                  onChange={() => handleViewChange('Cumulative')}
-                />
-              </ToggleRadioContainer>
+                  <Form.Check
+                    type="radio"
+                    id="view-cumulative"
+                    label="Cumulative"
+                    name="view-switch"
+                    value="Cumulative"
+                    checked={selectedView === 'Cumulative'}
+                    onChange={() => handleViewChange('Cumulative')}
+                  />
+                </ToggleRadioContainer>
+              </>
+            ) : (
+              <FilterSection>
+                <FiltersShownText>Number of categories Shown</FiltersShownText>
+
+              
+
+              </FilterSection>
             )}
+
           </ControlSection>
         </Col>
       </Row>
