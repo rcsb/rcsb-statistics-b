@@ -609,7 +609,6 @@ export const statsDataMetaInfo: MetaInfo[] = [
   },
 ];
 
-
 export const growthRelatedKeys: MetaInfo[] = [
   {
     key: 'growth-released-structures',

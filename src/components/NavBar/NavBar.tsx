@@ -52,9 +52,6 @@ const NavBar: React.FC = () => {
           </div>
           <NavbarCollapse className="collapse navbar-collapse" id="statsnavbarnav">
             <ul className="nav navbar-nav">
-              <NavItem className={`nav-item ${location.pathname === paths.HOME ? 'active' : ''}`}>
-                <NavLink as={Link} to={paths.HOME}>About RCSB Statistics <span className="sr-only">(current)</span></NavLink>
-              </NavItem>
               <NavDropdown className={`nav-item dropdown ${isDataGrowthActive ? 'active' : ''}`}>
                 <DropdownToggle className={`nav-item nav-link dropdown-toggle ${location.pathname.startsWith('/growth') ? 'active' : ''}`} as="a">
                   Data Growth 
@@ -135,12 +132,6 @@ const NavBar: React.FC = () => {
 
                 </DropdownMenu>
               </NavDropdown>
-              <NavItem className={`nav-item ${location.pathname === paths.OTHER_STATISTICS ? 'active' : ''}`}>
-                <NavLink as={Link} to={paths.OTHER_STATISTICS}>Other Statistics</NavLink>
-              </NavItem>
-              <NavItem className={`nav-item ${location.pathname === paths.PDB_DATA_SNAPSHOT ? 'active' : ''}`}>
-                <NavLink as={Link} to={paths.PDB_DATA_SNAPSHOT}>PDB Data Snapshot</NavLink>
-              </NavItem>
               <NavItem className="nav-item">
                 <button className="btn btn-link nav-link" onClick={handleOpenModal}>
                   <FaCog />

@@ -461,7 +461,7 @@ const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectIn
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-source-organism-natural');
 
     if (!existingFacets) {
-        throw new Error('Facets are missing or invalid for source-organism-natural');
+        throw new Error('Facets are missing or invalid for source-organism');
     }
 
     console.log('Existing Facets:', existingFacets);
@@ -474,11 +474,24 @@ const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectIn
             "min_interval_population": 1,
             "facets": [
               {
-                "name": "Source Organism",
+                "name": "Source Type",
                 "aggregation_type": "terms",
-                "attribute": "rcsb_entity_source_organism.ncbi_scientific_name",
+                "attribute": "rcsb_entity_source_organism.source_type",
                 "min_interval_population": 1,
-                "max_num_intervals": 20
+                "facets": [
+                  {
+                    "name": "Source Organism",
+                    "aggregation_type": "terms",
+                    "attribute": "rcsb_entity_source_organism.ncbi_scientific_name",
+                    "min_interval_population": 1,
+                    "max_num_intervals": 20
+                  },
+                  {
+                    "name": "Source Organism Count",
+                    "aggregation_type": "cardinality",
+                    "attribute": "rcsb_entity_source_organism.ncbi_scientific_name"
+                  }
+                ]
               }
             ]
           },
@@ -743,65 +756,120 @@ const fetchChartDataWithProps = async (
         }
     );
 
-    return fetchData(searchRequest)
-    .then(queryResults => {
+   const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
 
-        if (!queryResults) return [[]];
-        const buckets = getFacetsFromSearch(queryResults);
-        const data = buckets[0].data as BucketDataWithConfig[];
+   if (!queryResults) return [[]];
+   const buckets = getFacetsFromSearch(queryResults);
+   const data = buckets[0].data as BucketDataWithConfig[];
 
-        if (isCumulative && data.length > 0) {
-            let cumulativeSum = 0;
+   if (isCumulative && data.length > 0) {
+       let cumulativeSum = 0;
 
-            const originalDataWithColor = data.map(item => {
-                const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-                return {
-                    ...item,
-                    objectConfig: {
-                        ...item.objectConfig,
-                        color: colors[0 % colors.length],
-                        label: 'Annual',
-                        url: searchUrl
-                    }
-                };
-            });
+       const originalDataWithColor = data.map(item => {
+           const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+           return {
+               ...item,
+               objectConfig: {
+                   ...item.objectConfig,
+                   color: colors[0 % colors.length],
+                   label: 'Annual',
+                   url: searchUrl
+               }
+           };
+       });
 
-            const cumulativeData = data.map(item => {
-                cumulativeSum += item.population;
-                const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-                return {
-                    ...item,
-                    population: cumulativeSum,
-                    objectConfig: {
-                        objectId: [item.label, cumulativeSum],
-                        color: colors[1 % colors.length],
-                        label: 'Cumulative',
-                        url: searchUrl
-                    }
-                };
-            });
+       const cumulativeData = data.map(item => {
+           cumulativeSum += item.population;
+           const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+           return {
+               ...item,
+               population: cumulativeSum,
+               objectConfig: {
+                   objectId: [item.label, cumulativeSum],
+                   color: colors[1 % colors.length],
+                   label: 'Cumulative',
+                   url: searchUrl
+               }
+           };
+       });
 
-            return [originalDataWithColor, cumulativeData];
-        } else if (props.secondDim) {
-            return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
-        } else {
-            return [data.map(d => {
-                const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
-                return {
-                    ...d,
-                    objectConfig: {
-                        objectId: [d.label, d.population],
-                        color: colors[0 % colors.length],
-                        url: searchUrl 
-                    }
-                };
-            })];
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        throw error;
-    });
+       return [originalDataWithColor, cumulativeData];
+   } else if (props.secondDim) {
+       return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
+   } else {
+       return [data.map(d => {
+           const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+           return {
+               ...d,
+               objectConfig: {
+                   objectId: [d.label, d.population],
+                   color: colors[0 % colors.length],
+                   url: searchUrl 
+               }
+           };
+       })];
+   }
+   
+
+    // return fetchData(searchRequest)
+    // .then(queryResults => {
+
+    //     if (!queryResults) return [[]];
+    //     const buckets = getFacetsFromSearch(queryResults);
+    //     const data = buckets[0].data as BucketDataWithConfig[];
+
+    //     if (isCumulative && data.length > 0) {
+    //         let cumulativeSum = 0;
+
+    //         const originalDataWithColor = data.map(item => {
+    //             const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+    //             return {
+    //                 ...item,
+    //                 objectConfig: {
+    //                     ...item.objectConfig,
+    //                     color: colors[0 % colors.length],
+    //                     label: 'Annual',
+    //                     url: searchUrl
+    //                 }
+    //             };
+    //         });
+
+    //         const cumulativeData = data.map(item => {
+    //             cumulativeSum += item.population;
+    //             const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+    //             return {
+    //                 ...item,
+    //                 population: cumulativeSum,
+    //                 objectConfig: {
+    //                     objectId: [item.label, cumulativeSum],
+    //                     color: colors[1 % colors.length],
+    //                     label: 'Cumulative',
+    //                     url: searchUrl
+    //                 }
+    //             };
+    //         });
+
+    //         return [originalDataWithColor, cumulativeData];
+    //     } else if (props.secondDim) {
+    //         return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
+    //     } else {
+    //         return [data.map(d => {
+    //             const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+    //             return {
+    //                 ...d,
+    //                 objectConfig: {
+    //                     objectId: [d.label, d.population],
+    //                     color: colors[0 % colors.length],
+    //                     url: searchUrl 
+    //                 }
+    //             };
+    //         })];
+    //     }
+    // })
+    // .catch(error => {
+    //     console.error('Error:', error);
+    //     throw error;
+    // });
 
 };
 

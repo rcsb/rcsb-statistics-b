@@ -16,6 +16,7 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 import styled from 'styled-components';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaCog, FaRegWindowMaximize, FaSync, FaInfoCircle, FaTable, FaArrowDown, FaChartLine } from 'react-icons/fa';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
 interface StyledChartContainerProps {
@@ -36,8 +37,29 @@ interface DatasetVisibility {
 }
 
 const ControlSection = styled.div`
-  padding-left: 20px;
+  padding-left: 7px;
   margin-top: 40px;
+`;
+
+const ButtonSection = styled(Col)`
+  margin-top: 40px;
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+`;
+
+const StyledIcon = styled.div`
+  background-color: #f0f0f0;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #808080;
 `;
 
 const CheckboxContainer = styled.div`
@@ -91,6 +113,8 @@ const FiltersShownText = styled.div`
   font-weight: bold;
   margin-bottom: 5px;
 `;
+
+
 
 const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   const cumulativeDatasets = data.datasets.map((dataset) => {
@@ -253,62 +277,72 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, dis
     <Container>
       <Row>
         <Col md={10}>
-        <StyledChartContainer displaySize={displaySize}>
-            <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
+          <StyledChartContainer displaySize={displaySize}>
+              <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
         <Col md={2}>
-          <ControlSection>
-            <DataOptionsHeader>Data Options</DataOptionsHeader>
-            
-            {!isDistPlot ? (
-              <>
-                <FilterSection>
-                  <FiltersShownText>Data Shown</FiltersShownText>
-                  {visibility.map((item) => (
-                    <CheckboxContainer key={item.label}>
-                      <StyledCheckbox
-                        type="checkbox"
-                        id={item.label}
-                        checked={item.visible}
-                        onChange={() => toggleDatasetVisibility(item.label)}
+          <Row>
+            <ButtonSection md={2}>
+              <IconContainer>
+                <StyledIcon><FaCog size={15} /></StyledIcon>
+                <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
+                <StyledIcon><FaSync size={15} /></StyledIcon>
+                <StyledIcon><FaInfoCircle size={15} /></StyledIcon>
+                <StyledIcon><FaTable size={15} /></StyledIcon>
+                <StyledIcon><FaArrowDown size={15} /></StyledIcon>
+                <StyledIcon><FaChartLine size={15} /></StyledIcon>
+              </IconContainer>
+            </ButtonSection>
+            <Col md={10}>
+              <ControlSection>
+                <DataOptionsHeader>Data Options</DataOptionsHeader>
+                {!isDistPlot ? (
+                  <>
+                    <FilterSection>
+                      <FiltersShownText>Data Shown</FiltersShownText>
+                      {visibility.map((item) => (
+                        <CheckboxContainer key={item.label}>
+                          <StyledCheckbox
+                            type="checkbox"
+                            id={item.label}
+                            checked={item.visible}
+                            onChange={() => toggleDatasetVisibility(item.label)}
+                          />
+                          <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
+                        </CheckboxContainer>
+                      ))}
+                    </FilterSection>
+                    <ToggleRadioContainer>
+                      <FiltersShownText>Data Set</FiltersShownText>
+                      <Form.Check
+                        type="radio"
+                        id="view-annual"
+                        label="Annual"
+                        name="view-switch"
+                        value="Annual"
+                        checked={selectedView === 'Annual'}
+                        onChange={() => handleViewChange('Annual')}
                       />
-                      <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
-                    </CheckboxContainer>
-                  ))}
-                </FilterSection>
-                <ToggleRadioContainer>
-                  <FiltersShownText>Data Set</FiltersShownText>
-                  <Form.Check
-                    type="radio"
-                    id="view-annual"
-                    label="Annual"
-                    name="view-switch"
-                    value="Annual"
-                    checked={selectedView === 'Annual'}
-                    onChange={() => handleViewChange('Annual')}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="view-cumulative"
-                    label="Cumulative"
-                    name="view-switch"
-                    value="Cumulative"
-                    checked={selectedView === 'Cumulative'}
-                    onChange={() => handleViewChange('Cumulative')}
-                  />
-                </ToggleRadioContainer>
-              </>
-            ) : (
-              <FilterSection>
-                <FiltersShownText>Number of categories Shown</FiltersShownText>
-
-              
-
-              </FilterSection>
-            )}
-
-          </ControlSection>
+                      <Form.Check
+                        type="radio"
+                        id="view-cumulative"
+                        label="Cumulative"
+                        name="view-switch"
+                        value="Cumulative"
+                        checked={selectedView === 'Cumulative'}
+                        onChange={() => handleViewChange('Cumulative')}
+                      />
+                    </ToggleRadioContainer>
+                  </>
+                ) : (
+                  <FilterSection>
+                    <FiltersShownText>...</FiltersShownText>
+                  </FilterSection>
+                )}
+              </ControlSection>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>
