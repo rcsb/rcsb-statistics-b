@@ -19,6 +19,7 @@ export const FadeInContainer = styled.div`
 export const SearchApiContainer = styled.div` 
   display: flex;
   justify-content: flex-end;
+  margin-top: -10px;
 `;
 
 export const StyledButton = styled.button`

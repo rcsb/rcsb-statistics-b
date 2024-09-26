@@ -80,7 +80,6 @@ const Distribution: React.FC = () => {
         }),
     } : null;
 
-
     const selectedChartOptions = plotname && chartOptions[plotname];
 
     return (

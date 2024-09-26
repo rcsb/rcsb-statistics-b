@@ -17,6 +17,8 @@ const Growth: React.FC = () => {
 
     const { data, isLoading, error } = useGetData(key);
 
+    console.log('data:', data);
+
     if (isLoading) {
         return (
             <FadeInContainer>

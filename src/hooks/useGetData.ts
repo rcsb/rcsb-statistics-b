@@ -80,8 +80,6 @@ function fetchData(searchRequest: any): Promise<any> {
 
 
 /// GROWTH DATA /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('growth-released-structures');
 
