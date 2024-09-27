@@ -20,8 +20,6 @@ const Distribution: React.FC = () => {
         'distribution-residue-count'
     ];
 
-    const displaySize = smallDisplayPlots.includes(plotname) ? "Small" : "Large";
-
     const distPlots = [
         'distribution-space-group',
         'distribution-resolution',
@@ -90,7 +88,6 @@ const Distribution: React.FC = () => {
                         data={chartData} 
                         options={selectedChartOptions}
                         isOverallPlot={false}
-                        displaySize={displaySize}
                         isDistPlot={isDistPlot}
                     />
                 </>

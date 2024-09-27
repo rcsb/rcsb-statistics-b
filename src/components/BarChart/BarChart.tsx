@@ -17,17 +17,13 @@ import styled from 'styled-components';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCog, FaRegWindowMaximize, FaSync, FaInfoCircle, FaTable, FaArrowDown, FaChartLine } from 'react-icons/fa';
+import { useModal } from '../../contexts/ModalContext';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
-interface StyledChartContainerProps {
-  displaySize: "Large" | "Small";
-}
-
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
   isOverallPlot: boolean;
-  displaySize: "Large" | "Small";
   isDistPlot: boolean;
 }
 
@@ -55,11 +51,18 @@ const IconContainer = styled.div`
 
 const StyledIcon = styled.div`
   background-color: #f0f0f0;
-  padding: 4px;
+  border: 1px solid #fff;
+  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #808080;
+  
+  &:hover {
+    background-color: #fff;
+    border: 1px solid #c0c0c0;
+    cursor: pointer;
+  }
 `;
 
 const CheckboxContainer = styled.div`
@@ -85,9 +88,9 @@ const DataOptionsHeader = styled.div`
   margin-bottom: 15px;
 `;
 
-const StyledChartContainer = styled.div<StyledChartContainerProps>`
-  height: ${({ displaySize }) => (displaySize === 'Large' ? '550px' : '400px')};
-  width: ${({ displaySize }) => (displaySize === 'Small' ? '500px' : 'auto')};
+const StyledChartContainer = styled.div`
+  width: auto;
+  height: 550px;
 `;
 
 const ToggleRadioContainer = styled.div`
@@ -135,10 +138,11 @@ const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   return { ...data, datasets: cumulativeDatasets };
 };
 
-const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, displaySize, isDistPlot }) => {
+const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isDistPlot }) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { handleOpenModal } = useModal();
 
   const [visibility, setVisibility] = useState<DatasetVisibility[]>(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -161,9 +165,8 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, dis
   });
 
   useEffect(() => {
-    console.log('displaySize:', displaySize);
     console.log('isDistPlot:', isDistPlot);
-  }, [displaySize, isDistPlot]);
+  }, [isDistPlot]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -277,7 +280,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, dis
     <Container>
       <Row>
         <Col md={10}>
-          <StyledChartContainer displaySize={displaySize}>
+          <StyledChartContainer>
               <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
@@ -285,13 +288,13 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, dis
           <Row>
             <ButtonSection md={2}>
               <IconContainer>
-                <StyledIcon><FaCog size={15} /></StyledIcon>
-                <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
+                <StyledIcon onClick={handleOpenModal}><FaCog size={15} /></StyledIcon>
+                {/* <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
                 <StyledIcon><FaSync size={15} /></StyledIcon>
                 <StyledIcon><FaInfoCircle size={15} /></StyledIcon>
                 <StyledIcon><FaTable size={15} /></StyledIcon>
                 <StyledIcon><FaArrowDown size={15} /></StyledIcon>
-                <StyledIcon><FaChartLine size={15} /></StyledIcon>
+                <StyledIcon><FaChartLine size={15} /></StyledIcon> */}
               </IconContainer>
             </ButtonSection>
             <Col md={10}>

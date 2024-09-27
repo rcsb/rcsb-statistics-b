@@ -13,7 +13,6 @@ const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
     const key = plotname || 'defaultKey';
     const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
-    const displaySize = "Large";
 
     const { data, isLoading, error } = useGetData(key);
 
@@ -74,7 +73,6 @@ const Growth: React.FC = () => {
                         data={chartData} 
                         options={selectedChartOptions}
                         isOverallPlot={isOverallPlot}
-                        displaySize={displaySize}
                         isDistPlot={false}
                     />
                     {plotname === 'experimental-method' && (

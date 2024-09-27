@@ -132,11 +132,6 @@ const NavBar: React.FC = () => {
 
                 </DropdownMenu>
               </NavDropdown>
-              <NavItem className="nav-item">
-                <button className="btn btn-link nav-link" onClick={handleOpenModal}>
-                  <FaCog />
-                </button>
-              </NavItem>
             </ul>
           </NavbarCollapse>
         </div>
