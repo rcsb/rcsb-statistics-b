@@ -118,7 +118,6 @@ const FiltersShownText = styled.div`
 `;
 
 
-
 const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   const cumulativeDatasets = data.datasets.map((dataset) => {
     const cumulativeDataArray: number[] = [];
@@ -153,11 +152,11 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
     });
   });
 
+  
   const [selectedView, setSelectedView] = useState<'Annual' | 'Cumulative'>(() => {
     const searchParams = new URLSearchParams(location.search);
-    return (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual';
+    return (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Cumulative';
   });
-
   const [currentData, setCurrentData] = useState<ChartData<'bar'>>(() => {
     const searchParams = new URLSearchParams(location.search);
     const view = (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual';
@@ -165,8 +164,9 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
   });
 
   useEffect(() => {
-    console.log('isDistPlot:', isDistPlot);
-  }, [isDistPlot]);
+    console.log('sss isOverallPlot:', isOverallPlot);
+    console.log('sss visibility:', visibility);
+  }, [isDistPlot,isOverallPlot,visibility]); 
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -180,17 +180,15 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
     navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
   }, [visibility, selectedView, location.pathname, navigate]);
 
-  useEffect(() => {
-    const updatedDatasets = currentData.datasets.map((dataset) => ({
-      ...dataset,
-      hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
-    }));
-
-    setCurrentData({
-      ...currentData,
-      datasets: updatedDatasets,
-    });
-  }, [visibility]);
+useEffect(() => {
+  if (isOverallPlot) {
+    setVisibility((prevVisibility) =>
+      prevVisibility.map((item) =>
+        item.label === 'Cumulative' ? { ...item, visible: false } : item
+      )
+    );
+  }
+}, [isOverallPlot]);
 
   useEffect(() => {
     if (selectedView === 'Cumulative') {
@@ -302,20 +300,22 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
                 <DataOptionsHeader>Data Options</DataOptionsHeader>
                 {!isDistPlot ? (
                   <>
-                    <FilterSection>
-                      <FiltersShownText>Data Shown</FiltersShownText>
-                      {visibility.map((item) => (
-                        <CheckboxContainer key={item.label}>
-                          <StyledCheckbox
-                            type="checkbox"
-                            id={item.label}
-                            checked={item.visible}
-                            onChange={() => toggleDatasetVisibility(item.label)}
-                          />
-                          <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
-                        </CheckboxContainer>
-                      ))}
-                    </FilterSection>
+                    {!isOverallPlot && (
+                      <FilterSection>
+                        <FiltersShownText>Data Shown</FiltersShownText>
+                        {visibility.map((item) => (
+                          <CheckboxContainer key={item.label}>
+                            <StyledCheckbox
+                              type="checkbox"
+                              id={item.label}
+                              checked={item.visible}
+                              onChange={() => toggleDatasetVisibility(item.label)}
+                            />
+                            <StyledLabel htmlFor={item.label}>{item.label}</StyledLabel>
+                          </CheckboxContainer>
+                        ))}
+                      </FilterSection>
+                    )}
                     <ToggleRadioContainer>
                       <FiltersShownText>Data Set</FiltersShownText>
                       <Form.Check

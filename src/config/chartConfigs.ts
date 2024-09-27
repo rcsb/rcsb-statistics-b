@@ -2,7 +2,7 @@ import { ChartOptions } from 'chart.js';
 
 const baseChartOptions: ChartOptions<'bar'> = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     plugins: {
         title: {
             display: true,
