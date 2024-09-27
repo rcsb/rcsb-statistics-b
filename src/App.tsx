@@ -7,7 +7,7 @@ import routes from './routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SettingsProvider } from '../src/contexts/SettingsContext';
 import { ModalProvider} from '../src/contexts/ModalContext';
-import SettingsModal from './components/Modals/SettingsModal';
+import GenericModal from './components/Modals/GenericModal';
 import  ChartSkeleton from './components/BarChart/BarChartSkeleton';
 import ErrorPage  from './components/ErrorPage/ErrorPage';
 
@@ -30,7 +30,7 @@ const StatisticsAppContent: React.FC = () => {
     <main className="container mt-5">
       <section className="row">
         <Navbar />
-        <SettingsModal />
+        <GenericModal />
         <Suspense fallback={(<ChartSkeleton />)}>
           <Routes>
             {routes.map((route, index) => (

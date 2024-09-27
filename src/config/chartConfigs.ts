@@ -2479,21 +2479,6 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
             filler: {
                 propagate: true,
             },
-            zoom: {
-                pan: {
-                    enabled: true,
-                    mode: 'y',
-                },
-                zoom: {
-                    wheel: {
-                        enabled: true,
-                    },
-                    pinch: {
-                        enabled: true,
-                    },
-                    mode: 'y',
-                },
-            },
         },
         scales: {
             y: {

@@ -228,10 +228,10 @@ useEffect(() => {
       const elements = getElementAtEvent(chartRef.current, event);
   
       if (elements.length > 0) {
-        // Get the index of the clicked bar
+
         const { index } = elements[0];
   
-        // Loop through all datasets to find the first available URL for the clicked bar index
+
         let barUrl = '';
   
         for (const dataset of chartRef.current.data.datasets as ChartDataset<'bar'>[]) {
@@ -240,7 +240,6 @@ useEffect(() => {
           };
   
           if (typedDataset.objectConfig && typedDataset.objectConfig[index]) {
-            // Set the barUrl to the URL found and break out of the loop
             barUrl = typedDataset.objectConfig[index].url;
             break;
           }
@@ -286,7 +285,8 @@ useEffect(() => {
           <Row>
             <ButtonSection md={2}>
               <IconContainer>
-                <StyledIcon onClick={handleOpenModal}><FaCog size={15} /></StyledIcon>
+              <StyledIcon onClick={() => handleOpenModal('settings')}><FaCog size={15} /></StyledIcon>
+              <StyledIcon onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
                 {/* <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
                 <StyledIcon><FaSync size={15} /></StyledIcon>
                 <StyledIcon><FaInfoCircle size={15} /></StyledIcon>

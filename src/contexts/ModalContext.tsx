@@ -1,9 +1,12 @@
 import React, { useContext, useState, createContext, ReactNode } from 'react';
 
+type ModalType = 'fullscreen' | 'settings' | 'information' | 'snapshot' | ''; 
+
 interface ModalContextType {
   showModal: boolean;
-  handleOpenModal: () => void;
+  handleOpenModal: (type: ModalType) => void;
   handleCloseModal: () => void;
+  modalType: ModalType;
 }
 
 interface ModalProviderProps {
@@ -14,12 +17,19 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<ModalType>(''); 
 
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleOpenModal = (type: ModalType) => { 
+    setModalType(type); 
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setModalType(''); 
+    setShowModal(false);
+  };
 
   return (
-    <ModalContext.Provider value={{ showModal, handleOpenModal, handleCloseModal }}>
+    <ModalContext.Provider value={{ showModal, handleOpenModal, handleCloseModal, modalType }}>
       {children}
     </ModalContext.Provider>
   );
