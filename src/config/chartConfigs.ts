@@ -161,6 +161,9 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
                 ...baseChartOptions.plugins?.title,
                 text: 'PDB Statistics: Growth of Overall Structures',
             },
+            legend: {
+                display: false
+            },
             tooltip: {
                 ...baseChartOptions.plugins?.tooltip,
                 callbacks: {
@@ -243,6 +246,9 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
             title: {
                 ...baseChartOptions.plugins?.title,
                 text: 'PDB Statistics: Growth of Released Small Small Molecules',
+            },
+            legend: {
+                display: false
             },
             tooltip: {
                 ...baseChartOptions.plugins?.tooltip,

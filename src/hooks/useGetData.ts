@@ -100,7 +100,7 @@ const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectIn
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, overallStructuresQuery, true, ref_url);
+    return fetchChartDataWithProps(colors, overallStructuresQuery, false, ref_url);
 };
 const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('overall-small-molecules');
@@ -120,7 +120,7 @@ const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObje
         returnType: ReturnType.MolDefinition
     };
 
-    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, true, ref_url);
+    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, false, ref_url);
 };
 const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('experimental-method');
