@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BarChart from '../../components/BarChart/BarChart';
-import ChartSkeletonBarVerticle from '../../components/BarChartHorizontal/BarChartHorizontalSkeleton';
+import ChartSkeletonBarVerticle from '../../components/BarChart/BarChartSkeleton';
 import { FadeInContainer } from '../../styles/ChartStyles';
 import ErrorPage from '../../components/ErrorPage/ErrorPage';
 import useGetData from '../../hooks/useGetData';
@@ -19,6 +19,7 @@ const Distribution: React.FC = () => {
         'distribution-atom-count',
         'distribution-residue-count'
     ];
+
 
     const distPlots = [
         'distribution-space-group',
