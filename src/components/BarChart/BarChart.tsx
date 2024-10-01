@@ -163,10 +163,6 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
     return view === 'Cumulative' ? calculateCumulativeData(data) : data;
   });
 
-  useEffect(() => {
-    console.log('sss isOverallPlot:', isOverallPlot);
-    console.log('sss visibility:', visibility);
-  }, [isDistPlot,isOverallPlot,visibility]); 
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -246,7 +242,6 @@ useEffect(() => {
         }
   
         if (barUrl) {
-          console.log('Navigating to URL:', barUrl);
           window.location.href = barUrl;
         }
       }
@@ -287,12 +282,11 @@ useEffect(() => {
               <IconContainer>
               <StyledIcon onClick={() => handleOpenModal('settings')}><FaCog size={15} /></StyledIcon>
               <StyledIcon onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
-                {/* <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
-                <StyledIcon><FaSync size={15} /></StyledIcon>
-                <StyledIcon><FaInfoCircle size={15} /></StyledIcon>
-                <StyledIcon><FaTable size={15} /></StyledIcon>
-                <StyledIcon><FaArrowDown size={15} /></StyledIcon>
-                <StyledIcon><FaChartLine size={15} /></StyledIcon> */}
+              <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
+              <StyledIcon><FaTable size={15} /></StyledIcon>
+              <StyledIcon><FaChartLine size={15} /></StyledIcon>
+              <StyledIcon><FaArrowDown size={15} /></StyledIcon>
+              <StyledIcon><FaSync size={15} /></StyledIcon>
               </IconContainer>
             </ButtonSection>
             <Col md={10}>

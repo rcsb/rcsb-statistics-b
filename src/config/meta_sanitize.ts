@@ -1500,7 +1500,6 @@ export function createSearchUrlFromObj(obj: any, yearVal: string | number, retur
   const searchJson = JSON.stringify(searchObj);
   const searchEncoded = encodeURIComponent(searchJson);
   const searchUrl = `/search?request=${searchEncoded}`;
-  // console.log(`URL http://localhost:8080${searchUrl}`);
 
   return searchUrl;
 }

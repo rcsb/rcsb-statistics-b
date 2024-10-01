@@ -284,8 +284,6 @@ const GetResolutionData = async (colors: string[]): Promise<ChartObjectInterface
         throw new Error('Facets are missing or invalid for distribution-resolution');
     }
 
-    console.log('Existing Facets:', existingFacets);
-
     const resolutionQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
             "name": "Resolution Combined",
@@ -319,8 +317,6 @@ const GetRFreeData = async (colors: string[]): Promise<ChartObjectInterface[][]>
     if (!existingFacets) {
         throw new Error('Facets are missing or invalid for distribution-r-free');
     }
-
-    console.log('Existing Facets:', existingFacets);
 
     const rFreeQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -356,8 +352,6 @@ const GetMolecularWeightStructureData = async (colors: string[]): Promise<ChartO
         throw new Error('Facets are missing or invalid for distribution-molecular-weight-structure');
     }
 
-    console.log('Existing Facets:', existingFacets);
-
     const molecularWeightStructureQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
             "name": "Molecular Weight",
@@ -391,8 +385,6 @@ const GetAtomCountData = async (colors: string[]): Promise<ChartObjectInterface[
     if (!existingFacets) {
         throw new Error('Facets are missing or distribution-atom-count');
     }
-
-    console.log('Existing Facets:', existingFacets);
 
     const atomCountQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -428,7 +420,6 @@ const GetResidueCountData = async (colors: string[]): Promise<ChartObjectInterfa
         throw new Error('Facets are missing or invalid for distribution-residue-count');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const residueCountQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -464,7 +455,6 @@ const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectIn
         throw new Error('Facets are missing or invalid for source-organism');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const naturalSourceOrganismQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -507,7 +497,6 @@ const GetTaxonomyData = async (colors: string[]): Promise<ChartObjectInterface[]
         throw new Error('Facets are missing or invalid for taxonomy');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const taxonomyQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -529,7 +518,6 @@ const GetSoftwareData = async (colors: string[]): Promise<ChartObjectInterface[]
         throw new Error('Facets are missing or invalid for distribution-software');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const softwareQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -551,7 +539,6 @@ const GetSpaceGroupData = async (colors: string[]): Promise<ChartObjectInterface
         throw new Error('Facets are missing or invalid for distribution-space-group');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const spaceGroupQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -573,7 +560,6 @@ const GetJournalData = async (colors: string[]): Promise<ChartObjectInterface[][
         throw new Error('Facets are missing or invalid for distribution-journal');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const journalQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -595,7 +581,6 @@ const GetStructuralGenomicCentersData = async (colors: string[]): Promise<ChartO
         throw new Error('Facets are missing or invalid for distribution-structural-genomics-centers');
     }
 
-    console.log('Existing Facets:', existingFacets);
 
     const GetStructuralGenomicsCentersQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -616,8 +601,6 @@ const GetEnzymeClassificationNameData = async (colors: string[]): Promise<ChartO
     if (!existingFacets) {
         throw new Error('Facets are missing or invalid for enzyme-classification-name');
     }
-
-    console.log('Existing Facets:', existingFacets);
 
     const enzymeClassificationNameQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
@@ -652,8 +635,6 @@ const GetAssemblySymmetryDistData = async (colors: string[]): Promise<ChartObjec
         throw new Error('Facets are missing or invalid for assembly-symmetry-dist');
     }
 
-    console.log('Existing Facets:', existingFacets);
-
     const assemblySymmetryQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {
             "filter": {
@@ -685,8 +666,6 @@ const GetScopClassificationData = async (colors: string[]): Promise<ChartObjectI
     if (!existingFacets) {
         throw new Error('Facets are missing or invalid for scop-classification');
     }
-
-    console.log('Existing Facets:', existingFacets);
 
     const GetScopClassificationQuery: Omit<FacetPlotInterface, "chartType"> = {
         firstDim:       {

@@ -20,9 +20,11 @@ const SettingsModalContent: React.FC = () => {
   const [currentColor, setCurrentColor] = useState<string>('');
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
 
+  const colorBlindText = 'Color Blind Friendly';
+
   useEffect(() => {
     setSelectedScheme(settings.schemeName);
-  }, [settings.schemeName]);
+  }, [settings.schemeName, selectedScheme]);
 
   const handleSchemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const schemeName = event.target.value;
@@ -76,7 +78,8 @@ const SettingsModalContent: React.FC = () => {
 
   return (
     <div>
-      <label>Current Color Scheme:</label> {settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
+      <label>Current Color Scheme: &nbsp;</label> 
+      {settings.schemeName === 'Achromatic' ? colorBlindText : settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
       <div>
         {Object.keys(settings.colorSchemes).map((schemeName) => (
           <ColorSchemeContainer key={schemeName}>
@@ -87,10 +90,15 @@ const SettingsModalContent: React.FC = () => {
               checked={selectedScheme === schemeName}
               onChange={handleSchemeChange}
             />
-            <SchemeName>{schemeName}</SchemeName>
+            <SchemeName>{schemeName === 'Achromatic' ? colorBlindText : schemeName}</SchemeName>
             {renderColorGrid(settings.colorSchemes[schemeName])}
           </ColorSchemeContainer>
+          
         ))}
+
+       {selectedScheme === 'custom' && (
+          <p>Create a custom color scheme, click on the color you <br /> would like to change and use the color picker.</p>
+        )}
       </div>
       {displayColorPicker && (
         <Popover top={pickerPosition.top} left={pickerPosition.left}>
@@ -103,5 +111,6 @@ const SettingsModalContent: React.FC = () => {
 };
 
 export default SettingsModalContent;
+
 
 

@@ -90,7 +90,6 @@ const BarChartHorizontal: React.FC<BasicChartProps> = ({ data, options }) => {
         }
 
         if (barUrl) {
-          console.log('Navigating to URL:', barUrl);
           window.location.href = barUrl;
         }
       }
