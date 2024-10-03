@@ -2,7 +2,7 @@ import { MetaInfo, RefUrl, Facet } from '../interfaces/MetaInfoTypes';
 import { findObjectInArrayByKey, findQueryObjectInArrayByKey } from '../utils/utils';
 import { RcsbSearchMetadata } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchMetadata";
 import { AggregationType, Interval, ReturnType } from '@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums';
-
+import paths from '../routes/paths';
 
 export const statsDataMetaInfo: MetaInfo[] = [
   {
@@ -1397,6 +1397,30 @@ export const metaInfoUtils = {
     return findQueryObjectInArrayByKey('key', plotName, nrGrowthMetaInfo)?.[0];
   }
 };
+
+export const statisticsList = [
+  { text: 'By Overall Structures', link: paths.PDB_DATA_GROWTH('overall-structures') },
+  { text: 'By Overall Small Molecules', link: paths.PDB_DATA_GROWTH('overall-small-molecules') },
+  { text: 'By Experimental Method', link: paths.PDB_DATA_GROWTH('experimental-method') },
+  { text: 'By Molecular Composition', link: paths.PDB_DATA_GROWTH('molecular-composition') },
+  { text: 'By Assembly Symmetry', link: paths.PDB_DATA_GROWTH('assembly-symmetry') },
+  { text: 'By Number of Domains', link: paths.PDB_DATA_GROWTH('number-of-domains') },
+  { text: 'By Unique Protein Sequences', link: paths.PDB_DATA_GROWTH('unique-protein-sequences') },
+  { text: 'By Resolution', link: paths.PDB_DATA_DISTRIBUTION('distribution-resolution') },
+  { text: 'By R-free', link: paths.PDB_DATA_DISTRIBUTION('distribution-r-free') },
+  { text: 'By Molecular Weight (Structure)', link: paths.PDB_DATA_DISTRIBUTION('distribution-molecular-weight-structure') },
+  { text: 'By Atom Count', link: paths.PDB_DATA_DISTRIBUTION('distribution-atom-count') },
+  { text: 'By Residue Count', link: paths.PDB_DATA_DISTRIBUTION('distribution-residue-count') },
+  { text: 'By Source Organism', link: paths.PDB_DATA_DISTRIBUTION('distribution-source-organism-natural') },
+  { text: 'By Taxonomy', link: paths.PDB_DATA_DISTRIBUTION('taxonomy') },
+  { text: 'By Processing Software', link: paths.PDB_DATA_DISTRIBUTION('distribution-software') },
+  { text: 'By Space Groups', link: paths.PDB_DATA_DISTRIBUTION('distribution-space-group') },
+  { text: 'By Publication Journal', link: paths.PDB_DATA_DISTRIBUTION('distribution-journal') },
+  { text: 'By Structural Genomics Centers', link: paths.PDB_DATA_DISTRIBUTION('distribution-structural-genomics-centers') },
+  { text: 'By Enzyme Classification', link: paths.PDB_DATA_DISTRIBUTION('enzyme-classification-name') },
+  { text: 'By Assembly Symmetry', link: paths.PDB_DATA_DISTRIBUTION('assembly-symmetry-dist') },
+  { text: 'By SCOP Classification', link: paths.PDB_DATA_DISTRIBUTION('scop-classification') },
+]
 
 function sanitizeData(plotName: string, plotData: any): any {
   // Sanitization logic here...

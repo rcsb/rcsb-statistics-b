@@ -80,7 +80,7 @@ const SettingsModalContent: React.FC = () => {
 
   const renderChartColors = () => (
     <div>
-      <label>Current Color Scheme: &nbsp;</label>
+      <label>Current: &nbsp;</label>
       {settings.schemeName === 'Achromatic' ? colorBlindText : settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
       <div>
         {Object.keys(settings.colorSchemes).map((schemeName) => (
@@ -123,13 +123,13 @@ const SettingsModalContent: React.FC = () => {
           active={selectedTab === 'chartColors'}
           onClick={() => setSelectedTab('chartColors')}
         >
-          Chart Colors
+          Color Scheme
         </TabButton>
         <TabButton
           active={selectedTab === 'queryInfo'}
           onClick={() => setSelectedTab('queryInfo')}
         >
-          Info
+          Current Query Info
         </TabButton>
       </div>
       <TabContent>

@@ -14,7 +14,7 @@ import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchCli
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 import { useSettings } from '../../src/contexts/SettingsContext';
 import { useDataQuery } from '../contexts/QueryContext'; 
-import { metaInfoUtils, createSearchUrlFromObj } from '../config/meta_sanitize';
+import { metaInfoUtils, createSearchUrlFromObj } from '../config/chartMetaData';
 import { MetaInfo, Facet as MetaInfoFacet, RefUrl } from '../../src/interfaces/MetaInfoTypes';
 
 interface BucketDataType {
@@ -738,10 +738,11 @@ const fetchChartDataWithProps = async (
             facets: [facet]
         }
     );
-    console.log('searchRequest', searchRequest);
+
     setProperty('searchRequest', searchRequest);
 
     const queryResults = await fetchData(searchRequest);
+    
     if (!queryResults) return [[]];
 
     const buckets = getFacetsFromSearch(queryResults);
@@ -824,7 +825,6 @@ const fetchDistributionChartDataWithProps = async (
     );
 
     setProperty('searchRequest', searchRequest);
-    console.log('searchRequest', searchRequest);
 
     return fetchData(searchRequest)
     .then(queryResults => {

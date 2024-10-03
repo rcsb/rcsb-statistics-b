@@ -47,7 +47,7 @@ const NavBar: React.FC = () => {
               <NavbarTogglerIcon className="icon-bar" />
             </NavbarToggler>
             <NavbarBrand className="navbar-brand" href="#">
-              <NavLink as={Link} to="/">RCSB Statistics</NavLink>
+              <NavLink as={Link} to="/">RCSB Statistics 2.0</NavLink>
             </NavbarBrand>
           </div>
           <NavbarCollapse className="collapse navbar-collapse" id="statsnavbarnav">

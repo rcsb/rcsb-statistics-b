@@ -1,21 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ListGroup from '../../components/ListGroup';
+import { Label, Input } from '../../styles/HomeStyles';
+import {statisticsList} from '../../config/chartMetaData';
+
+interface ListItem {
+  text: string;
+  link: string;
+}
 
 const HomePage: React.FC = () => {
-  const listItems = [
-    { text: 'by Experimental Method and Molecular Type', link: '/summary' },
-    { text: 'by Natural Source Organism', link: '/distribution-source-organism-natural' },
-  ];
+  const [search, setSearch] = useState('');
+  const [filteredItems, setFilteredItems] = useState<ListItem[]>([]);
 
-  return (
-  <article>
-    <h4>PDB Statistics 2024.... </h4>
-
-    <p>These statistics are generated using Web Services and represent the current holdings of the archive. wwPDB hosts statistics on PDB Data Deposited and Data Downloaded. The statistics can be divided into 2 major types: data growth and data distribution. Each of these statistics Options for each type are accessible from the statistics top menu. The data snapshot for current major types of data is available.</p>
-        
-    <ListGroup items={listItems} />
-  </article>
+useEffect(() => {
+  setFilteredItems(
+    statisticsList.filter(item =>
+      item.text.toLowerCase().includes(search.toLowerCase())
+    )
   );
+}, [search]);
+
+return (
+  <article>
+    <p>These statistics are generated using&nbsp;<a href="/pages/webservices">Web Services</a>&nbsp;and represent the current holdings of the archive.</p>
+    <Label htmlFor="statistics-filter">Browse Statistics</Label>
+    <Input
+      id="statistics-filter"
+      type="text"
+      placeholder="Search for a statistic"
+      value={search}
+      onChange={e => setSearch(e.target.value)}
+    />
+
+    <ListGroup items={filteredItems} />
+  </article>
+);
 };
 
 export default HomePage;
