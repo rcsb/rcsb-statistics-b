@@ -22,7 +22,7 @@ export const SectionContainer = styled.div`
 `;
 
 export const SectionHeader = styled.h5`
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   padding: 10px;
   margin: 0;
 `;

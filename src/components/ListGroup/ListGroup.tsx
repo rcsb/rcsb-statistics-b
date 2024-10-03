@@ -18,7 +18,6 @@ const StyledList = styled.ul`
 const StyledLink = styled(RouterLink).attrs({
   className: 'list-group-item',
 })`
-  background-color: #f8f9fa;
   padding: 7px 10px;
 `;
 const ListGroup: React.FC<ListGroupProps> = ({ items }) => {
