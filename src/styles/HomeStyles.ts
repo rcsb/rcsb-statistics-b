@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Label = styled.label`
   display: block;
   font-size: 1.2em;
-  margin-bottom: 0.5em;
+  margin-bottom: 15px;
 `;
 
 export const Input = styled.input`
@@ -18,6 +18,7 @@ export const SectionContainer = styled.div`
   flex: 1;
   margin: 0 20px 10px 0;
   max-width: 350px;
+  min-height: 200px;
   position: relative;
   overflow: hidden;
 

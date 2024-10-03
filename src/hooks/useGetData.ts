@@ -906,8 +906,9 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
 
 const useGetData = (key: string, parameter?: any) => {
     const { settings } = useSettings();
-    const { setProperty } = useDataQuery(); 
-    const colorSchemeKey = settings.colorScheme.join('');
+    const { setProperty } = useDataQuery();
+
+
 
     type QueryFunction = (
         colors: string[], 
@@ -939,7 +940,7 @@ const useGetData = (key: string, parameter?: any) => {
     };
 
     return useQuery({
-        queryKey: [key, parameter, colorSchemeKey],
+        queryKey: [key, parameter], 
         queryFn: () => {
             const fetchData = queryFunctions[key];
 
@@ -947,11 +948,13 @@ const useGetData = (key: string, parameter?: any) => {
                 throw new Error(`Unknown query key: ${key}`);
             }
 
-            return fetchData(settings.colorScheme, setProperty);
+
+            return fetchData(settings.colorScheme, setProperty);  
         },
         enabled: !!key,
     });
 };
+
 
 
 export default useGetData;

@@ -18,8 +18,10 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCog, FaRegWindowMaximize, FaSync, FaInfoCircle, FaTable, FaArrowDown, FaChartLine } from 'react-icons/fa';
 import { useModal } from '../../contexts/ModalContext';
+import { useSettings } from '../../contexts/SettingsContext';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin);
+
 interface BasicChartProps {
   data: ChartData<'bar'>;
   options: ChartOptions<'bar'>;
@@ -117,7 +119,6 @@ const FiltersShownText = styled.div`
   margin-bottom: 5px;
 `;
 
-
 const calculateCumulativeData = (data: ChartData<'bar'>): ChartData<'bar'> => {
   const cumulativeDatasets = data.datasets.map((dataset) => {
     const cumulativeDataArray: number[] = [];
@@ -142,6 +143,7 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
   const location = useLocation();
   const navigate = useNavigate();
   const { handleOpenModal } = useModal();
+  const { settings } = useSettings();
 
   const [visibility, setVisibility] = useState<DatasetVisibility[]>(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -152,39 +154,35 @@ const BarChart: React.FC<BasicChartProps> = ({ data, options, isOverallPlot, isD
     });
   });
 
-  
   const [selectedView, setSelectedView] = useState<'Annual' | 'Cumulative'>(() => {
     const searchParams = new URLSearchParams(location.search);
     return (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Cumulative';
   });
+  
   const [currentData, setCurrentData] = useState<ChartData<'bar'>>(() => {
     const searchParams = new URLSearchParams(location.search);
     const view = (searchParams.get('view') as 'Annual' | 'Cumulative') || 'Annual';
     return view === 'Cumulative' ? calculateCumulativeData(data) : data;
   });
 
-
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-
     visibility.forEach((item) => {
       searchParams.set(item.label, String(item.visible));
     });
-
     searchParams.set('view', selectedView);
-
     navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
   }, [visibility, selectedView, location.pathname, navigate]);
 
-useEffect(() => {
-  if (isOverallPlot) {
-    setVisibility((prevVisibility) =>
-      prevVisibility.map((item) =>
-        item.label === 'Cumulative' ? { ...item, visible: false } : item
-      )
-    );
-  }
-}, [isOverallPlot]);
+  useEffect(() => {
+    if (isOverallPlot) {
+      setVisibility((prevVisibility) =>
+        prevVisibility.map((item) =>
+          item.label === 'Cumulative' ? { ...item, visible: false } : item
+        )
+      );
+    }
+  }, [isOverallPlot]);
 
   useEffect(() => {
     if (selectedView === 'Cumulative') {
@@ -194,6 +192,8 @@ useEffect(() => {
         datasets: cumulativeData.datasets.map((dataset) => ({
           ...dataset,
           hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+          backgroundColor: settings.colorScheme[0] || dataset.backgroundColor,
+          borderColor: settings.colorScheme[0] || dataset.borderColor,
         })),
       });
     } else {
@@ -202,10 +202,12 @@ useEffect(() => {
         datasets: data.datasets.map((dataset) => ({
           ...dataset,
           hidden: !visibility.find((item) => item.label === dataset.label)?.visible,
+          backgroundColor: settings.colorScheme[0] || dataset.backgroundColor,
+          borderColor: settings.colorScheme[0] || dataset.borderColor,
         })),
       });
     }
-  }, [selectedView, data, visibility]);
+  }, [selectedView, data, visibility, settings.colorScheme]);
 
   const toggleDatasetVisibility = (label: string) => {
     setVisibility((prevVisibility) =>
@@ -222,36 +224,28 @@ useEffect(() => {
   const handleBarClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (chartRef.current) {
       const elements = getElementAtEvent(chartRef.current, event);
-  
       if (elements.length > 0) {
-
         const { index } = elements[0];
-  
-
         let barUrl = '';
-  
         for (const dataset of chartRef.current.data.datasets as ChartDataset<'bar'>[]) {
           const typedDataset = dataset as ChartDataset<'bar'> & {
             objectConfig?: { [key: number]: { url: string } };
           };
-  
           if (typedDataset.objectConfig && typedDataset.objectConfig[index]) {
             barUrl = typedDataset.objectConfig[index].url;
             break;
           }
         }
-  
         if (barUrl) {
           window.location.href = barUrl;
         }
       }
     }
   };
-  
+
   const handleLegendClick = (chart: any, legendItem: any) => {
     const index = legendItem.datasetIndex;
     const label = chart.data.datasets[index].label;
-
     if (label) {
       toggleDatasetVisibility(label);
     }
@@ -273,20 +267,20 @@ useEffect(() => {
       <Row>
         <Col md={10}>
           <StyledChartContainer>
-              <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
+            <Bar ref={chartRef} data={currentData} options={updatedOptions} onClick={handleBarClick} />
           </StyledChartContainer>
         </Col>
         <Col md={2}>
           <Row>
             <ButtonSection md={2}>
               <IconContainer>
-              <StyledIcon onClick={() => handleOpenModal('settings')}><FaCog size={15} /></StyledIcon>
-              <StyledIcon onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
-              <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
-              <StyledIcon><FaTable size={15} /></StyledIcon>
-              <StyledIcon><FaChartLine size={15} /></StyledIcon>
-              <StyledIcon><FaArrowDown size={15} /></StyledIcon>
-              <StyledIcon><FaSync size={15} /></StyledIcon>
+                <StyledIcon onClick={() => handleOpenModal('settings')}><FaCog size={15} /></StyledIcon>
+                <StyledIcon onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
+                <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
+                <StyledIcon><FaTable size={15} /></StyledIcon>
+                <StyledIcon><FaChartLine size={15} /></StyledIcon>
+                <StyledIcon><FaArrowDown size={15} /></StyledIcon>
+                <StyledIcon><FaSync size={15} /></StyledIcon>
               </IconContainer>
             </ButtonSection>
             <Col md={10}>
@@ -347,3 +341,5 @@ useEffect(() => {
 };
 
 export default BarChart;
+
+
