@@ -22,7 +22,7 @@ useEffect(() => {
 
 return (
   <article>
-    <p>These statistics are generated using&nbsp;<a href="/pages/webservices">Web Services</a>&nbsp;and represent the current holdings of the archive.</p>
+    <p>These statistics are generated using our <a href="/docs/programmatic-access/web-services-overview">Web Services</a> and represent the current holdings of the archive.</p>
     <Label htmlFor="statistics-filter">Browse Statistics</Label>
     <Input
       id="statistics-filter"

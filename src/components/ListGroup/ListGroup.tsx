@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import styled from 'styled-components';
 
 interface ListItem {
   text: string;
@@ -10,15 +11,24 @@ interface ListGroupProps {
   items: ListItem[];
 }
 
+const StyledList = styled.ul`
+  padding: 0
+`;
+
+const StyledLink = styled(RouterLink).attrs({
+  className: 'list-group-item',
+})`
+  max-width: 400px;
+`;
 const ListGroup: React.FC<ListGroupProps> = ({ items }) => {
   return (
-    <ul className="list-group">
+    <StyledList>
       {items.map((item, index) => (
-        <Link key={index} to={item.link} className="list-group-item">
+        <StyledLink key={index} to={item.link}>
           {item.text}
-        </Link>
+        </StyledLink>
       ))}
-    </ul>
+    </StyledList>
   );
 };
 
