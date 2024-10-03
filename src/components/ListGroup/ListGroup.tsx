@@ -12,7 +12,9 @@ interface ListGroupProps {
 }
 
 const StyledList = styled.ul`
-  padding: 0
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
 `;
 
 const StyledLink = styled(RouterLink).attrs({
