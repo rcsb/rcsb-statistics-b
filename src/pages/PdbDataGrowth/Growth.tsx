@@ -8,13 +8,23 @@ import ErrorPage from '../../components/ErrorPage/ErrorPage';
 import useGetData from '../../hooks/useGetData';
 import chartOptions from '../../config/chartConfigs';
 import { FaCog } from 'react-icons/fa';
+import { useDataQuery } from '../../contexts/QueryContext';
+
+const constructSearchApiUrl = (context: any): string => {
+    const baseUrl = 'https://search.rcsb.org/query-editor.html?json=';
+    if (!context?.searchRequest) {
+        return baseUrl;
+    }
+    const encodedQuery = encodeURIComponent(JSON.stringify(context.searchRequest));
+    return `${baseUrl}${encodedQuery}`;
+};
 
 const Growth: React.FC = () => {
     const { plotname } = useParams<{ plotname: string }>();
     const key = plotname || 'defaultKey';
     const isOverallPlot = plotname === 'overall-structures' || plotname === 'overall-small-molecules';
-
     const { data, isLoading, error } = useGetData(key);
+    const context = useDataQuery();
 
     if (isLoading) {
         return (
@@ -55,16 +65,22 @@ const Growth: React.FC = () => {
         }),
     } : null;
 
-
     const selectedChartOptions = plotname && chartOptions[plotname];
+
+    const handleButtonClick = () => {
+        const url = constructSearchApiUrl(context);
+        if (url) {
+            window.open(url, '_blank');
+        }
+    };
 
     return (
         <FadeInContainer key={plotname}>
             {chartData && selectedChartOptions ? (
                 <>
                     <SearchApiContainer>
-                        <StyledButton>
-                            <FaCog />  Search API
+                        <StyledButton onClick={handleButtonClick}>
+                            <FaCog /> Search API
                         </StyledButton>
                     </SearchApiContainer>
                     <BarChart 
@@ -87,3 +103,4 @@ const Growth: React.FC = () => {
 };
 
 export default Growth;
+

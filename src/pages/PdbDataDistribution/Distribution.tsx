@@ -2,10 +2,21 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import BarChart from '../../components/BarChart/BarChart';
 import ChartSkeletonBarVerticle from '../../components/BarChart/BarChartSkeleton';
-import { FadeInContainer } from '../../styles/ChartStyles';
+import { FadeInContainer,SearchApiContainer, StyledButton } from '../../styles/ChartStyles';
 import ErrorPage from '../../components/ErrorPage/ErrorPage';
 import useGetData from '../../hooks/useGetData';
 import chartOptions from '../../config/chartConfigs';
+import { FaCog } from 'react-icons/fa';
+import { useDataQuery } from '../../contexts/QueryContext';
+
+const constructSearchApiUrl = (context: any): string => {
+    const baseUrl = 'https://search.rcsb.org/query-editor.html?json=';
+    if (!context?.searchRequest) {
+        return baseUrl;
+    }
+    const encodedQuery = encodeURIComponent(JSON.stringify(context.searchRequest));
+    return `${baseUrl}${encodedQuery}`;
+};
 
 const Distribution: React.FC = () => {
     const plotname = useParams<{ plotname: string }>().plotname || '';
@@ -31,6 +42,7 @@ const Distribution: React.FC = () => {
     const isDistPlot = distPlots.includes(plotname);
 
     const { data, isLoading, error } = useGetData(key);
+    const context = useDataQuery();
 
     if (isLoading) {
         return (
@@ -71,10 +83,22 @@ const Distribution: React.FC = () => {
 
     const selectedChartOptions = plotname && chartOptions[plotname];
 
+    const handleButtonClick = () => {
+        const url = constructSearchApiUrl(context);
+        if (url) {
+            window.open(url, '_blank');
+        }
+    };
+
     return (
         <FadeInContainer key={plotname}>
             {chartData && selectedChartOptions ? (
                 <>
+                    <SearchApiContainer>
+                        <StyledButton onClick={handleButtonClick}>
+                            <FaCog /> Search API
+                        </StyledButton>
+                    </SearchApiContainer>
                     <BarChart 
                         data={chartData} 
                         options={selectedChartOptions}

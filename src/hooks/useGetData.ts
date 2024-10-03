@@ -13,6 +13,7 @@ import { QueryResult } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchR
 import { SearchClient } from "@rcsb/rcsb-search-tools/lib/SearchClient/SearchClient";
 import { ReturnType } from "@rcsb/rcsb-api-tools/build/RcsbSearch/Types/SearchEnums";
 import { useSettings } from '../../src/contexts/SettingsContext';
+import { useDataQuery } from '../contexts/QueryContext'; 
 import { metaInfoUtils, createSearchUrlFromObj } from '../config/meta_sanitize';
 import { MetaInfo, Facet as MetaInfoFacet, RefUrl } from '../../src/interfaces/MetaInfoTypes';
 
@@ -80,7 +81,7 @@ function fetchData(searchRequest: any): Promise<any> {
 
 
 /// GROWTH DATA /////////////////////////////////////////////////////////////////////////////////////////////////////////
-const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetOverallStructuresData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('growth-released-structures');
 
     if (!existingFacets) {
@@ -100,9 +101,9 @@ const GetOverallStructuresData = async (colors: string[]): Promise<ChartObjectIn
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, overallStructuresQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, overallStructuresQuery, false, ref_url, setProperty);
 };
-const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetOverallSmallMoleculesData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('overall-small-molecules');
 
     if (!existingFacets) {
@@ -120,9 +121,9 @@ const GetOverallSmallMoleculesData = async (colors: string[]): Promise<ChartObje
         returnType: ReturnType.MolDefinition
     };
 
-    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, overallSmallMoleculesQuery, false, ref_url, setProperty);
 };
-const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetExperimentalMethodsData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('experimental-method');
 
     if (!existingFacets) {
@@ -146,9 +147,9 @@ const GetExperimentalMethodsData = async (colors: string[]): Promise<ChartObject
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, experimentalMethodsQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, experimentalMethodsQuery, false, ref_url, setProperty);
 };
-const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetMolecularCompositionData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('molecular-composition');
 
     if (!existingFacets) {
@@ -171,9 +172,9 @@ const GetMolecularCompositionData = async (colors: string[]): Promise<ChartObjec
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, molecularCompositionQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, molecularCompositionQuery, false, ref_url, setProperty);
 };
-const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetAssemblySymmetryData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('assembly-symmetry');
 
     if (!existingFacets) {
@@ -196,9 +197,9 @@ const GetAssemblySymmetryData = async (colors: string[]): Promise<ChartObjectInt
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url, setProperty);
 };
-const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetNumberOfDomainsData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('number-of-domains');
 
     if (!existingFacets) {
@@ -234,9 +235,9 @@ const GetNumberOfDomainsData = async (colors: string[]): Promise<ChartObjectInte
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url );
+    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url, setProperty);
 };
-const GetNumberOfUniqueProtienSequences = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetNumberOfUniqueProtienSequences = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getGrowthObjectDetails('unique-protein-sequences');
 
     if (!existingFacets) {
@@ -272,12 +273,12 @@ const GetNumberOfUniqueProtienSequences = async (colors: string[]): Promise<Char
         returnType: ReturnType.Entry
     };
 
-    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url);
+    return fetchChartDataWithProps(colors, numberOfDomainsQuery, false, ref_url, setProperty);
 };
 
 
 /// DISTRIBUTION DATA /////////////////////////////////////////////////////////////////////////////////////////////////////////
-const GetResolutionData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetResolutionData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-resolution');
 
     if (!existingFacets) {
@@ -309,9 +310,9 @@ const GetResolutionData = async (colors: string[]): Promise<ChartObjectInterface
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, resolutionQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, resolutionQuery, false, ref_url, setProperty);
 };
-const GetRFreeData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetRFreeData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-r-free');
 
     if (!existingFacets) {
@@ -343,9 +344,9 @@ const GetRFreeData = async (colors: string[]): Promise<ChartObjectInterface[][]>
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, rFreeQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, rFreeQuery, false, ref_url, setProperty);
 };
-const GetMolecularWeightStructureData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetMolecularWeightStructureData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-molecular-weight-structure');
 
     if (!existingFacets) {
@@ -377,9 +378,9 @@ const GetMolecularWeightStructureData = async (colors: string[]): Promise<ChartO
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, molecularWeightStructureQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, molecularWeightStructureQuery, false, ref_url, setProperty);
 };
-const GetAtomCountData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetAtomCountData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-atom-count');
 
     if (!existingFacets) {
@@ -411,9 +412,9 @@ const GetAtomCountData = async (colors: string[]): Promise<ChartObjectInterface[
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, atomCountQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, atomCountQuery, false, ref_url, setProperty);
 };
-const GetResidueCountData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetResidueCountData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-residue-count');
 
     if (!existingFacets) {
@@ -446,9 +447,9 @@ const GetResidueCountData = async (colors: string[]): Promise<ChartObjectInterfa
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, residueCountQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, residueCountQuery, false, ref_url, setProperty);
 };
-const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetNaturalSourceOrganism = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-source-organism-natural');
 
     if (!existingFacets) {
@@ -488,9 +489,9 @@ const GetNaturalSourceOrganism = async (colors: string[]): Promise<ChartObjectIn
         returnType: ReturnType.PolymerEntity
     };
 
-    return fetchDistributionChartDataWithProps(colors, naturalSourceOrganismQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, naturalSourceOrganismQuery, false, ref_url, setProperty);
 };
-const GetTaxonomyData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetTaxonomyData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('taxonomy');
 
     if (!existingFacets) {
@@ -509,9 +510,9 @@ const GetTaxonomyData = async (colors: string[]): Promise<ChartObjectInterface[]
         returnType: ReturnType.PolymerEntity
     };
 
-    return fetchDistributionChartDataWithProps(colors, taxonomyQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, taxonomyQuery, false, ref_url, setProperty);
 };
-const GetSoftwareData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetSoftwareData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-software');
 
     if (!existingFacets) {
@@ -530,9 +531,9 @@ const GetSoftwareData = async (colors: string[]): Promise<ChartObjectInterface[]
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, softwareQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, softwareQuery, false, ref_url, setProperty);
 };
-const GetSpaceGroupData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetSpaceGroupData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-space-group');
 
     if (!existingFacets) {
@@ -551,9 +552,9 @@ const GetSpaceGroupData = async (colors: string[]): Promise<ChartObjectInterface
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, spaceGroupQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, spaceGroupQuery, false, ref_url, setProperty);
 };
-const GetJournalData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetJournalData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-journal');
 
     if (!existingFacets) {
@@ -572,9 +573,9 @@ const GetJournalData = async (colors: string[]): Promise<ChartObjectInterface[][
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, journalQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, journalQuery, false, ref_url, setProperty);
 };
-const GetStructuralGenomicCentersData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetStructuralGenomicCentersData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('distribution-structural-genomics-centers');
 
     if (!existingFacets) {
@@ -593,9 +594,9 @@ const GetStructuralGenomicCentersData = async (colors: string[]): Promise<ChartO
         returnType: ReturnType.Entry
     };
 
-    return fetchDistributionChartDataWithProps(colors, GetStructuralGenomicsCentersQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, GetStructuralGenomicsCentersQuery, false, ref_url, setProperty);
 };
-const GetEnzymeClassificationNameData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetEnzymeClassificationNameData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('enzyme-classification-name');
 
     if (!existingFacets) {
@@ -626,9 +627,9 @@ const GetEnzymeClassificationNameData = async (colors: string[]): Promise<ChartO
         returnType: ReturnType.PolymerEntity
     };
 
-    return fetchDistributionChartDataWithProps(colors, enzymeClassificationNameQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, enzymeClassificationNameQuery, false, ref_url, setProperty);
 };
-const GetAssemblySymmetryDistData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetAssemblySymmetryDistData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('assembly-symmetry-dist');
 
     if (!existingFacets) {
@@ -658,9 +659,9 @@ const GetAssemblySymmetryDistData = async (colors: string[]): Promise<ChartObjec
         returnType: ReturnType.Assembly
     };
 
-    return fetchDistributionChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, assemblySymmetryQuery, false, ref_url, setProperty);
 };
-const GetScopClassificationData = async (colors: string[]): Promise<ChartObjectInterface[][]> => {
+const GetScopClassificationData = async (colors: string[], setProperty: (key: string, value: any) => void): Promise<ChartObjectInterface[][]>  => {
     const { existingFacets, ref_url } = getDistributionObjectDetails('scop-classification');
 
     if (!existingFacets) {
@@ -704,16 +705,19 @@ const GetScopClassificationData = async (colors: string[]): Promise<ChartObjectI
         returnType: ReturnType.PolymerEntity
     };
 
-    return fetchDistributionChartDataWithProps(colors, GetScopClassificationQuery, false, ref_url);
+    return fetchDistributionChartDataWithProps(colors, GetScopClassificationQuery, false, ref_url, setProperty);
 };
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const fetchChartDataWithProps = async (
     colors: string[],
     props: Omit<FacetPlotInterface, "chartType">,
     isCumulative: boolean = false,
-    ref_url: any 
+    ref_url: any,
+    setProperty: (key: string, value: any) => void 
 ): Promise<ExtendedChartObjectInterface[][]> => {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
         attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
@@ -734,67 +738,70 @@ const fetchChartDataWithProps = async (
             facets: [facet]
         }
     );
+    console.log('searchRequest', searchRequest);
+    setProperty('searchRequest', searchRequest);
 
-   const queryResults: QueryResult | null = await SearchClient.get().request(searchRequest);
+    const queryResults = await fetchData(searchRequest);
+    if (!queryResults) return [[]];
 
-   if (!queryResults) return [[]];
-   const buckets = getFacetsFromSearch(queryResults);
-   const data = buckets[0].data as BucketDataWithConfig[];
+    const buckets = getFacetsFromSearch(queryResults);
+    const data = buckets[0].data as BucketDataWithConfig[];
 
-   if (isCumulative && data.length > 0) {
-       let cumulativeSum = 0;
+    if (isCumulative && data.length > 0) {
+        let cumulativeSum = 0;
 
-       const originalDataWithColor = data.map(item => {
-           const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-           return {
-               ...item,
-               objectConfig: {
-                   ...item.objectConfig,
-                   color: colors[0 % colors.length],
-                   label: 'Annual',
-                   url: searchUrl
-               }
-           };
-       });
+        const originalDataWithColor = data.map(item => {
+            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+            return {
+                ...item,
+                objectConfig: {
+                    ...item.objectConfig,
+                    color: colors[0 % colors.length],
+                    label: 'Annual',
+                    url: searchUrl
+                }
+            };
+        });
 
-       const cumulativeData = data.map(item => {
-           cumulativeSum += item.population;
-           const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
-           return {
-               ...item,
-               population: cumulativeSum,
-               objectConfig: {
-                   objectId: [item.label, cumulativeSum],
-                   color: colors[1 % colors.length],
-                   label: 'Cumulative',
-                   url: searchUrl
-               }
-           };
-       });
+        const cumulativeData = data.map(item => {
+            cumulativeSum += item.population;
+            const searchUrl = createSearchUrlFromObj(ref_url, item.label, props.returnType);
+            return {
+                ...item,
+                population: cumulativeSum,
+                objectConfig: {
+                    objectId: [item.label, cumulativeSum],
+                    color: colors[1 % colors.length],
+                    label: 'Cumulative',
+                    url: searchUrl
+                }
+            };
+        });
 
-       return [originalDataWithColor, cumulativeData];
-   } else if (props.secondDim) {
-       return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
-   } else {
-       return [data.map(d => {
-           const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
-           return {
-               ...d,
-               objectConfig: {
-                   objectId: [d.label, d.population],
-                   color: colors[0 % colors.length],
-                   url: searchUrl 
-               }
-           };
-       })];
-   }
+        return [originalDataWithColor, cumulativeData];
+    } else if (props.secondDim) {
+        return drillFacets(buckets.filter(f => f.name === getFacetName(props.secondDim!)), colors, ref_url); 
+    } else {
+        return [data.map(d => {
+            const searchUrl = createSearchUrlFromObj(ref_url, d.label, props.returnType); 
+            return {
+                ...d,
+                objectConfig: {
+                    objectId: [d.label, d.population],
+                    color: colors[0 % colors.length],
+                    url: searchUrl 
+                }
+            };
+        })];
+    }
 };
 
 const fetchDistributionChartDataWithProps = async (
     colors: string[],
     props: Omit<FacetPlotInterface, "chartType">,
     isCumulative: boolean = false,
-    ref_url: any 
+    ref_url: any,
+    setProperty: (key: string, value: any) => void 
 ): Promise<ExtendedChartObjectInterface[][]> => {
     const searchQuery: SearchQueryType = props.searchQuery ?? buildAttributeQuery({
         attribute: RcsbSearchMetadata.RcsbEntryInfo.StructureDeterminationMethodology.path,
@@ -815,6 +822,9 @@ const fetchDistributionChartDataWithProps = async (
             facets: [facet]
         }
     );
+
+    setProperty('searchRequest', searchRequest);
+    console.log('searchRequest', searchRequest);
 
     return fetchData(searchRequest)
     .then(queryResults => {
@@ -845,6 +855,7 @@ const fetchDistributionChartDataWithProps = async (
         throw error;
     });
 };
+
 
 const drillFacets = (facets: SearchBucketFacetType[], colors: string[], ref_url: any): ExtendedChartObjectInterface[][] => {
     const labelSet: Set<string> = new Set();
@@ -895,36 +906,40 @@ const getFacetName = (facet: AttributeFacetType | FilterFacetType): string => {
 
 const useGetData = (key: string, parameter?: any) => {
     const { settings } = useSettings();
+    const { setProperty } = useDataQuery(); 
     const colorSchemeKey = settings.colorScheme.join('');
 
-    type QueryFunction = (colors: string[]) => Promise<ChartObjectInterface[][]>;
+    type QueryFunction = (
+        colors: string[], 
+        setProperty: (key: string, value: any) => void
+    ) => Promise<ChartObjectInterface[][]>;
 
-const queryFunctions: Record<string, QueryFunction> = {
-    'overall-structures': GetOverallStructuresData,
-    'overall-small-molecules': GetOverallSmallMoleculesData,
-    'experimental-method': GetExperimentalMethodsData,
-    'molecular-composition': GetMolecularCompositionData,
-    'assembly-symmetry': GetAssemblySymmetryData,
-    'number-of-domains': GetNumberOfDomainsData,
-    'unique-protein-sequences': GetNumberOfUniqueProtienSequences,
-    'distribution-resolution': GetResolutionData,
-    'distribution-r-free': GetRFreeData,
-    'distribution-molecular-weight-structure': GetMolecularWeightStructureData,
-    'distribution-atom-count': GetAtomCountData,
-    'distribution-residue-count': GetResidueCountData,
-    'distribution-source-organism-natural':  GetNaturalSourceOrganism,
-    'taxonomy': GetTaxonomyData,
-    'distribution-software': GetSoftwareData,
-    'distribution-space-group': GetSpaceGroupData,
-    'distribution-journal': GetJournalData,
-    'distribution-structural-genomics-centers': GetStructuralGenomicCentersData,
-    'enzyme-classification-name': GetEnzymeClassificationNameData,
-    'assembly-symmetry-dist': GetAssemblySymmetryDistData,
-    'scop-classification': GetScopClassificationData
-};
+    const queryFunctions: Record<string, QueryFunction> = {
+        'overall-structures': GetOverallStructuresData,
+        'overall-small-molecules': GetOverallSmallMoleculesData,
+        'experimental-method': GetExperimentalMethodsData,
+        'molecular-composition': GetMolecularCompositionData,
+        'assembly-symmetry': GetAssemblySymmetryData,
+        'number-of-domains': GetNumberOfDomainsData,
+        'unique-protein-sequences': GetNumberOfUniqueProtienSequences,
+        'distribution-resolution': GetResolutionData,
+        'distribution-r-free': GetRFreeData,
+        'distribution-molecular-weight-structure': GetMolecularWeightStructureData,
+        'distribution-atom-count': GetAtomCountData,
+        'distribution-residue-count': GetResidueCountData,
+        'distribution-source-organism-natural':  GetNaturalSourceOrganism,
+        'taxonomy': GetTaxonomyData,
+        'distribution-software': GetSoftwareData,
+        'distribution-space-group': GetSpaceGroupData,
+        'distribution-journal': GetJournalData,
+        'distribution-structural-genomics-centers': GetStructuralGenomicCentersData,
+        'enzyme-classification-name': GetEnzymeClassificationNameData,
+        'assembly-symmetry-dist': GetAssemblySymmetryDistData,
+        'scop-classification': GetScopClassificationData
+    };
 
     return useQuery({
-        queryKey: [key, parameter, colorSchemeKey], 
+        queryKey: [key, parameter, colorSchemeKey],
         queryFn: () => {
             const fetchData = queryFunctions[key];
 
@@ -932,10 +947,11 @@ const queryFunctions: Record<string, QueryFunction> = {
                 throw new Error(`Unknown query key: ${key}`);
             }
 
-            return fetchData(settings.colorScheme);
+            return fetchData(settings.colorScheme, setProperty);
         },
         enabled: !!key,
     });
 };
+
 
 export default useGetData;

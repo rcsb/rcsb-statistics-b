@@ -1200,7 +1200,6 @@ export const growthRelatedKeys: MetaInfo[] = [
 
 ];
 
-
 export const nrMetaInfo = [
   {
       key: 'cluster-ids-',
