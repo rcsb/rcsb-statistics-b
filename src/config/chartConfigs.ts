@@ -2239,7 +2239,7 @@ const chartOptions: Record<string, ChartOptions<'bar'>> = {
         plugins: {
             title: {
                 display: true,
-                text: 'PDB Statistics: PDB Data Distribution by Natural Source Organism',
+                text: 'PDB Statistics: PDB Data Distribution by R-free',
                 font: {
                     size: 18,
                     family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",

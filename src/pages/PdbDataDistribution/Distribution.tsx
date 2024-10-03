@@ -11,16 +11,6 @@ const Distribution: React.FC = () => {
     const plotname = useParams<{ plotname: string }>().plotname || '';
     const key = plotname || 'defaultKey';
 
-    const smallDisplayPlots = [
-        'distribution-space-group',
-        'distribution-resolution',
-        'distribution-r-free',
-        'distribution-molecular-weight-structure',
-        'distribution-atom-count',
-        'distribution-residue-count'
-    ];
-
-
     const distPlots = [
         'distribution-space-group',
         'distribution-resolution',

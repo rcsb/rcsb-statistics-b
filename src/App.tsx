@@ -7,6 +7,7 @@ import routes from './routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SettingsProvider } from '../src/contexts/SettingsContext';
 import { ModalProvider} from '../src/contexts/ModalContext';
+import { QueryProvider } from './contexts/QueryContext';
 import GenericModal from './components/Modals/GenericModal';
 import  ChartSkeleton from './components/BarChart/BarChartSkeleton';
 import ErrorPage  from './components/ErrorPage/ErrorPage';
@@ -65,13 +66,15 @@ const App: React.FC<AppProps> = ({ basename }) => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <SettingsProvider>
-          <Router basename={basename}>
-            <ModalProvider>
-              <StatisticsAppContent />
-            </ModalProvider>
-          </Router>
-        </SettingsProvider>
+        <QueryProvider>
+          <SettingsProvider>
+            <Router basename={basename}>
+              <ModalProvider>
+                <StatisticsAppContent />
+              </ModalProvider>
+            </Router>
+          </SettingsProvider>
+        </QueryProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
