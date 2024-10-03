@@ -10,16 +10,18 @@ import {
   Popover,
   Cover,
 } from '../../styles/GenericModalStyles';
+import { TabContainer, TabButton, TabContent } from '../../styles/TabStyles';
+import { useDataQuery } from '../../contexts/QueryContext';
 
 const SettingsModalContent: React.FC = () => {
   const { settings, changeColorScheme, updateCustomColor } = useSettings();
-
+  const [selectedTab, setSelectedTab] = useState('chartColors');
   const [selectedScheme, setSelectedScheme] = useState(settings.schemeName);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerIndex, setColorPickerIndex] = useState<number | null>(null);
   const [currentColor, setCurrentColor] = useState<string>('');
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
-
+  const context = useDataQuery();
   const colorBlindText = 'Color Blind Friendly';
 
   useEffect(() => {
@@ -76,9 +78,9 @@ const SettingsModalContent: React.FC = () => {
     </ColorGrid>
   );
 
-  return (
+  const renderChartColors = () => (
     <div>
-      <label>Current Color Scheme: &nbsp;</label> 
+      <label>Current Color Scheme: &nbsp;</label>
       {settings.schemeName === 'Achromatic' ? colorBlindText : settings.schemeName.charAt(0).toUpperCase() + settings.schemeName.slice(1)}
       <div>
         {Object.keys(settings.colorSchemes).map((schemeName) => (
@@ -93,10 +95,9 @@ const SettingsModalContent: React.FC = () => {
             <SchemeName>{schemeName === 'Achromatic' ? colorBlindText : schemeName}</SchemeName>
             {renderColorGrid(settings.colorSchemes[schemeName])}
           </ColorSchemeContainer>
-          
         ))}
 
-       {selectedScheme === 'custom' && (
+        {selectedScheme === 'custom' && (
           <p>Create a custom color scheme, click on the color you <br /> would like to change and use the color picker.</p>
         )}
       </div>
@@ -108,9 +109,36 @@ const SettingsModalContent: React.FC = () => {
       )}
     </div>
   );
+
+  const renderQueryInfo = () => (
+    <div>
+     <pre>{JSON.stringify(context, null, 2)}</pre>
+    </div>
+  );
+
+  return (
+    <TabContainer>
+      <div>
+        <TabButton
+          active={selectedTab === 'chartColors'}
+          onClick={() => setSelectedTab('chartColors')}
+        >
+          Chart Colors
+        </TabButton>
+        <TabButton
+          active={selectedTab === 'queryInfo'}
+          onClick={() => setSelectedTab('queryInfo')}
+        >
+          Info
+        </TabButton>
+      </div>
+      <TabContent>
+        {selectedTab === 'chartColors' && renderChartColors()}
+        {selectedTab === 'queryInfo' && renderQueryInfo()}
+      </TabContent>
+    </TabContainer>
+  );
 };
 
 export default SettingsModalContent;
-
-
 

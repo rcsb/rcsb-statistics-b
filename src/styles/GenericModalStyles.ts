@@ -53,3 +53,5 @@ export const Cover = styled.div`
   bottom: 0;
   left: 0;
 `;
+
+
