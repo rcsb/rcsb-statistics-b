@@ -614,6 +614,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-released-structures',
     title: 'Overall',
     description: 'Overall Growth of Released Structures Per Year',
+    stats_notes: 'This chart shows the growth in the number of structures released annually in the PDB over time. The data is aggregated by year, allowing for an overview of how the database has expanded.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -630,11 +631,11 @@ export const growthRelatedKeys: MetaInfo[] = [
     },
     facets: [
       {
-          name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
-          aggregation_type: AggregationType.DateHistogram,
-          attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
-          interval: Interval.Year,
-          min_interval_population: 1
+        name: `FACET/${RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path}`,
+        aggregation_type: AggregationType.DateHistogram,
+        attribute: RcsbSearchMetadata.RcsbAccessionInfo.InitialReleaseDate.path,
+        interval: Interval.Year,
+        min_interval_population: 1
       }
     ]
   },
@@ -642,6 +643,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'overall-small-molecules',
     title: 'by Small Molecules Only',
     description: 'Small Molecule-only Structures Released Per Year',
+    stats_notes: 'This chart tracks the growth of structures that exclusively contain small molecules released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -678,6 +680,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'experimental-method',
     title: 'Growth',
     description: 'Overall Growth By Experimental Method',
+    stats_notes: 'This chart visualizes the growth in PDB entries categorized by different experimental methods, such as X-ray crystallography, NMR, or EM, over time.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -723,8 +726,8 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'molecular-composition',
     title: 'by Molecular Composition',
     description: 'PDB Data Growth by Molecular Composition',
+    stats_notes: 'This chart highlights the growth of PDB entries based on their molecular composition, such as proteins, nucleic acids, and small molecules.',
     header_label: 'Molecular Composition',
-    stats_notes: 'Growth of PDB structures by molecular composition, such as protein, nucleic acid, and small molecules.',
     header_label_sort: 'alphabetical',
     ref_url: {
       type: 'group',
@@ -770,8 +773,8 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'assembly-symmetry',
     title: 'by Assembly Symmetry',
     description: 'PDB Data Growth by Assembly Symmetry',
+    stats_notes: 'This chart shows the growth of PDB entries based on their global assembly symmetry classifications.',
     header_label: 'Assembly Symmetry',
-    stats_notes: 'Growth of PDB structures by global assembly symmetry types.',
     header_label_sort: 'alphabetical',
     ref_url: {
       type: 'group',
@@ -817,8 +820,8 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'number-of-domains',
     title: 'by Number of Domains',
     description: 'PDB Data Growth by Number of Unique Domains',
+    stats_notes: 'This chart visualizes the growth of structures by the number of unique domains, with domains classified by matching UniProtKB accession.',
     header_label: 'Number of Domains',
-    stats_notes: 'Growth of PDB structures by the number of unique domains, calculated using UniProtKB accession matching.',
     header_label_sort: 'alphabetical',
     ref_url: {
       type: 'group',
@@ -853,7 +856,7 @@ export const growthRelatedKeys: MetaInfo[] = [
         facets: [
           {
             name: 'Unique UniProtKB Entries',
-            aggregation_type: AggregationType.Terms,  // Changed from 'cardinality' to 'terms'
+            aggregation_type: AggregationType.Terms,
             attribute: 'rcsb_polymer_entity_group_membership.group_id',
           },
         ],
@@ -865,8 +868,8 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'unique-protein-sequences',
     title: 'by Unique Protein Sequences',
     description: 'PDB Data Growth by Unique Protein Sequences',
+    stats_notes: 'This chart illustrates the growth of PDB structures based on the number of unique protein sequences, identified through UniProtKB accession matching.',
     header_label: 'Unique Protein Sequences',
-    stats_notes: 'Growth of PDB structures by the number of unique protein sequences, determined by UniProtKB accession matching.',
     header_label_sort: 'alphabetical',
     ref_url: {
       type: 'group',
@@ -901,7 +904,7 @@ export const growthRelatedKeys: MetaInfo[] = [
         facets: [
           {
             name: 'Unique UniProtKB Entries',
-            aggregation_type: AggregationType.Terms,  
+            aggregation_type: AggregationType.Terms,
             attribute: 'rcsb_polymer_entity_group_membership.group_id',
           },
         ],
@@ -913,6 +916,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-xray',
     title: 'by X-ray',
     description: 'Growth of Structures from X-ray Crystallography Experiments Released per Year',
+    stats_notes: 'This chart shows the growth of structures obtained from X-ray crystallography experiments released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -949,6 +953,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-nmr',
     title: 'by NMR',
     description: 'Growth of Structures from NMR Experiments Released per Year',
+    stats_notes: 'This chart shows the growth of structures obtained from NMR experiments released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -985,6 +990,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-em',
     title: 'by Electron Microscopy',
     description: 'Growth of Structures from 3DEM Experiments Released per Year',
+    stats_notes: 'This chart tracks the annual growth of structures obtained from electron microscopy experiments released in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1021,6 +1027,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-multi-method',
     title: 'by Multi-method',
     description: 'Growth of Structures by Multi-method per Year',
+    stats_notes: 'This chart visualizes the growth of structures obtained using multiple experimental methods, released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1057,6 +1064,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-protein',
     title: 'by Protein-only',
     description: 'Protein-only Structures Released Per Year',
+    stats_notes: 'This chart shows the growth in structures that contain only proteins, released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1093,6 +1101,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-protein-na-complex',
     title: 'by Protein-Nucleic Acid Complexes',
     description: 'Protein-Nucleic Acid Complexes Released Per Year',
+    stats_notes: 'This chart tracks the annual growth of structures that contain protein and nucleic acid complexes released in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1129,6 +1138,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-dna',
     title: 'by DNA-only',
     description: 'DNA-only Structures Released Per Year',
+    stats_notes: 'This chart tracks the growth of DNA-only structures released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1165,6 +1175,7 @@ export const growthRelatedKeys: MetaInfo[] = [
     key: 'growth-rna',
     title: 'by RNA-only',
     description: 'RNA-only Structures Released Per Year',
+    stats_notes: 'This chart tracks the growth of RNA-only structures released annually in the PDB.',
     ref_url: {
       type: 'group',
       logical_operator: 'and',
@@ -1197,8 +1208,9 @@ export const growthRelatedKeys: MetaInfo[] = [
       }
     ]
   },
-
 ];
+
+
 
 export const nrMetaInfo = [
   {

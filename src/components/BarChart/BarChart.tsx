@@ -49,21 +49,27 @@ const IconContainer = styled.div`
   gap: 5px;
 `;
 
-const StyledIcon = styled.div`
+const StyledIcon = styled.div<{ disabled?: boolean }>`
   background-color: #f0f0f0;
   border: 1px solid #fff;
   padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #808080;
-  
-  &:hover {
-    background-color: #fff;
-    border: 1px solid #c0c0c0;
-    cursor: pointer;
-  }
+  color: ${({ disabled }) => (disabled ? '#e0e0e0' : '#a0a0a0')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+
+  ${({ disabled }) =>
+    !disabled &&
+    `
+    &:hover {
+      background-color: #fff;
+      border: 1px solid #c0c0c0;
+      cursor: pointer;
+    }
+  `}
 `;
+
 
 const CheckboxContainer = styled.div`
   display: flex;
@@ -281,12 +287,12 @@ useEffect(() => {
             <ButtonSection md={2}>
               <IconContainer>
               <StyledIcon onClick={() => handleOpenModal('settings')}><FaCog size={15} /></StyledIcon>
-              <StyledIcon onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
-              <StyledIcon><FaRegWindowMaximize size={15} /></StyledIcon>
-              <StyledIcon><FaTable size={15} /></StyledIcon>
-              <StyledIcon><FaChartLine size={15} /></StyledIcon>
-              <StyledIcon><FaArrowDown size={15} /></StyledIcon>
-              <StyledIcon><FaSync size={15} /></StyledIcon>
+              <StyledIcon disabled={true} onClick={() => handleOpenModal('information')}><FaInfoCircle size={15} /></StyledIcon>
+              <StyledIcon disabled={true}><FaRegWindowMaximize size={15} /></StyledIcon>
+              <StyledIcon disabled={true}><FaTable size={15} /></StyledIcon>
+              <StyledIcon disabled={true}><FaChartLine size={15} /></StyledIcon>
+              <StyledIcon disabled={true}><FaArrowDown size={15} /></StyledIcon>
+              <StyledIcon disabled={true}><FaSync size={15} /></StyledIcon>
               </IconContainer>
             </ButtonSection>
             <Col md={10}>
