@@ -219,16 +219,24 @@ const GetNumberOfDomainsData = async (colors: string[], setProperty: (key: strin
                 "type": "terminal",
                 "service": "text",
                 "parameters": {
-                    "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
-                    "operator": "exact_match",
-                    "value": "matching_uniprot_accession"
+                  "attribute": "rcsb_polymer_entity_group_membership.aggregation_method",
+                  "operator": "exact_match",
+                  "value": "sequence_identity"
                 }
             },
             "facets": [
                 {
-                    "name": "Unique UniProtKB Entries",
-                    "aggregation_type": "cardinality",
-                    "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                    "name": "Similarity Cutoff",
+                    "aggregation_type": "terms",
+                    "attribute": "rcsb_polymer_entity_group_membership.similarity_cutoff",
+                    "min_interval_population": 1,
+                    "facets": [
+                      {
+                        "name": "Unique Protein Sequences",
+                        "aggregation_type": "cardinality",
+                        "attribute": "rcsb_polymer_entity_group_membership.group_id"
+                      }
+                    ]
                 }
             ]
         },
