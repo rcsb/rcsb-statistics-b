@@ -9,6 +9,7 @@ import {
   RadioInput,
   Popover,
   Cover,
+  PreStyled
 } from '../../styles/GenericModalStyles';
 import { TabContainer, TabButton, TabContent } from '../../styles/TabStyles';
 import { useDataQuery } from '../../contexts/QueryContext';
@@ -111,9 +112,7 @@ const SettingsModalContent: React.FC = () => {
   );
 
   const renderQueryInfo = () => (
-    <div>
-     <pre>{JSON.stringify(context, null, 2)}</pre>
-    </div>
+     <PreStyled>{JSON.stringify(context, null, 2)}</PreStyled>
   );
 
   return (

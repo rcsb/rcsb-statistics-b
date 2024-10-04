@@ -54,4 +54,6 @@ export const Cover = styled.div`
   left: 0;
 `;
 
-
+export const PreStyled = styled.pre`
+  max-height: 500px
+`;
