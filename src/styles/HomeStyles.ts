@@ -18,6 +18,7 @@ export const SectionContainer = styled.div`
   flex: 1;
   margin: 0 20px 10px 0;
   max-width: 350px;
+  min-height: 250px;
   position: relative;
   overflow: hidden;
 
