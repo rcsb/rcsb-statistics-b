@@ -291,21 +291,28 @@ const GetResolutionData = async (colors: string[], setProperty: (key: string, va
             "aggregation_type": "range",
             "attribute": "rcsb_entry_info.resolution_combined",
             "ranges": [
-              {
-                "to": 1
-              },
-              {
-                "from": 2,
-                "to": 2.2
-              },
-              {
-                "from": 2.2,
-                "to": 2.4
-              },
-              {
-                "from": 4.6
-              }
-            ]
+                { "to": 1.0 },
+                { "from": 1.0, "to": 1.2 },
+                { "from": 1.2, "to": 1.4 },
+                { "from": 1.4, "to": 1.6 },
+                { "from": 1.6, "to": 1.8 },
+                { "from": 1.8, "to": 2.0 },
+                { "from": 2.0, "to": 2.2 },
+                { "from": 2.2, "to": 2.4 },
+                { "from": 2.4, "to": 2.6 },
+                { "from": 2.6, "to": 2.8 },
+                { "from": 2.8, "to": 3.0 },
+                { "from": 3.0, "to": 3.2 },
+                { "from": 3.2, "to": 3.4 },
+                { "from": 3.4, "to": 3.6 },
+                { "from": 3.6, "to": 3.8 },
+                { "from": 3.8, "to": 4.0 },
+                { "from": 4.0, "to": 4.2 },
+                { "from": 4.2, "to": 4.4 },
+                { "from": 4.4, "to": 4.6 },
+                { "from": 4.6 }
+              ]
+              
           },
         returnType: ReturnType.Entry
     };
@@ -325,21 +332,28 @@ const GetRFreeData = async (colors: string[], setProperty: (key: string, value: 
             "aggregation_type": "range",
             "attribute": "refine.ls_R_factor_R_free",
             "ranges": [
-              {
-                "to": 0.14
-              },
-              {
-                "from": 0.14,
-                "to": 0.15
-              },
-              {
-                "from": 0.15,
-                "to": 0.16
-              },
-              {
-                "from": 0.32
-              }
-            ]
+                { "to": 0.14 },
+                { "from": 0.14, "to": 0.15 },
+                { "from": 0.15, "to": 0.16 },
+                { "from": 0.16, "to": 0.17 },
+                { "from": 0.17, "to": 0.18 },
+                { "from": 0.18, "to": 0.19 },
+                { "from": 0.19, "to": 0.2 },
+                { "from": 0.2, "to": 0.21 },
+                { "from": 0.21, "to": 0.22 },
+                { "from": 0.22, "to": 0.23 },
+                { "from": 0.23, "to": 0.24 },
+                { "from": 0.24, "to": 0.25 },
+                { "from": 0.25, "to": 0.26 },
+                { "from": 0.26, "to": 0.27 },
+                { "from": 0.27, "to": 0.28 },
+                { "from": 0.28, "to": 0.29 },
+                { "from": 0.29, "to": 0.3 },
+                { "from": 0.3, "to": 0.31 },
+                { "from": 0.31, "to": 0.32 },
+                { "from": 0.32 }
+              ]
+              
           },
         returnType: ReturnType.Entry
     };
@@ -359,20 +373,26 @@ const GetMolecularWeightStructureData = async (colors: string[], setProperty: (k
             "aggregation_type": "range",
             "attribute": "rcsb_entry_info.molecular_weight",
             "ranges": [
-              {
-                "to": 20
-              },
-              {
-                "from": 20,
-                "to": 40
-              },
-              {
-                "from": 40,
-                "to": 60
-              },
-              {
-                "from": 380
-              }
+            { "to": 20 },
+            { "from": 20, "to": 40 },
+            { "from": 40, "to": 60 },
+            { "from": 60, "to": 80 },
+            { "from": 80, "to": 100 },
+            { "from": 100, "to": 120 },
+            { "from": 120, "to": 140 },
+            { "from": 140, "to": 160 },
+            { "from": 160, "to": 180 },
+            { "from": 180, "to": 200 },
+            { "from": 200, "to": 220 },
+            { "from": 220, "to": 240 },
+            { "from": 240, "to": 260 },
+            { "from": 260, "to": 280 },
+            { "from": 280, "to": 300 },
+            { "from": 300, "to": 320 },
+            { "from": 320, "to": 340 },
+            { "from": 340, "to": 360 },
+            { "from": 360, "to": 380 },
+            { "from": 380 }
             ]
           },
         returnType: ReturnType.Entry
@@ -393,21 +413,28 @@ const GetAtomCountData = async (colors: string[], setProperty: (key: string, val
             "aggregation_type": "range",
             "attribute": "rcsb_entry_info.deposited_atom_count",
             "ranges": [
-              {
-                "to": 1000
-              },
-              {
-                "from": 1000,
-                "to": 2000
-              },
-              {
-                "from": 2000,
-                "to": 3000
-              },
-              {
-                "from": 19000
-              }
-            ]
+                { "to": 100 },
+                { "from": 100, "to": 200 },
+                { "from": 200, "to": 300 },
+                { "from": 300, "to": 400 },
+                { "from": 400, "to": 500 },
+                { "from": 500, "to": 600 },
+                { "from": 600, "to": 700 },
+                { "from": 700, "to": 800 },
+                { "from": 800, "to": 900 },
+                { "from": 900, "to": 1000 },
+                { "from": 1000, "to": 1100 },
+                { "from": 1100, "to": 1200 },
+                { "from": 1200, "to": 1300 },
+                { "from": 1300, "to": 1400 },
+                { "from": 1400, "to": 1500 },
+                { "from": 1500, "to": 1600 },
+                { "from": 1600, "to": 1700 },
+                { "from": 1700, "to": 1800 },
+                { "from": 1800, "to": 1900 },
+                { "from": 1900 }
+              ]
+              
           },
         returnType: ReturnType.Entry
     };
@@ -428,21 +455,27 @@ const GetResidueCountData = async (colors: string[], setProperty: (key: string, 
             "aggregation_type": "range",
             "attribute": "rcsb_entry_info.deposited_polymer_monomer_count",
             "ranges": [
-              {
-                "to": 100
-              },
-              {
-                "from": 100,
-                "to": 200
-              },
-              {
-                "from": 200,
-                "to": 300
-              },
-              {
-                "from": 1900
-              }
-            ]
+                { "to": 100 },
+                { "from": 100, "to": 200 },
+                { "from": 200, "to": 300 },
+                { "from": 300, "to": 400 },
+                { "from": 400, "to": 500 },
+                { "from": 500, "to": 600 },
+                { "from": 600, "to": 700 },
+                { "from": 700, "to": 800 },
+                { "from": 800, "to": 900 },
+                { "from": 900, "to": 1000 },
+                { "from": 1000, "to": 1100 },
+                { "from": 1100, "to": 1200 },
+                { "from": 1200, "to": 1300 },
+                { "from": 1300, "to": 1400 },
+                { "from": 1400, "to": 1500 },
+                { "from": 1500, "to": 1600 },
+                { "from": 1600, "to": 1700 },
+                { "from": 1700, "to": 1800 },
+                { "from": 1800, "to": 1900 },
+                { "from": 1900 }
+              ]   
           },
         returnType: ReturnType.Entry
     };
