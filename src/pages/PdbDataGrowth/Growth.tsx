@@ -89,9 +89,9 @@ const Growth: React.FC = () => {
                         isOverallPlot={isOverallPlot}
                         isDistPlot={false}
                     />
-                    {plotname === 'experimental-method' && (
+                    {/* {plotname === 'experimental-method' && (
                         <BarChartRace plotname={plotname} />
-                    )}
+                    )} */}
                 </>
             ) : (
                 <FadeInContainer>
